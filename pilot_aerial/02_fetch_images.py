@@ -5,13 +5,17 @@ Sources (public, Manhattan coverage every other year):
   2012-2024 (even) NYS ITS orthos    https://orthos.its.ny.gov/arcgis/rest/services/wms/{year}/MapServer/export
 
 Each panel is a ~70 m square around the segment midpoint, rotated so the street runs vertically.
-Usage (from repo root): python pilot_aerial/02_fetch_images.py
+Usage (from repo root): python pilot_aerial/02_fetch_images.py [points.csv] [out_dir]
+  points.csv: columns pilot_id or proj_id, lon, lat, bearing (default pilot_aerial/out/pilot_segments.csv)
 """
-import csv, io, math, os, time, urllib.request
+import csv, io, math, os, sys, time, urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from PIL import Image, ImageDraw, ImageFont
 
-OUT = "pilot_aerial/out"
-CACHE = os.path.join(OUT, "cache")
+POINTS = sys.argv[1] if len(sys.argv) > 1 else "pilot_aerial/out/pilot_segments.csv"
+OUT = sys.argv[2] if len(sys.argv) > 2 else "pilot_aerial/out"
+# tile cache outside Dropbox (thousands of small files); override with AERIAL_CACHE
+CACHE = os.environ.get("AERIAL_CACHE", os.path.join(os.environ.get("LOCALAPPDATA", "."), "nyc_aerial_cache"))
 YEARS_NYC = [2008, 2010]
 YEARS_NYS = [2012, 2014, 2016, 2018, 2020, 2022, 2024]
 FETCH_M = 110      # ground metres fetched (before rotation)
@@ -56,11 +60,14 @@ def fetch_nyc(pid, lon, lat, year, z=20):
     tx0, tx1 = int((b[0] + world / 2) // tile_m), int((b[2] + world / 2) // tile_m)
     ty0, ty1 = int((world / 2 - b[3]) // tile_m), int((world / 2 - b[1]) // tile_m)
     mosaic = Image.new("RGB", ((tx1 - tx0 + 1) * 256, (ty1 - ty0 + 1) * 256))
-    for tx in range(tx0, tx1 + 1):
-        for ty in range(ty0, ty1 + 1):
-            url = f"https://maps.nyc.gov/xyz/1.0.0/photo/{year}/{z}/{tx}/{ty}.png8"
-            t = Image.open(io.BytesIO(get(url, os.path.join(CACHE, f"tile_{year}_{z}_{tx}_{ty}.png")))).convert("RGB")
-            mosaic.paste(t, ((tx - tx0) * 256, (ty - ty0) * 256))
+    tiles = [(tx, ty) for tx in range(tx0, tx1 + 1) for ty in range(ty0, ty1 + 1)]
+    def one(t):
+        tx, ty = t
+        url = f"https://maps.nyc.gov/xyz/1.0.0/photo/{year}/{z}/{tx}/{ty}.png8"
+        return t, get(url, os.path.join(CACHE, f"tile_{year}_{z}_{tx}_{ty}.png"))
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for (tx, ty), data in ex.map(one, tiles):
+            mosaic.paste(Image.open(io.BytesIO(data)).convert("RGB"), ((tx - tx0) * 256, (ty - ty0) * 256))
     # crop mosaic to bbox
     ox, oy = tx0 * tile_m - world / 2, world / 2 - ty0 * tile_m
     sc = 256 / tile_m
@@ -80,10 +87,14 @@ def main():
         font = ImageFont.truetype("arial.ttf", 22)
     except OSError:
         font = ImageFont.load_default()
-    rows = list(csv.DictReader(open(os.path.join(OUT, "pilot_segments.csv"))))
+    os.makedirs(OUT, exist_ok=True)
+    rows = list(csv.DictReader(open(POINTS)))
     years = YEARS_NYC + YEARS_NYS
     for r in rows:
-        pid, lon, lat, brg = r["pilot_id"], float(r["lon"]), float(r["lat"]), float(r["bearing"])
+        pid = r.get("pilot_id") or r["proj_id"]
+        lon, lat, brg = float(r["lon"]), float(r["lat"]), float(r["bearing"])
+        if os.path.exists(os.path.join(OUT, f"{pid}.jpg")):
+            continue
         sheet = Image.new("RGB", (3 * PANEL + 4 * 6, 3 * PANEL + 4 * 6 + 36), "white")
         d = ImageDraw.Draw(sheet)
         d.text((8, 6), f"{pid}  (street runs vertically, {CROP_M} m square)", fill="black", font=font)
