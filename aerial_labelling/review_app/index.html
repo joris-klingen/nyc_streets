@@ -83,7 +83,7 @@
   figure img { display: block; width: 100%; height: auto; border-radius: 4px; border: 1px solid var(--line); background: var(--bg); }
   figcaption { font-size: .82rem; color: var(--muted); margin-top: 4px; }
 
-  form { border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 14px; }
+  form { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-block: 16px; margin-bottom: 18px; display: grid; gap: 14px; }
   .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px 20px; }
   label, legend { font: 600 .78rem var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   fieldset { border: 0; padding: 0; margin: 0; }
@@ -218,11 +218,11 @@
     box.append(views);
     box.append(el("p", { class: "hint", text: "Three points spread along the project, looking along the street. In Street View, open \"See more dates\" (top left) to step back in time." }));
 
+    box.append(buildForm(p, r));
+
     box.append(el("figure", {},
       el("img", { src: "sheets/" + p.proj_id + ".jpg", alt: "Aerial photos 2008 to 2024 of " + titleCase(p.street) + ", with the project's street segments marked in magenta", loading: "lazy" }),
       el("figcaption", { text: "Aerial photos 2008–2024, each labelled with its Manhattan capture date (NYC OTI). 2008–2014 were flown in June with trees in leaf; 2016 onward in March–April. 70 m square, street running vertically; magenta marks the project segments. A photo can date a change more precisely than Street View when it falls between two panoramas." })));
-
-    box.append(buildForm(p, r));
   }
 
   function buildForm(p, r) {
