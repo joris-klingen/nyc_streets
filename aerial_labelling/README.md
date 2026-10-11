@@ -48,3 +48,8 @@ Before acting on any conflict:
 3. **Decide whether the park drives count as protected** from the car-free date, or from the painted lane that is always present.
 
 Only changes confirmed in step 2 should go into the manual overrides (`manual/`). The aerial labels are evidence, not ground truth.
+
+## Review page
+
+Published at https://claude.ai/artifact/LNgqgjc1jKrH4Yf35vjX9i (private; share with reviewers as Contributor so they can save answers).
+Built by `review_app/build.py` from `out/review_checklist.csv` and `out/review_sheets/`. Answers are stored in the artifact database, collection `reviews`, one document per project (`protected_from` YYYY-MM or "none", `before_type`, `confidence`, `note`, `by`, `saved_at`); Claude reads them back with the ArtifactData tool and writes confirmed dates into `manual/`.
