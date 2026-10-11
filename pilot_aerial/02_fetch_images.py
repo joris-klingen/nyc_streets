@@ -15,7 +15,8 @@ from PIL import Image, ImageDraw, ImageFont
 POINTS = sys.argv[1] if len(sys.argv) > 1 else "pilot_aerial/out/pilot_segments.csv"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "pilot_aerial/out"
 # tile cache outside Dropbox (thousands of small files); override with AERIAL_CACHE
-CACHE = os.environ.get("AERIAL_CACHE", os.path.join(os.environ.get("LOCALAPPDATA", "."), "nyc_aerial_cache"))
+# (not under AppData: the Microsoft Store Python silently redirects writes there)
+CACHE = os.environ.get("AERIAL_CACHE", "C:/code/nyc_aerial_cache")
 YEARS_NYC = [2008, 2010]
 YEARS_NYS = [2012, 2014, 2016, 2018, 2020, 2022, 2024]
 FETCH_M = 110      # ground metres fetched (before rotation)
