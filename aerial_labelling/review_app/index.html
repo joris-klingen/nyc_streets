@@ -97,9 +97,7 @@
   fieldset { border: 0; padding: 0; margin: 0; }
   input[type="month"], select, textarea { width: 100%; margin-top: 4px; font: 500 .95rem var(--font-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; }
   textarea { min-height: 70px; resize: vertical; font-family: var(--font-body); }
-  .seg { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .seg label { text-transform: none; letter-spacing: 0; font: 500 .9rem var(--font-body); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 12px; cursor: pointer; display: flex; gap: 6px; align-items: center; }
-  .seg input { accent-color: var(--accent); }
+  .prefill { font-size: .82rem; color: var(--muted); margin: 4px 0 6px; }
   .check { display: flex; gap: 8px; align-items: center; text-transform: none; letter-spacing: 0; font: 500 .9rem var(--font-body); color: var(--fg); }
   .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .btn { font: 600 .95rem var(--font-body); padding: 9px 18px; border-radius: 4px; border: 1px solid var(--fg); background: var(--fg); color: var(--bg); cursor: pointer; }
@@ -149,7 +147,6 @@
     park_drive_definition: { label: "Park drive", task: "Decision taken: park drives count as protected from the date the drive became fully car-free. Confirm that date for this section and record it as the protection date." }
   };
   const BEFORE = [["none", "No bike lane"], ["conventional", "Conventional lane"], ["buffered", "Painted buffer"], ["protected", "Already protected"]];
-  const CONF = [["high", "High"], ["medium", "Medium"], ["low", "Low"]];
 
   let reviews = {};          // proj_id -> review document body
   let current = PROJECTS[0] ? PROJECTS[0].proj_id : null;
@@ -270,11 +267,15 @@
   function buildForm(p, r) {
     const f = el("form", { id: "review-form", novalidate: "" });
     const row1 = el("div", { class: "row" });
+    // pre-fill: a saved answer, else the DOT date, else the pipeline date
+    const claimed = (p.prot_dot || p.prot_pipe || "").slice(0, 7);
+    const claimSrc = p.prot_dot ? "DOT date" : (p.prot_pipe ? "pipeline date" : "");
     const monthWrap = el("div", {},
       el("label", { for: "f-month", text: "Protection first visible" }),
-      el("input", { type: "month", id: "f-month", min: "1990-01", max: "2026-12", value: r ? (r.protected_from || "") : "" }));
+      el("input", { type: "month", id: "f-month", min: "1990-01", max: "2026-12", value: r ? (r.protected_from || "") : claimed }));
     const none = el("label", { class: "check" }, el("input", { type: "checkbox", id: "f-none" }), document.createTextNode("No physical protection found"));
     if (r && r.protected_from === "none") { none.firstChild.checked = true; monthWrap.querySelector("input").value = ""; }
+    if (!r && claimed) monthWrap.append(el("p", { class: "prefill", text: "Pre-filled with the " + claimSrc + ". Change it if Street View shows otherwise." }));
     monthWrap.append(none);
     row1.append(monthWrap);
 
@@ -283,15 +284,6 @@
     for (const [v, t] of BEFORE) { const o = el("option", { value: v, text: t }); if (r && r.before_type === v) o.selected = true; sel.append(o); }
     row1.append(el("div", {}, el("label", { for: "f-before", text: "What was there before" }), sel));
     f.append(row1);
-
-    const fs = el("fieldset", {}, el("legend", { text: "Confidence" }));
-    const seg = el("div", { class: "seg" });
-    for (const [v, t] of CONF) {
-      const inp = el("input", { type: "radio", name: "conf", id: "f-conf-" + v, value: v });
-      if (r && r.confidence === v) inp.checked = true;
-      seg.append(el("label", { for: "f-conf-" + v }, inp, document.createTextNode(t)));
-    }
-    fs.append(seg); f.append(fs);
 
     const ta = el("textarea", { id: "f-note", placeholder: "What you saw: panorama dates before and after, cross streets, anything unusual" });
     ta.value = r ? (r.note || "") : "";
@@ -314,14 +306,11 @@
       ev.preventDefault();
       const noneOn = $("#f-none").checked;
       const month = $("#f-month").value;
-      const conf = (f.querySelector('input[name="conf"]:checked') || {}).value || "";
       if (!noneOn && !/^\d{4}-\d{2}$/.test(month)) { saved.textContent = "Enter the month protection first appears, or tick \"No physical protection found\"."; return; }
-      if (!conf) { saved.textContent = "Choose a confidence level."; return; }
       const body = {
         proj_id: p.proj_id, street: p.street,
         protected_from: noneOn ? "none" : month,
         before_type: $("#f-before").value,
-        confidence: conf,
         note: $("#f-note").value.trim().slice(0, 2000),
         by: myId || "",
         saved_at: new Date().toISOString()
