@@ -10,7 +10,8 @@ library(data.table)
 library(sf)
 
 bl_root <- "../5_NYC_bikelanes"
-nyc_data <- file.path(Sys.getenv("USERPROFILE"), "Dropbox/1_research/data_NYC")
+source("../nyc_traffic/R/nyc_traffic.R")
+nyc_data <- nyc_data_root()
 out <- "aerial_labelling/out"
 dir.create(out, showWarnings = FALSE, recursive = TRUE)
 

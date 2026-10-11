@@ -2,8 +2,8 @@
 
 | Script | Output |
 |---|---|
-| `01_lion_panel.R` | `data_NYC/derived/lion_panel/lion_lanes_panel.parquet`: citywide segment x release panel from 57 quarterly LION releases (12a-26c; 12d, 22d not archived); `out/release_changes.csv`: segments whose travel-lane count changed per release and borough |
-| `02_manhattan_lane_panel.R` | `out/manhattan_lane_spells.csv` (one row per segment), `out/lane_review.csv` (by street), `data_NYC/derived/lion_panel/manhattan_lanes_monthly.parquet` (segment x month, 2012-07 to 2026-08) |
+| `01_lion_panel.R` | `nyc_traffic_data/derived/lion_panel/lion_lanes_panel.parquet`: citywide segment x release panel from 57 quarterly LION releases (12a-26c; 12d, 22d not archived); `out/release_changes.csv`: segments whose travel-lane count changed per release and borough |
+| `02_manhattan_lane_panel.R` | `out/manhattan_lane_spells.csv` (one row per segment), `out/lane_review.csv` (by street), `nyc_traffic_data/derived/lion_panel/manhattan_lanes_monthly.parquet` (segment x month, 2012-07 to 2026-08) |
 
 ## What LION can and cannot tell
 

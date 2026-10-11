@@ -1,5 +1,6 @@
 library(data.table)
 library(sf)
+source("../nyc_traffic/R/nyc_traffic.R")
 setwd("C:/Users/admin/Dropbox/1_research/5_NYC_bikelanes")
 S <- "C:/Users/admin/AppData/Local/Temp/claude/C--Users-admin-Dropbox-1-research-5-NYC-bikelanes/229146a7-b4e1-44e3-bc9b-8e236e87a233/scratchpad"
 mm <- fread(file.path(S, "date_comparison.csv"))
@@ -14,7 +15,7 @@ cat("  of which have an upgrade window in pipeline:", d[!is.na(modif), .N], "\n"
 cat("  and the pipeline's upgrade date is within 31 days of the DOT protection date:", d[!is.na(modif) & abs(as.numeric(modif - as.IDate(prot_dot))) <= 31, .N], "\n")
 
 # streets involved
-r26 <- setDT(st_drop_geometry(st_read("C:/Users/admin/Dropbox/1_research/data_NYC/streets/bike_routes/New York City Bike Routes_20261010.geojson", quiet = TRUE)))
+r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data_root(), "streets/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
 r26[, SegmentID := as.numeric(segmentid)]
 st <- unique(r26[, .(SegmentID, street)], by = "SegmentID")
 cat("\nstreets where pipeline dates protection > 1 year too early:\n")

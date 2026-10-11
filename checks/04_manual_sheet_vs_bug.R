@@ -1,5 +1,6 @@
 library(data.table)
 library(sf)
+source("../nyc_traffic/R/nyc_traffic.R")
 S <- "C:/Users/admin/AppData/Local/Temp/claude/C--Users-admin-Dropbox-1-research-5-NYC-bikelanes/229146a7-b4e1-44e3-bc9b-8e236e87a233/scratchpad"
 setwd("C:/Users/admin/Dropbox/1_research/5_NYC_bikelanes")
 
@@ -7,7 +8,7 @@ m <- fread(file.path(S, "manual_sheets/dot_2020.csv"), colClasses = "character")
 setnames(m, "street...2", "street")
 
 # match to 2020 DOT segments on geometry text, as 002 does ----
-dot.sf <- st_read("C:/Users/admin/Dropbox/1_research/data_NYC/streets/bike_routes/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp", quiet = TRUE)
+dot.sf <- st_read(file.path(nyc_data_root(), "streets/bike_routes/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp"), quiet = TRUE)
 dot.sf <- st_transform(dot.sf, "+init=EPSG:4326")
 g <- data.table(segmentid = as.numeric(dot.sf$segmentid), boro = dot.sf$boro, geometry = st_as_text(st_geometry(dot.sf)))
 mm <- merge(m, unique(g, by = "geometry"), by = "geometry", all.x = TRUE)

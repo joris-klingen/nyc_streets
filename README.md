@@ -30,8 +30,8 @@ After editing the sheet, re-export and commit so git records every change:
 Rscript scripts/01_export_manual_sheet.R
 ```
 
-Raw DOT releases live in the shared data store: `Dropbox/1_research/data_NYC/streets/bike_routes/`
-(see the `nyc_data` repo).
+Raw DOT releases live in the shared data store: `Dropbox/1_research/nyc_traffic_data/streets/bike_routes/`
+(see the `nyc_traffic` repo).
 
 ## Classification
 

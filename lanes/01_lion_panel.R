@@ -1,9 +1,9 @@
 # Citywide segment x release panel of lane counts from quarterly LION releases
 #
-# Reads every LION release in data_NYC/streets/lion (nyc_lion12a.zip ... nyclion_26c.zip),
+# Reads every LION release in nyc_traffic_data/streets/lion (nyc_lion12a.zip ... nyclion_26c.zip),
 # attributes only, and stacks: release, release_date (latest file date inside the zip),
 # SegmentID, SegmentTyp, borough, street, roadway type, traffic direction, travel / parking /
-# total lanes, street width. Writes data_NYC/derived/lion_panel/lion_lanes_panel.parquet and
+# total lanes, street width. Writes nyc_traffic_data/derived/lion_panel/lion_lanes_panel.parquet and
 # a per-release change summary lanes/out/release_changes.csv.
 # Run from repo root: Rscript lanes/01_lion_panel.R
 
@@ -11,7 +11,8 @@ library(data.table)
 library(sf)
 library(arrow)
 
-root <- file.path(Sys.getenv("USERPROFILE"), "Dropbox/1_research/data_NYC")
+source("../nyc_traffic/R/nyc_traffic.R")
+root <- nyc_data_root()
 lion_dir <- file.path(root, "streets/lion")
 out_dir <- file.path(root, "derived/lion_panel")
 tmp <- "C:/code/lion_tmp"          # unzip outside Dropbox

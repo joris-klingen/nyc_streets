@@ -13,13 +13,14 @@
 # already reflect the project, so the pre-project count is unknown.
 #
 # Writes lanes/out/manhattan_lane_spells.csv (one row per segment), lanes/out/lane_review.csv
-# and data_NYC/derived/lion_panel/manhattan_lanes_monthly.parquet (segment x month).
+# and nyc_traffic_data/derived/lion_panel/manhattan_lanes_monthly.parquet (segment x month).
 # Run from repo root: Rscript lanes/02_manhattan_lane_panel.R
 
 library(data.table)
 library(arrow)
 
-root <- file.path(Sys.getenv("USERPROFILE"), "Dropbox/1_research/data_NYC")
+source("../nyc_traffic/R/nyc_traffic.R")
+root <- nyc_data_root()
 p <- setDT(read_parquet(file.path(root, "derived/lion_panel/lion_lanes_panel.parquet")))[boro == 1]
 
 d16 <- as.IDate("2016-02-01")   # first release with lane counts (16a, data as of early 2016)
