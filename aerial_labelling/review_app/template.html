@@ -221,15 +221,7 @@
     const views = el("div", { class: "views" });
     ["streetview_1", "streetview_2", "streetview_3"].forEach((k, i) => {
       if (!p[k]) return;
-      const a = el("a", { href: p[k], target: "_blank", rel: "noopener", text: "Street View " + (i + 1) + " ↗" });
-      // open in one separate, reused window next to this page; if the viewer refuses pop-up
-      // windows, window.open returns null and the link opens in a new tab as usual
-      a.addEventListener("click", ev => {
-        let w = null;
-        try { w = window.open(p[k], "lane-review-streetview", "popup=yes,width=1100,height=800"); } catch (e) { w = null; }
-        if (w) { ev.preventDefault(); try { w.focus(); } catch (e) {} }
-      });
-      views.append(a);
+      views.append(el("a", { href: p[k], target: "_blank", rel: "noopener", text: "Street View " + (i + 1) + " ↗" }));
     });
     box.append(views);
     box.append(el("p", { class: "hint", text: "Three points spread along the project, looking along the street. In Street View, open \"See more dates\" (top left) to step back in time." }));
