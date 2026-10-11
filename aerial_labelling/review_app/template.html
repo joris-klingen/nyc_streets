@@ -79,6 +79,14 @@
   .views a { font: 600 .9rem var(--font-body); color: var(--accent); border: 1px solid var(--accent); padding: 7px 12px; border-radius: 4px; text-decoration: none; }
   .views a:hover, .views a:focus-visible { background: var(--accent); color: var(--surface); }
   .hint { font-size: .85rem; color: var(--muted); margin: -8px 0 16px; }
+  .evidence { border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; margin: 0 0 16px; }
+  .evidence summary { cursor: pointer; font: 600 .9rem var(--font-body); }
+  .evh { font: 600 .72rem var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 12px 0 4px; }
+  .rep, .pres { margin: 0; padding-left: 18px; }
+  .pres > li { margin: 6px 0; overflow-wrap: anywhere; }
+  .pdate { font: 500 .85rem var(--font-mono); font-variant-numeric: tabular-nums; margin-right: 8px; color: var(--muted); }
+  .pres a { color: var(--accent); }
+  .snips { margin: 2px 0 0; padding-left: 16px; font-size: .85rem; color: var(--muted); }
   figure { margin: 0 0 18px; }
   figure img { display: block; width: 100%; height: auto; border-radius: 4px; border: 1px solid var(--line); background: var(--bg); }
   figcaption { font-size: .82rem; color: var(--muted); margin-top: 4px; }
@@ -130,9 +138,11 @@
 </div>
 
 <script id="projects" type="application/json">/*DATA*/</script>
+<script id="evidence" type="application/json">/*EVIDENCE*/</script>
 <script>
 (function () {
   const PROJECTS = JSON.parse(document.getElementById("projects").textContent);
+  const EVIDENCE = JSON.parse(document.getElementById("evidence").textContent);
   const CATS = {
     claim_too_early: { label: "Claimed too early", task: "The aerial photos show no lane after the claimed date. Check whether physical protection existed at the claimed date. Parking-protected lanes without green paint are easy to miss from the air, so look at the curb lane closely." },
     claim_too_late: { label: "Claimed too late", task: "A buffered or protected lane is visible in the photos before the claimed date. Find the first panorama with physical protection, and record what was there before (often a painted buffered lane)." },
@@ -218,11 +228,43 @@
     box.append(views);
     box.append(el("p", { class: "hint", text: "Three points spread along the project, looking along the street. In Street View, open \"See more dates\" (top left) to step back in time." }));
 
+    const ev = EVIDENCE[p.proj_id];
+    if (ev && (ev.presentations.length || ev.report2014.length)) box.append(buildEvidence(ev));
+
     box.append(buildForm(p, r));
 
     box.append(el("figure", {},
       el("img", { src: "sheets/" + p.proj_id + ".jpg", alt: "Aerial photos 2008 to 2024 of " + titleCase(p.street) + ", with the project's street segments marked in magenta", loading: "lazy" }),
       el("figcaption", { text: "Aerial photos 2008–2024, each labelled with its Manhattan capture date (NYC OTI). 2008–2014 were flown in June with trees in leaf; 2016 onward in March–April. 70 m square, street running vertically; magenta marks the project segments. A photo can date a change more precisely than Street View when it falls between two panoramas." })));
+  }
+
+  function buildEvidence(ev) {
+    const n = ev.presentations.length;
+    const rep = ev.report2014.map(x => x.install_year).join(", ");
+    const sumText = "DOT records: " + n + " presentation" + (n === 1 ? "" : "s") + (rep ? " · 2014 report install year " + rep : "");
+    const d = el("details", { class: "evidence" }, el("summary", { text: sumText }));
+    if (ev.report2014.length) {
+      const ul = el("ul", { class: "rep" });
+      for (const x of ev.report2014) ul.append(el("li", { text: x.corridor + " (" + x.from_street + " – " + x.to_street + "): installed " + x.install_year }));
+      d.append(el("p", { class: "evh", text: "DOT, Protected Bicycle Lanes in NYC (2014), install years" }), ul);
+    }
+    if (n) {
+      d.append(el("p", { class: "evh", text: "Community board presentations, oldest first. Planned dates are often missed; post-implementation decks show what was built." }));
+      const ol = el("ol", { class: "pres" });
+      for (const pr of ev.presentations) {
+        const li = el("li", {},
+          el("span", { class: "pdate", text: pr.presented || "undated" }),
+          el("a", { href: pr.url, target: "_blank", rel: "noopener", text: pr.title + " ↗" }));
+        if (pr.snippets.length) {
+          const q = el("ul", { class: "snips" });
+          for (const s of pr.snippets) q.append(el("li", { text: "p." + s.page + ": " + s.text }));
+          li.append(q);
+        }
+        ol.append(li);
+      }
+      d.append(ol);
+    }
+    return d;
   }
 
   function buildForm(p, r) {

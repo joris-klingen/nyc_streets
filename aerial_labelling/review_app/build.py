@@ -11,7 +11,12 @@ KEEP = ["priority", "category", "proj_id", "street", "n_segments", "prot_pipe", 
 
 rows = [{k: r[k] for k in KEEP} for r in csv.DictReader(open("aerial_labelling/out/review_checklist.csv", encoding="utf-8"))]
 data = json.dumps(rows, ensure_ascii=False).replace("</", "<\\/")
-html = open(os.path.join(APP, "template.html"), encoding="utf-8").read().replace("/*DATA*/", data)
+ev_path = "dot_projects/review_evidence.json"
+evidence = json.load(open(ev_path, encoding="utf-8")) if os.path.exists(ev_path) else {}
+evidence = {k: v for k, v in evidence.items() if k in {r["proj_id"] for r in rows}}
+ev_data = json.dumps(evidence, ensure_ascii=False).replace("</", "<\\/")
+html = (open(os.path.join(APP, "template.html"), encoding="utf-8").read()
+        .replace("/*DATA*/", data).replace("/*EVIDENCE*/", ev_data))
 open(os.path.join(APP, "index.html"), "w", encoding="utf-8").write(html)
 
 os.makedirs(os.path.join(APP, "sheets"), exist_ok=True)
