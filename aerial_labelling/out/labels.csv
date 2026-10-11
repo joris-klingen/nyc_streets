@@ -109,3 +109,17 @@ M107,N,N,N,N,N,N,C?,C?,?,,street along track field; buffered markings on right 2
 M108,N,N,N,N,N,N,P,P,P,2020,two-way street; green parking-protected lane on right from 2020
 M109,N,N,N,N,N,N,P,P,P,2020,two-way street between parks; green parking-protected lanes both sides from 2020
 M110,N,N,N?,?,P?,P?,?,P?,P,2016?,complex diagonal intersection; plaza from 2012; green lane on right visible 2016-2018 and 2024
+M111,N,N,N,N,N,N,N,N,N?,,complex diagonal intersection; crosswalk redesigns only; no bike lane visible
+M112,N,N,N,N,N,N,N,P,P,2022,avenue next to plaza; green protected lane with parking buffer on left from 2022
+M113,N,N,?,?,N,N,N,?,C?,,two-way avenue; no lane to 2020; hatched median 2022; bike markings 2024
+M114,N,N,P?,N?,N?,P,?,P?,P?,2018,avenue along park; green lane on park side visible 2012 and clearly 2018 with parking buffer
+M115,N,N,N,N,N,N,N,N,N,,street next to large plaza/market; no bike lane visible
+M116,N,N,N,N,N,N,N,P,P,2022,avenue next to plaza parking; green protected lane on right 2022-2024
+M117,N,N,N,N,N,N,N,?,?,,Midtown avenue; no bike lane visible where readable; shadow 2022-2024
+M118,P,P,P,P,P,P,P,P,P,before 2008,Central Park drive with marked bike lane all years; road diet with bike and runner lanes 2018-2020
+M119,P,P,P,P,P,P,P,P,P,before 2008,Central Park drive with marked bike lane all years; redesigned car-free lanes 2018
+M120,C?,C?,C?,C?,C?,P,P,P,P,2018,park drive under canopy; plain lane lines to 2016; dedicated bike lane markings from 2018
+M121,P,P,P,P,P,P,P,P,P,before 2008,park drive with buffered bike lane all years
+M122,C?,C?,C?,P,P,P,P,P,P,2014,park drive; plain two-lane road to 2012; buffered bike lane from 2014
+M123,N,N,N,?,N,N,?,P,P,2022,Lower Manhattan street next to plaza; green protected lane on left from 2022 (construction)
+M124,?,N,N,N,N,N,N,N,N,,highway ramp / bridge approach area; no bike lane visible
