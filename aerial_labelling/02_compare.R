@@ -29,22 +29,30 @@ bracket <- function(row) {
 b <- lab[, bracket(.SD), by = proj_id]
 d <- merge(merge(lab[, .(proj_id, first_protected_year, note)], b, by = "proj_id"), cl, by = "proj_id")
 
-# date of the flight: assume 1 May of the image year
-flight <- function(y) as.IDate(sprintf("%d-05-01", y))
+# capture dates of the Manhattan flights (NYC OTI metadata) ----
+# An image showing no lane means installation came after that flight's FIRST capture day;
+# an image showing protection means installation came on or before its LAST capture day.
+cap <- fread("manual/aerial_capture_dates_manhattan.csv")
+cap_start <- function(y) as.IDate(cap[match(y, cap$year), capture_start])
+cap_end <- function(y) as.IDate(cap[match(y, cap$year), capture_end])
+
 check <- function(claim, upper, lower) {
   claim <- as.IDate(claim)
   fcase(
     is.na(claim), "no claim",
     is.na(upper) & is.na(lower), "undecidable",
-    is.na(upper) & !is.na(lower) & claim < flight(lower), "CONFLICT: claimed before an image showing no lane",
+    is.na(upper) & !is.na(lower) & claim < cap_start(lower), "CONFLICT: claimed before an image showing no lane",
     is.na(upper), "no protection seen (claim after last readable image or not visible)",
-    !is.na(lower) & claim < flight(lower), "CONFLICT: claimed before an image showing no lane",
-    claim > flight(upper), "CONFLICT: protection visible before claimed date",
+    !is.na(lower) & claim < cap_start(lower), "CONFLICT: claimed before an image showing no lane",
+    claim > cap_end(upper), "CONFLICT: protection visible before claimed date",
     default = "consistent")
 }
 d[, check_pipe := check(prot_pipe, upper, lower)]
 d[, check_dot := check(prot_dot, upper, lower)]
-d[, aerial_window := fifelse(is.na(upper), NA_character_, sprintf("%s-05 .. %d-05", fifelse(is.na(lower), "<2008", as.character(lower)), upper))]
+d[, `:=`(window_from = cap_start(lower), window_to = cap_end(upper))]
+d[, aerial_window := fifelse(is.na(upper), NA_character_,
+                             paste0(fifelse(is.na(lower), "before Jun 2008", paste("after", format(window_from, "%d %b %Y"))),
+                                    ", by ", format(window_to, "%d %b %Y")))]
 
 cat("projects:", nrow(d), "\n\npipeline claim:\n"); print(d[, .N, by = check_pipe][order(-N)])
 cat("\nDOT 2026 claim:\n"); print(d[, .N, by = check_dot][order(-N)])

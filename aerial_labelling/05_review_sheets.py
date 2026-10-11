@@ -35,6 +35,7 @@ def main():
     for r in csv.DictReader(open("aerial_labelling/out/review_segment_lines.csv")):
         lines[r["proj_id"]].append(r)
     years = F.YEARS_NYC + F.YEARS_NYS
+    cap = {int(r["year"]): r["label"] for r in csv.DictReader(open("manual/aerial_capture_dates_manhattan.csv"))}
     for pid, segs in sorted(lines.items()):
         p = pts[pid]
         lon, lat, brg = float(p["lon"]), float(p["lat"]), float(p["bearing"])
@@ -57,8 +58,10 @@ def main():
                 print(pid, yr, "failed:", e)
             x, y = 6 + (i % 3) * (F.PANEL + 6), 42 + (i // 3) * (F.PANEL + 6)
             sheet.paste(panel, (x, y))
-            d.rectangle((x, y, x + 70, y + 30), fill="black")
-            d.text((x + 6, y + 3), str(yr), fill="yellow", font=font)
+            label = cap.get(yr, str(yr))
+            w = d.textlength(label, font=font) if hasattr(d, "textlength") else 12 * len(label)
+            d.rectangle((x, y, x + w + 12, y + 30), fill="black")
+            d.text((x + 6, y + 3), label, fill="yellow", font=font)
         sheet.save(os.path.join(OUT, f"{pid}.jpg"), quality=88)
         print(pid, "done")
 

@@ -204,7 +204,7 @@
     box.append(el("h2", { text: titleCase(p.street) }));
 
     const facts = el("dl", { class: "facts" });
-    for (const [k, v] of [["Segments", p.n_segments], ["Pipeline date", fmtDate(p.prot_pipe)], ["DOT 2026 date", fmtDate(p.prot_dot)], ["Aerial window", p.aerial_window || "no protection seen"]]) {
+    for (const [k, v] of [["Segments", p.n_segments], ["Pipeline date", fmtDate(p.prot_pipe)], ["DOT 2026 date", fmtDate(p.prot_dot)], ["Protection appeared (aerial)", p.aerial_window || "no protection seen"]]) {
       facts.append(el("div", { class: "fact" }, el("dt", { text: k }), el("dd", { text: String(v) })));
     }
     box.append(facts);
@@ -220,7 +220,7 @@
 
     box.append(el("figure", {},
       el("img", { src: "sheets/" + p.proj_id + ".jpg", alt: "Aerial photos 2008 to 2024 of " + titleCase(p.street) + ", with the project's street segments marked in magenta", loading: "lazy" }),
-      el("figcaption", { text: "Aerial photos, spring 2008–2024, 70 m square, street running vertically. Magenta marks the project segments." })));
+      el("figcaption", { text: "Aerial photos 2008–2024, each labelled with its Manhattan capture date (NYC OTI). 2008–2014 were flown in June with trees in leaf; 2016 onward in March–April. 70 m square, street running vertically; magenta marks the project segments. A photo can date a change more precisely than Street View when it falls between two panoramas." })));
 
     box.append(buildForm(p, r));
   }
