@@ -191,8 +191,27 @@ dot_updates <- dot_updates %>%
   mutate(boro = as.numeric(boro),
          lanecount = as.numeric(lanecount))
 
-dot_final <- dot_final %>% 
-  bind_rows(dot_updates %>% st_drop_geometry())
+# segments with several update records (e.g. sharrows replaced by a protected lane): one record with
+# the earliest as the situation before the modification and the latest as the current one
+# ('none' = no lane in that direction before)
+dot_updates <- as.data.table(dot_updates)[order(segmentid, install_date)]
+multi <- dot_updates[, .N, segmentid][N > 1, segmentid]
+if (length(multi)) {
+  first_rec <- dot_updates[segmentid %in% multi, .SD[1], segmentid]
+  last_rec <- dot_updates[segmentid %in% multi, .SD[.N], segmentid]
+  last_rec[, `:=`(modif_date = install_date, install_date = first_rec[, install_date],
+                  tf_bef_mod = fcoalesce(first_rec[, tf_facilit], 'none'),
+                  ft_bef_mod = fcoalesce(first_rec[, ft_facilit], 'none'))]
+  dot_updates <- rbind(dot_updates[!segmentid %in% multi], last_rec, fill = TRUE)
+  cat('update segments with several records chained:', length(multi), '\n')
+}
+
+dot_final <- dot_final %>%
+  bind_rows(dot_updates)
+
+# records without a LION segment id (segmentid 0 in the 2020 release) cannot be placed
+dot_final <- dot_final[!is.na(segmentid) & segmentid != 0]
+stopifnot(dot_final[, anyDuplicated(segmentid)] == 0)
 
 
 
@@ -263,6 +282,10 @@ dot_out[time_window == 2 & infra_upgrades == 1, date_to := end_date]
 dot_out[time_window == 2 & infra_upgrades == 2, date_to := modif_date]
 dot_out[time_window == 3, date_to := end_date]
 
+# install dates on or before start_date (old bridges, unknown dates) leave an empty first window
+dot_out <- dot_out[date_to > date_from]
+dot_out[, time_window := seq_len(.N), by = segmentid]
+
 
 # select
 dot_export <- dot_out[, .(
@@ -322,11 +345,17 @@ cat('overrides applied to', uniqueN(dot_ov$SegmentID), 'segments\n')
 # copies for LION 16d segments missing from the DOT data ----
 # hand-made in 5_NYC_bikelanes 101_merge_streets_data.R (moved here 2026-10-13): the windows of a DOT
 # segment are copied to the LION 16d SegmentID of the same street piece (the paper's street network).
-# Note: 37669, 37630 and 37533 receive several sources and 36563 has windows of its own, so these get
-# overlapping windows.
+# 37669, 37630 and 37533 receive identical windows from several sources (kept once); the copy
+# replaces windows the target has of its own (36563: DOT Standard from 2018-12-24, copy Protected
+# from 2018-12-01).
 xw <- fread('manual/segmentid_crosswalk_lion16d.csv')
 dot_xw <- dot_export[SegmentID %in% xw[, dot_segmentid]]
 dot_xw[, SegmentID := xw[match(dot_xw[, SegmentID], xw[, dot_segmentid]), lion16d_segmentid]]
-dot_export <- rbind(dot_export, dot_xw)
+dot_xw <- unique(dot_xw)
+dot_export <- rbind(dot_export[!SegmentID %in% dot_xw[, SegmentID]], dot_xw)
+
+# windows of a segment must not overlap
+overlap <- dot_export[order(SegmentID, date_from)][, .(n = sum(shift(date_from, -1) < date_to, na.rm = TRUE)), SegmentID][n > 0]
+if (nrow(overlap)) stop(nrow(overlap), ' segments with overlapping windows, e.g. ', paste(head(overlap[, SegmentID]), collapse = ', '))
 
 saveRDS(dot_export, file.path(out_dir, 'bike_lanes_time_windows.RDS'))
