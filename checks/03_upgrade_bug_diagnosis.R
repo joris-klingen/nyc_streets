@@ -4,7 +4,7 @@ source("../nyc_traffic/R/nyc_traffic.R")
 setwd("C:/Users/admin/Dropbox/1_research/5_NYC_bikelanes")
 S <- "C:/Users/admin/AppData/Local/Temp/claude/C--Users-admin-Dropbox-1-research-5-NYC-bikelanes/229146a7-b4e1-44e3-bc9b-8e236e87a233/scratchpad"
 mm <- fread(file.path(S, "date_comparison.csv"))
-tw <- setDT(readRDS("data/normalized/bike_lanes_time_windows.RDS"))
+tw <- setDT(bikelane_windows_read())
 tw[, n_win := .N, by = SegmentID]
 w3 <- tw[time_window == 3, .(SegmentID, modif = as.Date(date_from))]
 

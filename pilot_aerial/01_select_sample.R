@@ -22,7 +22,7 @@ g <- data.table(SegmentID = as.numeric(dot$segmentid), boro = as.character(dot$b
 man <- merge(man, unique(g, by = "geometry"), by = "geometry")[boro == "1"]
 
 # fixed pipeline time windows and DOT 2026 history ----
-tw <- setDT(readRDS(file.path(bl_root, "data/normalized/bike_lanes_time_windows.RDS")))
+tw <- setDT(bikelane_windows_read())
 tw[, `:=`(date_from = as.Date(date_from), date_to = as.Date(date_to))]
 prot_pipe <- tw[tf_facilit == "Protected" | ft_facilit == "Protected", .(prot_pipe = min(date_from)), by = SegmentID]
 

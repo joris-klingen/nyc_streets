@@ -22,7 +22,7 @@ st <- unique(st[!is.na(zone) & grepl("NB|SB", TrafDir_WD),
              by = "SegmentID")
 
 # protection dates: fixed pipeline and DOT 2026 history ----
-tw <- setDT(readRDS(file.path(bl_root, "data/normalized/bike_lanes_time_windows.RDS")))
+tw <- setDT(bikelane_windows_read())
 pipe <- tw[tf_facilit == "Protected" | ft_facilit == "Protected", .(prot_pipe = as.Date(min(date_from))), by = SegmentID]
 
 r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data, "streets/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))

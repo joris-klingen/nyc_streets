@@ -23,11 +23,14 @@ manual/
   review_export/               raw JSON export of the review page answers
   03_park_drive_dates.R        -> park_drive_dates.csv: Central Park drives car-free dates (2015-06 north of 72nd St, 2018-06 rest)
   04_build_overrides.R         -> protection_overrides.csv: segment-level protection dates from the review
-                               and park-drive dates (294 segments); applied in 5_NYC_bikelanes 002_import_bikelanes.R
+                               and park-drive dates (294 segments); applied in scripts/03_time_windows.R
+  segmentid_crosswalk_lion16d.csv  DOT segments whose windows are copied to LION 16d SegmentIDs (18)
   aerial_capture_dates_manhattan.csv  flight dates of the Manhattan orthophotos
 scripts/
   01_export_manual_sheet.R     export the Google Sheet "Manual Streetview NYC Bikelanes" to manual/
   02_import_review_answers.py  review page export -> manual/streetview_review_answers.csv
+  03_time_windows.R            build the segment x time-window facilities (Protected / Standard / Sharrows)
+                               -> nyc_traffic_data/derived/bikelane_history/bike_lanes_time_windows.RDS
 checks/                        quality checks from 2026-10 (DOT releases, pipeline vs DOT history, upgrade bug)
 pilot_aerial/                  blind test of dating lanes from orthophotos (30 segments); see its README
 aerial_labelling/              aerial labels for 124 Manhattan protected-lane projects, review list and the
@@ -51,6 +54,13 @@ After editing the sheet, re-export and commit so git records every change:
 
 ```bash
 Rscript scripts/01_export_manual_sheet.R
+```
+
+The output is read in other projects (e.g. `5_NYC_bikelanes`) with `bikelane_windows_read()` from
+`nyc_traffic`. All bike lane classification and dating happens in this repo:
+
+```bash
+Rscript scripts/03_time_windows.R
 ```
 
 Raw DOT releases live in the shared data store: `Dropbox/1_research/nyc_traffic_data/streets/bike_routes/`

@@ -5,7 +5,7 @@ source("../nyc_traffic/R/nyc_traffic.R")
 R <- file.path(nyc_data_root(), "streets/bike_routes")
 
 # pipeline: first date a segment is protected (any direction) ----
-tw <- setDT(readRDS("data/normalized/bike_lanes_time_windows.RDS"))
+tw <- setDT(bikelane_windows_read())
 pipe <- tw[tf_facilit == "Protected" | ft_facilit == "Protected", .(prot_pipe = as.Date(min(date_from))), by = SegmentID]
 
 # overlapping windows within a segment (would double count)

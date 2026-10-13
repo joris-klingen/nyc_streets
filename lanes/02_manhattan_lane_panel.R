@@ -35,7 +35,7 @@ lv <- p[!is.na(trav), .(street = Street[.N], trav_first = trav[1], rel_first = r
                         trafdir = TrafDir[.N], width = width_min[.N]), by = SegmentID]
 
 # Bike facility changes per segment (fixed pipeline) ----
-tw <- setDT(readRDS("../5_NYC_bikelanes/data/normalized/bike_lanes_time_windows.RDS"))
+tw <- setDT(bikelane_windows_read())
 tw[, date_from := as.IDate(date_from)]
 fac <- tw[time_window > 1 & date_from > as.IDate("1900-01-01"), .(fac_dates = list(sort(unique(date_from)))), by = SegmentID]
 prot <- tw[tf_facilit == "Protected" | ft_facilit == "Protected", .(prot_from = min(date_from)), by = SegmentID]

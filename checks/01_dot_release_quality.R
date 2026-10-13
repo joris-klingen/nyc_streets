@@ -5,7 +5,7 @@ source("../nyc_traffic/R/nyc_traffic.R")
 R <- file.path(nyc_data_root(), "streets/bike_routes")
 
 # processed time windows ----
-tw <- setDT(readRDS("data/normalized/bike_lanes_time_windows.RDS"))
+tw <- setDT(bikelane_windows_read())
 cat("time windows:", nrow(tw), "rows,", uniqueN(tw[, SegmentID]), "segments\n")
 print(tw[, .N, by = time_window])
 cat("\nsegments with 3 windows (upgraded): types in window 2 vs 3\n")
