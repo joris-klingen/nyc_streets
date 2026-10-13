@@ -35,6 +35,4 @@
 
 ## Documentation
 
-- [ ] **`aerial_labelling/README.md`:** the review-page section still lists a `confidence` field, which was removed. The "before acting on any conflict" steps are done; replace them with a short record of the outcome.
-- [ ] **Main `README.md`:** add `lanes/`, `dot_projects/`, `manual/` (overrides, park dates, decisions) and the review page to the contents list. Replace the roadmap pointer with a link to this file.
 - [ ] **`manual/decisions.md`:** add the buffered-before rule for the overrides (treatment starts at the buffered lane date) and the confirmations of 2026-10-12 (M010 2012-06; M068 and M124 always protected; M029 window).

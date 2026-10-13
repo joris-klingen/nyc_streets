@@ -18,10 +18,33 @@ manual/
   rules.csv                    coding rules used during the checks
   lookup_bikelane_types.xlsx   facility text -> class (I protected, II conventional, III shared)
   exported_at.txt              time of the last export from the Google Sheet
+  decisions.md                 dated coding decisions (buffered = protected, park drives, ...)
+  streetview_review_answers.csv  answers from the review page (37 projects, 2026-10)
+  review_export/               raw JSON export of the review page answers
+  03_park_drive_dates.R        -> park_drive_dates.csv: Central Park drives car-free dates (2015-06 north of 72nd St, 2018-06 rest)
+  04_build_overrides.R         -> protection_overrides.csv: segment-level protection dates from the review
+                               and park-drive dates (294 segments); applied in 5_NYC_bikelanes 002_import_bikelanes.R
+  aerial_capture_dates_manhattan.csv  flight dates of the Manhattan orthophotos
 scripts/
   01_export_manual_sheet.R     export the Google Sheet "Manual Streetview NYC Bikelanes" to manual/
-checks/                        quality checks from 2026-10 (see 5_NYC_bikelanes/notes/bikelane_dates_plan.md)
+  02_import_review_answers.py  review page export -> manual/streetview_review_answers.csv
+checks/                        quality checks from 2026-10 (DOT releases, pipeline vs DOT history, upgrade bug)
+pilot_aerial/                  blind test of dating lanes from orthophotos (30 segments); see its README
+aerial_labelling/              aerial labels for 124 Manhattan protected-lane projects, review list and the
+                               review page (review_app/); see its README
+dot_projects/                  DOT presentation catalogue, matched to the review projects, with timing
+                               sentences from the PDFs; see its README
+lanes/                         travel-lane panel from 57 quarterly LION releases (citywide, Manhattan monthly);
+                               see its README
 ```
+
+### Review page
+
+Street View date checks are entered on a private review page:
+https://claude.ai/artifact/LNgqgjc1jKrH4Yf35vjX9i (share as Contributor so reviewers can save answers).
+It shows per project the claimed dates, the aerial sheets, the matched DOT presentations and Street View links.
+It is built by `aerial_labelling/review_app/build.py`, and the answers flow into `manual/` via `scripts/02_import_review_answers.py`
+and `manual/04_build_overrides.R`.
 
 The Google Sheet is the entry form; the CSVs in `manual/` are the source of truth for analysis.
 After editing the sheet, re-export and commit so git records every change:
@@ -41,7 +64,4 @@ pipeline uses, codes it as I.
 
 ## Roadmap
 
-See `5_NYC_bikelanes/notes/bikelane_dates_plan.md`, section 3:
-build segment x facility spells from the DOT 2026 version history (`bikeid`, `prevbikeid`, `instdate`,
-`ret_date`), apply the manual checks as overrides, record date precision, and check new projects
-(2019 onward) at project level with pre-computed before/after Street View panoramas.
+Open work is listed in [TODO.md](TODO.md).

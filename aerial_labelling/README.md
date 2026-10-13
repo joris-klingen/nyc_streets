@@ -41,15 +41,20 @@ The pilot showed my aerial reading errs late, never early. But at least one high
 - M087 Columbus Av has a documented 2010 protected lane (77th–96th St).
 - Its sheet shows a narrow street, so the 70 m frame may not cover the avenue's carriageway, or I misread it.
 
-Before acting on any conflict:
+Only Street View-confirmed dates go into the manual overrides (`manual/`). The aerial labels are evidence, not ground truth.
 
-1. **Draw the segment line on each panel**, so it's clear which carriageway is being judged. Regenerate the sheets for the 36 review projects.
-2. **Check the priority-1 projects (12) in Street View time travel.** A link list per project is the next step.
-3. **Decide whether the park drives count as protected** from the car-free date, or from the painted lane that is always present.
+## Outcome (2026-10-12)
 
-Only changes confirmed in step 2 should go into the manual overrides (`manual/`). The aerial labels are evidence, not ground truth.
+- `04_review_material.R` and `05_review_sheets.py` redrew the sheets of the review projects with the segment lines marked. `06_checklist_html.py` built a local checklist, which the review page below replaced.
+- All review projects (37) were checked in Street View time travel on the review page.
+  - 21 got a reviewed date.
+  - 4 keep the buffered-lane date (buffered counts as protected).
+  - 2 were always protected and 2 never.
+  - The 8 park drives follow the decision to date them at the car-free date (`manual/park_drive_dates.csv`).
+- M087 Columbus Av was reviewed as protected from 2011-06. Its unpainted parking-protected lane is invisible in the photos, so this aerial flag was a false alarm.
+- The answers are in `manual/streetview_review_answers.csv`. `manual/04_build_overrides.R` turns them into `manual/protection_overrides.csv` (294 segments). The decisions are recorded in `manual/decisions.md`.
 
 ## Review page
 
 Published at https://claude.ai/artifact/LNgqgjc1jKrH4Yf35vjX9i (private; share with reviewers as Contributor so they can save answers).
-Built by `review_app/build.py` from `out/review_checklist.csv` and `out/review_sheets/`. Answers are stored in the artifact database, collection `reviews`, one document per project (`protected_from` YYYY-MM or "none", `before_type`, `confidence`, `note`, `by`, `saved_at`); Claude reads them back with the ArtifactData tool and writes confirmed dates into `manual/`.
+Built by `review_app/build.py` from `out/review_checklist.csv` and `out/review_sheets/`. Answers are stored in the artifact database, collection `reviews`, one document per project (`protected_from` YYYY-MM or "none", `before_type`, `note`, `by`, `saved_at`). Claude exports them with the ArtifactData tool to `manual/review_export/`, and `scripts/02_import_review_answers.py` writes `manual/streetview_review_answers.csv`.
