@@ -4,7 +4,7 @@
 
 ## Protection dates
 
-- [ ] **Re-run the paper pipeline with the overrides.** `manual/protection_overrides.csv` (37 projects, 294 segments) is already applied in `5_NYC_bikelanes/scripts/data_management/002_import_bikelanes.R`. `101 → 303` and the main models have not been re-run yet; the `101` fix is pushed.
+- [x] **Re-run the paper pipeline with the overrides** (2026-10-13). `101 → 303` re-run; old vs new treatment and TWFE in `5_NYC_bikelanes/scripts/checks/303_compare_treatment_overrides.R` (output in `output/checks/`). 80 of 120 zone-directions change in at least one month; estimates move little.
 - [ ] **Remaining disagreements outside the review.** After the upgrade-bug fix, 69 study-period segments still differ from the DOT 2026 history by more than a year, and 133 are protected in only one source. The 37 reviewed projects cover part of this; list what is left (`checks/02_pipeline_vs_dot_history.R` on the new windows) and decide whether a second review round is needed.
 - [ ] **27 segments moved earlier with the bug fix** (2016 → 1978), where the manual sheet codes the pre-upgrade type as protected. Check them against Street View or the aerial sheets.
 - [ ] **117 segments with overlapping time windows** in `bike_lanes_time_windows.RDS`, probably from appending the 2025 updates with both retired and current records. Find and fix the cause in `002`.
