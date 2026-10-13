@@ -32,7 +32,3 @@
 - [ ] **Capture dates for other boroughs** (NYC OTI metadata lists per-borough dates for 2004–2014) if the work goes citywide.
 - [ ] **Classifier** (parked 2026-10-11): PyTorch CPU is installed in `C:/code/nyc_aerial_venv`. Worth building only for citywide coverage. Design notes are in `aerial_labelling/README.md` and `pilot_aerial/README.md`: an obscured class; flight dates; labels by facility type; the 124 labelled projects plus the pilot as test set.
 - [ ] **Unpainted parking-protected lanes are a blind spot** of the aerial reading (Columbus Av, M087). A classifier needs labelled examples of them.
-
-## Documentation
-
-- [ ] **`manual/decisions.md`:** add the buffered-before rule for the overrides (treatment starts at the buffered lane date) and the confirmations of 2026-10-12 (M010 2012-06; M068 and M124 always protected; M029 window).
