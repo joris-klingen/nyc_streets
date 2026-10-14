@@ -16,7 +16,7 @@ out <- "evidence/aerial_labelling/out"
 dir.create(out, showWarnings = FALSE, recursive = TRUE)
 
 # study street segments: north-south, inside zones ----
-st <- setDT(st_drop_geometry(readRDS(file.path(bl_root, "data/normalized/streets_manhattan_with_bikelanes.RDS"))))
+st <- setDT(st_drop_geometry(readRDS(file.path(bl_root, "data/intermediate/streets/streets_manhattan_with_bikelanes.RDS"))))
 st <- unique(st[!is.na(zone) & grepl("NB|SB", TrafDir_WD),
                 .(SegmentID, Street, StreetCode, corridor, lat_start, lon_start, lat_end, lon_end, MidP_lat, MidP_lon, SegmentLength)],
              by = "SegmentID")

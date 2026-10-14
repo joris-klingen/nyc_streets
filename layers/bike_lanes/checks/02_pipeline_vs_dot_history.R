@@ -20,7 +20,7 @@ h[, `:=`(SegmentID = as.numeric(segmentid), inst = as.Date(substr(as.character(i
 dot <- h[toupper(facilitycl) == "I", .(prot_dot = min(inst)), by = SegmentID]
 
 # study-relevant segments: those in the panel's street selection ----
-streets <- readRDS("data/normalized/streets_manhattan_with_bikelanes.RDS")
+streets <- readRDS("data/intermediate/streets/streets_manhattan_with_bikelanes.RDS")
 seg_study <- unique(as.numeric(st_drop_geometry(streets)$SegmentID))
 cat("segments in study street network:", length(seg_study), "\n")
 

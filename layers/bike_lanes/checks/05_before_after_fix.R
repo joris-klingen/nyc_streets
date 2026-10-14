@@ -1,8 +1,8 @@
 library(data.table)
 setwd("C:/Users/admin/Dropbox/1_research/5_NYC_bikelanes")
-cat("new file modified:", format(file.mtime("data/normalized/bike_lanes_time_windows.RDS")), "\n")
-old <- setDT(readRDS("data/normalized/_pre_fix_20261010/bike_lanes_time_windows.RDS"))
-new <- setDT(readRDS("data/normalized/bike_lanes_time_windows.RDS"))
+cat("new file modified:", format(file.mtime("data/archive/normalized_moved_20261013/bike_lanes_time_windows.RDS")), "\n")
+old <- setDT(readRDS("data/archive/normalized_pre_fix_20261010/bike_lanes_time_windows.RDS"))
+new <- setDT(readRDS("data/archive/normalized_moved_20261013/bike_lanes_time_windows.RDS"))
 cat("rows old/new:", nrow(old), nrow(new), "| segments:", uniqueN(old$SegmentID), uniqueN(new$SegmentID), "\n")
 
 cat("\nupgraded segments: type in window 2 -> window 3 (new)\n")
