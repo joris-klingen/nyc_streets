@@ -21,7 +21,7 @@ dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 # DOT bike routes snapshot for the 2025 updates (YYYYMMDD)
 snap_bike_routes <- '20251008'
 
-path_dot_bikelanes <- file.path(nyc_data_root(), "streets/bike_routes/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")
+path_dot_bikelanes <- paste0("/vsizip/", file.path(nyc_data_root(), "streets/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp"))
 
 # load -------------
 dot.sf = read_sf(path_dot_bikelanes)

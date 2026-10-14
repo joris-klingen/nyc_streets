@@ -13,7 +13,7 @@ up <- dcast(tw[SegmentID %in% tw[time_window == 3, SegmentID]], SegmentID ~ time
 print(up[, .N, by = .(w2 = `2`, w3 = `3`)])
 
 # DOT releases: column names ----
-r20 <- st_read(file.path(R, "Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp"), quiet = TRUE)
+r20 <- st_read(paste0("/vsizip/", file.path(R, "Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
 r25 <- st_read(file.path(R, "New York City Bike Routes_20251008.geojson"), quiet = TRUE)
 r26 <- st_read(file.path(R, "New York City Bike Routes_20261010.geojson"), quiet = TRUE)
 cat("\n2020 cols:", names(r20), "\n2025 cols:", names(r25), "\n2026 cols:", names(r26), "\n")

@@ -16,7 +16,7 @@ set.seed(20261010)
 # manual checks with segment ids (geometry match, as in 002) ----
 man <- fread("layers/bike_lanes/manual/streetview_dot2020.csv", colClasses = "character")
 man <- man[, !duplicated(names(man)), with = FALSE]
-dot <- st_read(file.path(nyc_data, "streets/bike_routes/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp"), quiet = TRUE)
+dot <- st_read(paste0("/vsizip/", file.path(nyc_data, "streets/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
 dot <- st_transform(dot, 4326)
 g <- data.table(SegmentID = as.numeric(dot$segmentid), boro = as.character(dot$boro), geometry = st_as_text(st_geometry(dot)))
 man <- merge(man, unique(g, by = "geometry"), by = "geometry")[boro == "1"]
