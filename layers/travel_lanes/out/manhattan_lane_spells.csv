@@ -93,7 +93,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 68534,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
 68537,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
 69436,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
-69452,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
+69452,1 AVENUE,constant,4,4,,"",FALSE,2016-10-01,4,4,"",W,70
 69468,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",A,32
 69470,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",A,32
 108717,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
@@ -102,7 +102,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 129761,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
 134691,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,25
 134692,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-134693,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+134693,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 134716,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,25
 134718,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,25
 135599,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
@@ -133,21 +133,21 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 146059,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,25
 146114,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,25
 146115,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-146116,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
-146117,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+146116,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
+146117,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 146118,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 146119,1 AVENUE,constant,3,3,,"",FALSE,,3,3,"",W,28
-146120,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
-146121,1 AVENUE,constant,3,3,,"",FALSE,2024-10-04,3,3,"",W,28
+146120,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
+146121,1 AVENUE,constant,3,3,,"",FALSE,2012-06-01,3,3,"",W,28
 146122,1 AVENUE,decrease_dated_by_facility,2,1,2017-10-21,bike facility date (pipeline),FALSE,2017-10-21,2,1,24b,W,24
-146123,1 AVENUE,review_decrease_no_facility,3,2,,"",FALSE,2024-10-04,3,2,24b,W,28
+146123,1 AVENUE,review_decrease_no_facility,3,2,,"",FALSE,2012-06-01,3,2,24b,W,28
 146124,1 AVENUE,constant,3,3,,"",FALSE,,3,3,"",W,28
 146125,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,25
-146126,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+146126,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 146127,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-146128,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+146128,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 146129,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-146130,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+146130,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 146131,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147483,1 AVENUE,constant,2,2,,"",FALSE,2011-07-22,2,2,"",W,24
 147485,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,24
@@ -156,16 +156,16 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 147488,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147489,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147490,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,28
-147491,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+147491,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 147492,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147493,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,40
 147494,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,25
 147495,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147498,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,25
-147499,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+147499,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 147500,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147501,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-147502,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+147502,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 147503,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 147504,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,30
 159053,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,25
@@ -184,12 +184,12 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 190858,1 AVENUE,review_decrease_no_facility,5,4,,"",FALSE,2010-10-01,5,4,24b,W,70
 190859,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 190860,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-190901,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
-190902,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+190901,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
+190902,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 193760,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
 193761,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,22
-193762,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
-193763,1 AVENUE,constant,2,2,,"",FALSE,2024-10-04,2,2,"",W,22
+193762,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
+193763,1 AVENUE,constant,2,2,,"",FALSE,2012-06-01,2,2,"",W,22
 193764,1 AVENUE,constant,2,2,,"",FALSE,2011-07-22,2,2,"",W,24
 193765,1 AVENUE,constant,2,2,,"",FALSE,2011-07-22,2,2,"",W,24
 193766,1 AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,28
@@ -200,8 +200,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 222929,1 AVENUE,review_decrease_no_facility,5,4,,"",FALSE,2003-08-01,5,4,24b,W,70
 241851,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",A,32
 241852,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",A,32
-241894,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
-241895,1 AVENUE,constant,4,4,,"",TRUE,2013-10-18,4,4,"",W,70
+241894,1 AVENUE,constant,4,4,,"",FALSE,2016-10-01,4,4,"",W,70
+241895,1 AVENUE,constant,4,4,,"",FALSE,2016-10-01,4,4,"",W,70
 245151,1 AVENUE,review_decrease_no_facility,5,4,,"",FALSE,2010-10-01,5,4,24b,W,70
 245152,1 AVENUE,review_decrease_no_facility,5,4,,"",FALSE,2010-10-01,5,4,24b,W,70
 251802,1 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,25
@@ -327,7 +327,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 33481,10 AVENUE,constant,4,4,,"",FALSE,2024-11-28,4,4,"",W,70
 33565,10 AVENUE,constant,4,4,,"",FALSE,2024-11-28,4,4,"",W,55
 33575,10 AVENUE,constant,4,4,,"",FALSE,2024-11-28,4,4,"",W,70
-33577,10 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
+33577,10 AVENUE,constant,4,4,,"",FALSE,2024-11-28,4,4,"",W,70
 33581,10 AVENUE,constant,4,4,,"",FALSE,2024-11-28,4,4,"",W,70
 33583,10 AVENUE,constant,4,4,,"",FALSE,2024-11-28,4,4,"",W,70
 33603,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,70
@@ -340,7 +340,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 33754,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,60
 33756,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,60
 33758,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,60
-33844,10 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,60
+33844,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,60
 33854,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,60
 33856,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,58
 33858,10 AVENUE,constant,4,4,,"",FALSE,2024-11-14,4,4,"",W,58
@@ -455,21 +455,21 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 33594,11 AVENUE,decrease_dated_by_facility,6,5,2022-02-10,bike facility date (pipeline),FALSE,2022-02-10,6,5,24b,T,75
 33597,11 AVENUE,decrease_dated_by_facility,7,5,2022-02-10,bike facility date (pipeline),FALSE,2022-02-10,7,5,24b,A,75
 33609,11 AVENUE,decrease_dated_by_facility,7,5,2023-09-19,bike facility date (pipeline),FALSE,2023-09-19,7,5,24b,A,75
-33611,11 AVENUE,constant,5,5,,"",FALSE,2019-10-25,5,5,"",A,70
-33612,11 AVENUE,constant,5,5,,"",FALSE,2019-10-25,5,5,"",A,70
-33615,11 AVENUE,decrease_dated_by_facility,5,4,2021-06-01,street view review,FALSE,2019-10-25,5,4,24b,A,70
-33760,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,70
-33762,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33764,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33766,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33775,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33777,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33779,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33781,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33861,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33869,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33871,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
-33873,11 AVENUE,constant,4,4,,"",FALSE,2019-10-25,4,4,"",A,68
+33611,11 AVENUE,constant,5,5,,"",FALSE,2021-06-01,5,5,"",A,70
+33612,11 AVENUE,constant,5,5,,"",FALSE,2021-06-01,5,5,"",A,70
+33615,11 AVENUE,decrease_dated_by_facility,5,4,2021-06-01,street view review,FALSE,2021-06-01,5,4,24b,A,70
+33760,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,70
+33762,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33764,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33766,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33775,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33777,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33779,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33781,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33861,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33869,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33871,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
+33873,11 AVENUE,constant,4,4,,"",FALSE,2021-06-01,4,4,"",A,68
 33875,11 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,68
 34307,11 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,70
 121298,11 AVENUE,constant,5,5,,"",FALSE,,5,5,"",A,70
@@ -499,8 +499,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 38397,12 AVENUE,constant,2,2,,"",FALSE,,2,2,"",A,25
 38405,12 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 38409,12 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
-38413,12 AVENUE,constant,4,4,,"",FALSE,2017-08-01,4,4,"",T,60
-38417,12 AVENUE,constant,4,4,,"",FALSE,2017-08-01,4,4,"",T,60
+38413,12 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
+38417,12 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 38431,12 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 38445,12 AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,78
 133629,12 AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,20
@@ -605,12 +605,12 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 36414,2 AVENUE,decrease_dated_by_facility,4,3,2017-12-01,bike facility date (pipeline),FALSE,2017-12-01,4,3,24b,A,60
 36550,2 AVENUE,decrease_dated_by_facility,4,3,2017-12-01,bike facility date (pipeline),FALSE,2017-12-01,4,3,24b,A,60
 36560,2 AVENUE,decrease_dated_by_facility,4,3,2017-12-01,bike facility date (pipeline),FALSE,2017-12-01,4,3,24b,A,60
-36561,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-24,bike facility date (pipeline),FALSE,2018-12-24,4,3,24b,A,60
-36563,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-24,bike facility date (pipeline),FALSE,,4,3,24b,A,60
-36565,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-24,bike facility date (pipeline),FALSE,2018-12-24,4,3,24b,A,60
-36575,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-24,bike facility date (pipeline),FALSE,2018-12-24,4,3,24b,A,60
-36577,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-24,bike facility date (pipeline),FALSE,2018-12-24,4,3,24b,A,60
-36579,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-24,bike facility date (pipeline),FALSE,2018-12-24,4,3,24b,A,60
+36561,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-01,street view review,FALSE,2018-12-01,4,3,24b,A,60
+36563,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-01,bike facility date (pipeline),FALSE,2018-12-01,4,3,24b,A,60
+36565,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-01,street view review,FALSE,2018-12-01,4,3,24b,A,60
+36575,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-01,street view review,FALSE,2018-12-01,4,3,24b,A,60
+36577,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-01,street view review,FALSE,2018-12-01,4,3,24b,A,60
+36579,2 AVENUE,decrease_dated_by_facility,4,3,2018-12-01,street view review,FALSE,2018-12-01,4,3,24b,A,60
 36671,2 AVENUE,decrease_dated_by_facility,4,3,2017-12-01,bike facility date (pipeline),FALSE,2017-12-01,4,3,24b,A,60
 37621,2 AVENUE,decrease_dated_by_facility,4,3,2017-12-01,bike facility date (pipeline),FALSE,2017-12-01,4,3,24b,A,60
 37623,2 AVENUE,constant,4,4,,"",FALSE,2017-12-01,4,4,"",A,60
@@ -794,7 +794,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 33307,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
 33309,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
 34139,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
-34142,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
+34142,3 AVENUE,constant,4,4,,"",FALSE,2026-04-01,4,4,"",W,70
 35736,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
 35738,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
 35741,3 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,70
@@ -835,17 +835,17 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 36574,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37530,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37531,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
-37533,3 AVENUE,constant,5,5,,"",FALSE,,5,5,"",W,70
+37533,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37535,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37550,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37628,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
-37630,3 AVENUE,constant,5,5,,"",FALSE,,5,5,"",W,70
+37630,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37633,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37646,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37648,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37650,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37652,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
-37669,3 AVENUE,constant,5,5,,"",FALSE,,5,5,"",W,70
+37669,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37762,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37763,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
 37765,3 AVENUE,constant,5,5,,"",FALSE,2023-12-07,5,5,"",W,70
@@ -1209,7 +1209,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 32268,7 AVENUE,constant,4,4,,"",FALSE,,4,4,"",A,58
 32443,7 AVENUE,constant,4,4,,"",FALSE,2017-12-29,4,4,"",A,58
 32455,7 AVENUE,decrease_dated_by_facility,4,3,2017-12-29,bike facility date (pipeline),FALSE,2017-12-29,4,3,24b,A,58
-32457,7 AVENUE,constant,4,4,,"",FALSE,,4,4,"",A,58
+32457,7 AVENUE,constant,4,4,,"",FALSE,2017-12-29,4,4,"",A,58
 32459,7 AVENUE,decrease_dated_by_facility,4,3,2017-12-29,bike facility date (pipeline),FALSE,2017-12-29,4,3,24b,A,58
 32461,7 AVENUE,decrease_dated_by_facility,4,3,2017-12-29,bike facility date (pipeline),FALSE,2017-12-29,4,3,24b,A,58
 32467,7 AVENUE,decrease_dated_by_facility,4,3,2017-12-29,bike facility date (pipeline),FALSE,2017-12-29,4,3,24b,A,58
@@ -1337,19 +1337,19 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 33828,8 AVENUE,constant,4,4,,"",FALSE,2019-10-06,4,4,"",W,70
 33831,8 AVENUE,constant,4,4,,"",FALSE,2019-10-06,4,4,"",W,70
 33953,8 AVENUE,constant,4,4,,"",FALSE,2017-08-05,4,4,"",W,70
-33955,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-33957,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-33959,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-33966,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-33968,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-33970,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-33972,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-34097,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-34099,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-34101,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-34103,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-34105,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
-34111,8 AVENUE,constant,4,4,,"",TRUE,2012-07-06,4,4,"",W,70
+33955,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+33957,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+33959,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+33966,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+33968,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+33970,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+33972,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+34097,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+34099,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+34101,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+34103,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+34105,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
+34111,8 AVENUE,constant,4,4,,"",FALSE,2012-06-01,4,4,"",W,70
 34113,8 AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,
 34115,8 AVENUE,constant,4,4,,"",FALSE,2019-11-04,4,4,"",W,70
 34233,8 AVENUE,constant,6,6,,"",FALSE,2019-11-04,6,6,"",W,70
@@ -1791,14 +1791,14 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 9007799,ALLEN STREET,constant,2,2,,"",FALSE,2009-08-01,2,2,"",W,30
 9007800,ALLEN STREET,constant,2,2,,"",FALSE,2009-08-01,2,2,"",W,30
 9007801,ALLEN STREET,constant,2,2,,"",FALSE,2009-08-01,2,2,"",W,30
-33998,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,58
-34338,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-34388,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,65
-34390,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,60
-34392,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,65
-34393,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,65
-34396,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,65
-34397,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,60
+33998,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,58
+34338,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+34388,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,65
+34390,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,60
+34392,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,65
+34393,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,65
+34396,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,2021-07-01,4,4,"",W,65
+34397,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,60
 34488,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",W,60
 34492,AMSTERDAM AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,40
 34500,AMSTERDAM AVENUE,review_increase_with_facility,2,3,,"",FALSE,2016-12-23,2,3,24b,W,44
@@ -1974,20 +1974,20 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 9001367,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 9001368,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 9001395,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
-9001906,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001907,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001908,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001909,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001916,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001917,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001922,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001924,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001925,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001929,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001931,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001933,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001935,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9001936,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
+9001906,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001907,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001908,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001909,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001916,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001917,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001922,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001924,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001925,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001929,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001931,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001933,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001935,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9001936,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
 9002853,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2016-12-23,bike facility date (pipeline),FALSE,2016-12-23,4,3,24b,W,60
 9002854,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2016-12-23,bike facility date (pipeline),FALSE,2016-12-23,4,3,24b,W,60
 9002855,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2016-12-23,bike facility date (pipeline),FALSE,2016-12-23,4,3,24b,W,60
@@ -2006,8 +2006,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 9002968,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2016-12-23,bike facility date (pipeline),FALSE,2016-12-23,4,3,24b,W,60
 9017007,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 9017008,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
-9017059,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
-9017060,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2019-09-17,4,3,24b,W,68
+9017059,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
+9017060,AMSTERDAM AVENUE,decrease_dated_by_facility,4,3,2021-07-01,street view review,FALSE,2021-07-01,4,3,24b,W,68
 9017075,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 9017076,AMSTERDAM AVENUE,constant,4,4,,"",FALSE,,4,4,"",T,60
 246087,ANAYA PLACE,constant,1,1,,"",FALSE,,1,1,"",T,20
@@ -2262,10 +2262,10 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 9009299,AVENUE D,constant,2,2,,"",FALSE,,2,2,"",T,48
 9009634,AVENUE D,constant,2,2,,"",FALSE,,2,2,"",T,48
 9009635,AVENUE D,constant,2,2,,"",FALSE,,2,2,"",T,48
-31778,AVENUE OF THE AMERICAS,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,55
+31778,AVENUE OF THE AMERICAS,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,55
 31813,AVENUE OF THE AMERICAS,constant,2,2,,"",FALSE,2024-11-18,2,2,"",W,46
-31814,AVENUE OF THE AMERICAS,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-31816,AVENUE OF THE AMERICAS,review_increase_with_facility,2,3,,"",FALSE,2022-04-20,2,3,24b,W,48
+31814,AVENUE OF THE AMERICAS,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+31816,AVENUE OF THE AMERICAS,review_increase_with_facility,2,3,,"",FALSE,2022-04-01,2,3,24b,W,48
 31818,AVENUE OF THE AMERICAS,constant,3,3,,"",FALSE,2024-11-18,3,3,"",W,60
 31865,AVENUE OF THE AMERICAS,constant,2,2,,"",FALSE,,2,2,"",A,24
 31867,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,46
@@ -2283,29 +2283,29 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 32196,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
 32201,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
 32420,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
-32427,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32431,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32438,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32447,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32449,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32451,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
+32427,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32431,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32438,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32447,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32449,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32451,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
 32453,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,,4,4,"",W,64
-32628,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32633,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32635,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32637,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32639,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32645,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32649,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32828,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-32831,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-33794,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-33796,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-33798,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-33806,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-33895,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
+32628,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32633,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32635,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32637,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32639,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32645,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32649,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32828,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+32831,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+33794,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+33796,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+33798,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+33806,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+33895,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
 33897,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,,4,4,"",W,64
-33899,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
+33899,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
 33901,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
 33913,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,48
 33915,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2019-08-21,4,4,"",W,48
@@ -2339,10 +2339,10 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 110638,AVENUE OF THE AMERICAS,constant,1,1,,"",FALSE,,1,1,"",W,22
 110914,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,56
 110915,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
-223321,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-223322,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-223337,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
-223338,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,1978-07-01,4,4,"",W,64
+223321,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+223322,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+223337,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
+223338,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2016-11-01,4,4,"",W,64
 257911,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
 262276,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
 262277,AVENUE OF THE AMERICAS,constant,4,4,,"",FALSE,2024-11-18,4,4,"",W,60
@@ -2772,7 +2772,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 33933,BROADWAY,decrease_dated_by_facility,4,1,2022-01-13,bike facility date (pipeline),FALSE,,4,1,24b,A,31
 33935,BROADWAY,decrease_dated_by_facility,4,1,2022-01-13,bike facility date (pipeline),FALSE,,4,1,24b,A,30
 33937,BROADWAY,decrease_dated_by_facility,4,1,2021-02-15,bike facility date (pipeline),FALSE,2021-02-15,4,1,24b,A,30
-33939,BROADWAY,decrease_dated_by_facility,4,1,2021-10-21,bike facility date (pipeline),FALSE,2021-10-21,4,1,24b,P,59
+33939,BROADWAY,review_decrease_no_facility,4,1,,"",FALSE,1899-01-01,4,1,24b,P,59
 33947,BROADWAY,decrease_dated_by_facility,4,1,2022-01-13,bike facility date (pipeline),FALSE,,4,1,24b,A,30
 33951,BROADWAY,decrease_dated_by_facility,4,1,2022-01-13,bike facility date (pipeline),FALSE,,4,1,24b,A,30
 34079,BROADWAY,review_decrease_no_facility,4,2,,"",FALSE,2009-05-22,4,2,24b,A,60
@@ -3528,20 +3528,20 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 35873,CENTER DRIVE,constant,1,1,,"",FALSE,2018-06-27,1,1,"",W,20
 35876,CENTER DRIVE,constant,1,1,,"",FALSE,2018-06-27,1,1,"",W,20
 36037,CENTER DRIVE,constant,2,2,,"",FALSE,2019-06-27,2,2,"",W,30
-111164,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,20
+111164,CENTER DRIVE,constant,1,1,,"",FALSE,2018-06-01,1,1,"",W,20
 111165,CENTER DRIVE,constant,1,1,,"",FALSE,,1,1,"",W,
 111166,CENTER DRIVE,constant,1,1,,"",FALSE,,1,1,"",W,
 117694,CENTER DRIVE,decrease_dated_by_facility,2,1,2019-06-27,bike facility date (pipeline),FALSE,2019-06-27,2,1,24b,W,30
 252141,CENTER DRIVE,decrease_dated_by_facility,2,1,2019-06-27,bike facility date (pipeline),FALSE,2019-06-27,2,1,24b,W,30
 252142,CENTER DRIVE,decrease_dated_by_facility,2,1,2019-06-27,bike facility date (pipeline),FALSE,2019-06-27,2,1,24b,W,30
-253149,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,20
+253149,CENTER DRIVE,constant,1,1,,"",FALSE,2018-06-01,1,1,"",W,20
 253150,CENTER DRIVE,constant,1,1,,"",FALSE,,1,1,"",W,
 262031,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,30
 262032,CENTER DRIVE,constant,1,1,,"",FALSE,,1,1,"",W,
 300102,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,30
 300103,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,30
-300422,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,20
-300423,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,20
+300422,CENTER DRIVE,constant,1,1,,"",FALSE,2018-06-01,1,1,"",W,20
+300423,CENTER DRIVE,constant,1,1,,"",FALSE,2018-06-01,1,1,"",W,20
 300426,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,30
 300427,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,30
 300482,CENTER DRIVE,constant,1,1,,"",FALSE,2019-06-27,1,1,"",W,30
@@ -3556,25 +3556,25 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 346946,CENTER DRIVE,constant,1,1,,"",FALSE,,1,1,"",W,30
 346947,CENTER DRIVE,constant,1,1,,"",FALSE,,1,1,"",W,30
 115312,CENTRAL PARK EAST 102 ST APPR,constant,2,2,,"",FALSE,,2,2,"",T,
-282152,CENTRAL PARK EN POWELL BLVD,constant,1,1,,"",FALSE,2018-06-27,1,1,"",A,26
+282152,CENTRAL PARK EN POWELL BLVD,constant,1,1,,"",TRUE,2015-06-01,1,1,"",A,26
 300253,CENTRAL PARK EN POWELL BLVD,constant,1,1,,"",FALSE,2018-06-27,1,1,"",A,26
-300254,CENTRAL PARK EN POWELL BLVD,constant,1,1,,"",FALSE,2018-06-27,1,1,"",A,26
+300254,CENTRAL PARK EN POWELL BLVD,constant,1,1,,"",TRUE,2015-06-01,1,1,"",A,26
 114471,CENTRAL PARK ENTRANCE E 102 ST,review_decrease_no_facility,2,1,,"",FALSE,1979-05-01,2,1,24b,T,30
 115311,CENTRAL PARK ENTRANCE E 102 ST,review_decrease_no_facility,2,1,,"",FALSE,1979-05-01,2,1,24b,T,30
 300233,CENTRAL PARK ENTRANCE E 102 ST,review_decrease_no_facility,2,1,,"",FALSE,1979-05-01,2,1,24b,T,30
 300234,CENTRAL PARK ENTRANCE E 102 ST,review_decrease_no_facility,2,1,,"",FALSE,1979-05-01,2,1,24b,T,
 36025,CENTRAL PARK ENTRANCE E 60 ST,constant,2,2,,"",FALSE,,2,2,"",W,38
 115267,CENTRAL PARK ENTRANCE W 85 ST,constant,2,2,,"",FALSE,2018-06-27,2,2,"",W,30
-300229,CENTRAL PARK ENTRANCE W 85 ST,constant,2,2,,"",FALSE,2018-06-27,2,2,"",W,30
-300230,CENTRAL PARK ENTRANCE W 85 ST,constant,2,2,,"",FALSE,2018-06-27,2,2,"",W,30
+300229,CENTRAL PARK ENTRANCE W 85 ST,constant,2,2,,"",TRUE,2015-06-01,2,2,"",W,30
+300230,CENTRAL PARK ENTRANCE W 85 ST,constant,2,2,,"",TRUE,2015-06-01,2,2,"",W,30
 106211,CENTRAL PARK ENTRANCE W 96 ST,constant,1,1,,"",FALSE,2018-06-27,1,1,"",A,30
 300179,CENTRAL PARK ENTRANCE W 96 ST,constant,1,1,,"",FALSE,2018-06-27,1,1,"",A,30
 300180,CENTRAL PARK ENTRANCE W 96 ST,constant,1,1,,"",FALSE,2018-06-27,1,1,"",A,30
 111161,CENTRAL PARK EXIT 7 AVENUE,decrease_dated_by_facility,3,2,2018-06-27,bike facility date (pipeline),FALSE,2018-06-27,3,2,24b,A,30
 111162,CENTRAL PARK EXIT 7 AVENUE,constant,3,3,,"",FALSE,2018-06-27,3,3,"",A,30
-282154,CENTRAL PARK EXIT POWELL BLVD,review_increase_with_facility,2,3,,"",FALSE,2018-06-27,2,3,24b,W,42
+282154,CENTRAL PARK EXIT POWELL BLVD,correction_increase,3,3,,"",TRUE,2015-06-01,2,3,24b,W,42
 300249,CENTRAL PARK EXIT POWELL BLVD,review_increase_with_facility,2,3,,"",FALSE,2018-06-27,2,3,24b,W,42
-300250,CENTRAL PARK EXIT POWELL BLVD,review_increase_with_facility,2,3,,"",FALSE,2018-06-27,2,3,24b,W,42
+300250,CENTRAL PARK EXIT POWELL BLVD,correction_increase,3,3,,"",TRUE,2015-06-01,2,3,24b,W,42
 114444,CENTRAL PARK EXIT WEST 100 ST,constant,1,1,,"",FALSE,1979-05-01,1,1,"",W,16
 300122,CENTRAL PARK EXIT WEST 100 ST,constant,2,2,,"",FALSE,2018-06-27,2,2,"",T,24
 300123,CENTRAL PARK EXIT WEST 100 ST,constant,2,2,,"",FALSE,2018-06-27,2,2,"",T,24
@@ -3582,11 +3582,11 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 285416,CENTRAL PARK EXIT WEST 67 ST,constant,2,2,,"",FALSE,1979-05-01,2,2,"",T,28
 285417,CENTRAL PARK EXIT WEST 67 ST,constant,2,2,,"",FALSE,1979-05-01,2,2,"",T,28
 341385,CENTRAL PARK EXIT WEST 72 ST,constant,3,3,,"",FALSE,,3,3,"",T,46
-114451,CENTRAL PARK LENOX AVE ACCESS RD,constant,1,1,,"",FALSE,2018-06-27,1,1,"",W,24
+114451,CENTRAL PARK LENOX AVE ACCESS RD,constant,1,1,,"",TRUE,2015-06-01,1,1,"",W,24
 262544,CENTRAL PARK LENOX AVE ACCESS RD,constant,4,4,,"",FALSE,2018-06-27,4,4,"",T,46
 262545,CENTRAL PARK LENOX AVE ACCESS RD,constant,4,4,,"",FALSE,1979-05-01,4,4,"",T,
-262550,CENTRAL PARK LENOX AVE ACCESS RD,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,24
-262551,CENTRAL PARK LENOX AVE ACCESS RD,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,24
+262550,CENTRAL PARK LENOX AVE ACCESS RD,constant,2,2,,"",TRUE,2015-06-01,2,2,"",A,24
+262551,CENTRAL PARK LENOX AVE ACCESS RD,constant,2,2,,"",TRUE,2015-06-01,2,2,"",A,24
 166137,CENTRAL PARK NORTH,constant,2,2,,"",FALSE,,2,2,"",T,
 166138,CENTRAL PARK NORTH,constant,2,2,,"",FALSE,,2,2,"",T,42
 166360,CENTRAL PARK NORTH,constant,2,2,,"",FALSE,,2,2,"",T,46
@@ -3605,23 +3605,23 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 257463,CENTRAL PARK SOUTH,constant,4,4,,"",FALSE,,4,4,"",T,65
 257468,CENTRAL PARK SOUTH,constant,4,4,,"",FALSE,,4,4,"",T,65
 257469,CENTRAL PARK SOUTH,constant,4,4,,"",FALSE,,4,4,"",T,65
-34257,CENTRAL PARK WEST,decrease_dated_by_facility,4,2,2019-08-19,bike facility date (pipeline),FALSE,2019-08-19,4,2,24b,W,60
-34262,CENTRAL PARK WEST,decrease_dated_by_facility,4,2,2019-08-19,bike facility date (pipeline),FALSE,2019-08-19,4,2,24b,W,60
-34264,CENTRAL PARK WEST,decrease_dated_by_facility,4,3,2019-08-19,bike facility date (pipeline),FALSE,2019-08-19,4,3,24b,T,60
-34470,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-34472,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37064,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37066,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37069,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37075,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37077,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37079,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37081,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37089,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37187,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-37189,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,62
+34257,CENTRAL PARK WEST,decrease_dated_by_facility,4,2,2019-08-01,street view review,FALSE,2019-08-01,4,2,24b,W,60
+34262,CENTRAL PARK WEST,decrease_dated_by_facility,4,2,2019-08-01,street view review,FALSE,2019-08-01,4,2,24b,W,60
+34264,CENTRAL PARK WEST,decrease_dated_by_facility,4,3,2019-08-01,street view review,FALSE,2019-08-01,4,3,24b,T,60
+34470,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+34472,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37064,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37066,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37069,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37075,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37077,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37079,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37081,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37089,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37187,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+37189,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
 37191,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,
-37199,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
+37199,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
 37202,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 37303,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 37305,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
@@ -3640,8 +3640,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 37425,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 37494,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 37508,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
-37511,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,62
-37522,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,62
+37511,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
+37522,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 37524,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 37613,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,
 37615,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,60
@@ -3649,8 +3649,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 38317,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,60
 38319,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,60
 38322,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,60
-302049,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
-302050,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-19,4,4,"",T,62
+302049,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
+302050,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2019-08-01,4,4,"",T,62
 302071,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,60
 302072,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,60
 309963,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
@@ -3671,8 +3671,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 314753,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 314790,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 314791,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
-9009549,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,62
-9009550,CENTRAL PARK WEST,constant,4,4,,"",FALSE,,4,4,"",T,62
+9009549,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
+9009550,CENTRAL PARK WEST,constant,4,4,,"",FALSE,2020-10-01,4,4,"",T,62
 132786,CENTRAL ROAD,constant,2,2,,"",FALSE,,2,2,"",A,24
 140507,CENTRAL ROAD,constant,2,2,,"",FALSE,,2,2,"",T,34
 140508,CENTRAL ROAD,constant,2,2,,"",FALSE,,2,2,"",T,34
@@ -3861,16 +3861,16 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 23221,CHURCH STREET,constant,4,4,,"",FALSE,,4,4,"",W,54
 23222,CHURCH STREET,constant,2,2,,"",FALSE,,2,2,"",W,50
 23224,CHURCH STREET,constant,4,4,,"",FALSE,,4,4,"",W,58
-23226,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,58
-23254,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-23259,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-23261,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
+23226,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,58
+23254,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+23259,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+23261,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
 23394,CHURCH STREET,constant,3,3,,"",FALSE,,3,3,"",W,60
-23396,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-31764,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-31771,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-31773,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
-31775,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-20,3,3,"",W,60
+23396,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+31764,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+31771,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+31773,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
+31775,CHURCH STREET,constant,3,3,,"",FALSE,2022-04-01,3,3,"",W,60
 31779,CHURCH STREET,constant,3,3,,"",FALSE,,3,3,"",W,44
 31822,CHURCH STREET,constant,3,3,,"",FALSE,,3,3,"",W,60
 32078,CHURCH STREET,constant,3,3,,"",FALSE,,3,3,"",W,60
@@ -3909,7 +3909,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 18077,CLAYTON ROAD,constant,1,1,,"",TRUE,2013-10-25,1,1,"",A,20
 18079,CLAYTON ROAD,constant,1,1,,"",TRUE,2013-10-25,1,1,"",A,20
 32351,CLEVELAND PLACE,constant,2,2,,"",FALSE,,2,2,"",W,28
-32369,CLEVELAND PLACE,constant,2,2,,"",FALSE,2023-07-16,2,2,"",W,30
+32369,CLEVELAND PLACE,constant,2,2,,"",FALSE,2023-07-01,2,2,"",W,30
 328051,CLEVELAND PLACE,constant,2,2,,"",FALSE,2023-07-16,2,2,"",W,28
 328052,CLEVELAND PLACE,constant,2,2,,"",FALSE,2023-07-16,2,2,"",W,28
 23350,CLIFF STREET,constant,1,1,,"",FALSE,,1,1,"",W,22
@@ -3979,41 +3979,41 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 9003127,COLUMBIA STREET,constant,2,2,,"",FALSE,,2,2,"",T,52
 9003128,COLUMBIA STREET,constant,2,2,,"",FALSE,,2,2,"",T,52
 9008004,COLUMBIA STREET,constant,2,2,,"",FALSE,,2,2,"",T,52
-34121,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-34122,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-34124,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-34385,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-34386,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-34464,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
+34121,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+34122,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+34124,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+34385,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+34386,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+34464,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
 34468,COLUMBUS AVENUE,constant,3,3,,"",FALSE,,3,3,"",A,60
 34480,COLUMBUS AVENUE,constant,3,3,,"",FALSE,,3,3,"",A,60
-34482,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2015-10-01,3,3,"",A,60
-34484,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2015-10-01,3,3,"",A,60
-34486,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-34502,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-34504,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-37083,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-37085,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-37087,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-37091,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-37095,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37097,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37204,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37206,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37208,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37210,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37212,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37214,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37215,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37218,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37318,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37320,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37322,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37324,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37330,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37332,COLUMBUS AVENUE,constant,3,3,,"",FALSE,,3,3,"",A,60
-37334,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-37419,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
+34482,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2015-09-01,3,3,"",A,60
+34484,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2015-09-01,3,3,"",A,60
+34486,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+34502,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+34504,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+37083,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+37085,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+37087,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+37091,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+37095,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37097,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37204,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37206,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37208,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37210,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37212,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37214,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37215,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37218,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37318,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37320,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37322,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37324,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37330,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37332,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37334,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+37419,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
 37427,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
 37515,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
 38221,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
@@ -4021,20 +4021,20 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 38225,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
 38229,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
 38239,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-164859,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-164860,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-23,4,4,"",A,60
-218228,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
-218229,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
+164859,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+164860,COLUMBUS AVENUE,constant,4,4,,"",FALSE,2016-11-01,4,4,"",A,60
+218228,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
+218229,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-01,3,3,"",A,60
 313247,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
 313249,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
 313250,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002817,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002818,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002819,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002821,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002822,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002823,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
-9002824,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,60
+9002817,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+9002818,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+9002819,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+9002821,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+9002822,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+9002823,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
+9002824,COLUMBUS AVENUE,constant,3,3,,"",FALSE,2011-06-01,3,3,"",A,60
 9007752,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
 9007753,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
 9007754,COLUMBUS AVENUE,constant,3,3,,"",TRUE,2013-09-25,3,3,"",A,60
@@ -4399,18 +4399,18 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 72550,DYCKMAN STREET,constant,2,2,,"",FALSE,,2,2,"",T,56
 72551,DYCKMAN STREET,constant,2,2,,"",FALSE,,2,2,"",T,42
 72552,DYCKMAN STREET,constant,2,2,,"",FALSE,,2,2,"",T,42
-72596,DYCKMAN STREET,constant,4,4,,"",FALSE,2017-12-21,4,4,"",T,60
-72600,DYCKMAN STREET,constant,4,4,,"",FALSE,2017-12-21,4,4,"",T,60
+72596,DYCKMAN STREET,constant,4,4,,"",FALSE,2021-08-01,4,4,"",T,60
+72600,DYCKMAN STREET,constant,4,4,,"",FALSE,2021-08-01,4,4,"",T,60
 72605,DYCKMAN STREET,constant,2,2,,"",FALSE,,2,2,"",T,44
 72607,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-11-21,2,2,"",P,44
-72609,DYCKMAN STREET,constant,4,4,,"",FALSE,2017-12-21,4,4,"",T,60
-72643,DYCKMAN STREET,decrease_dated_by_facility,4,3,2017-12-21,bike facility date (pipeline),FALSE,2017-12-21,4,3,24b,T,60
+72609,DYCKMAN STREET,constant,4,4,,"",FALSE,2021-08-01,4,4,"",T,60
+72643,DYCKMAN STREET,decrease_dated_by_facility,4,3,2021-08-01,street view review,FALSE,2021-08-01,4,3,24b,T,60
 281408,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
 281409,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
 281416,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
 281417,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
-300026,DYCKMAN STREET,constant,2,2,,"",FALSE,2017-12-21,2,2,"",T,60
-300028,DYCKMAN STREET,constant,2,2,,"",FALSE,2017-12-21,2,2,"",T,60
+300026,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-08-01,2,2,"",T,60
+300028,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-08-01,2,2,"",T,60
 327873,DYCKMAN STREET,constant,4,4,,"",FALSE,,4,4,"",T,60
 327874,DYCKMAN STREET,constant,4,4,,"",FALSE,,4,4,"",T,60
 332327,DYCKMAN STREET,constant,2,2,,"",FALSE,,2,2,"",T,60
@@ -4420,10 +4420,10 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 341125,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
 341126,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
 341129,DYCKMAN STREET,constant,1,1,,"",FALSE,,1,1,"",W,28
-9009097,DYCKMAN STREET,constant,2,2,,"",FALSE,2017-12-21,2,2,"",T,60
-9009098,DYCKMAN STREET,constant,2,2,,"",FALSE,2017-12-21,2,2,"",T,60
-9009920,DYCKMAN STREET,constant,2,2,,"",FALSE,2017-12-21,2,2,"",T,60
-9009921,DYCKMAN STREET,constant,2,2,,"",FALSE,2017-12-21,2,2,"",T,60
+9009097,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-08-01,2,2,"",T,60
+9009098,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-08-01,2,2,"",T,60
+9009920,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-08-01,2,2,"",T,60
+9009921,DYCKMAN STREET,constant,2,2,,"",FALSE,2021-08-01,2,2,"",T,60
 33671,DYER AVENUE,constant,5,5,,"",FALSE,,5,5,"",A,80
 33683,DYER AVENUE,constant,1,1,,"",FALSE,,1,1,"",A,20
 33685,DYER AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,30
@@ -7962,24 +7962,24 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 31890,HUDSON STREET,constant,2,2,,"",FALSE,2021-07-06,2,2,"",W,46
 31914,HUDSON STREET,constant,2,2,,"",FALSE,2021-07-06,2,2,"",W,46
 31916,HUDSON STREET,constant,2,2,,"",FALSE,2021-07-06,2,2,"",W,46
-31918,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31933,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31935,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31938,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31940,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31963,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31966,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31968,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31970,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31991,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31993,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
-31997,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-09,3,2,24b,A,50
-31999,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-09,3,2,24b,A,50
+31918,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31933,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31935,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31938,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31940,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31963,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31966,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31968,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31970,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31991,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31993,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-01,2,2,"",W,50
+31997,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-01,3,2,24b,A,50
+31999,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-01,3,2,24b,A,50
 32002,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",A,30
-32029,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-09,3,2,24b,A,50
-32031,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-09,3,2,24b,A,50
-32033,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-09,3,2,24b,A,50
-32035,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-09,3,2,24b,A,50
+32029,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-01,3,2,24b,A,50
+32031,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-01,3,2,24b,A,50
+32033,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-01,3,2,24b,A,50
+32035,HUDSON STREET,review_decrease_no_facility,3,2,,"",TRUE,2014-07-01,3,2,24b,A,50
 103729,HUDSON STREET,constant,2,2,,"",FALSE,,2,2,"",W,36
 104937,HUDSON STREET,constant,2,2,,"",TRUE,2014-07-09,2,2,"",W,50
 108159,HUDSON STREET,constant,3,3,,"",FALSE,,3,3,"",W,50
@@ -8171,16 +8171,16 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 23561,LAFAYETTE STREET,constant,2,2,,"",FALSE,2021-11-08,2,2,"",A,42
 23569,LAFAYETTE STREET,constant,2,2,,"",FALSE,2021-11-08,2,2,"",A,48
 23572,LAFAYETTE STREET,constant,2,2,,"",FALSE,2021-11-08,2,2,"",A,48
-23578,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,48
-32059,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,48
-32064,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,54
-32069,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,50
+23578,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,48
+32059,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,48
+32064,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,54
+32069,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,50
 32074,LAFAYETTE STREET,constant,3,3,,"",FALSE,,3,3,"",A,
-32077,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,50
-32330,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,50
-32332,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,48
-32341,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,48
-32347,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,48
+32077,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,50
+32330,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,50
+32332,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,48
+32341,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,48
+32347,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,48
 32365,LAFAYETTE STREET,constant,2,2,,"",FALSE,,2,2,"",A,28
 32521,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-04-25,2,2,"",W,46
 32553,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-04-25,2,2,"",W,48
@@ -8191,14 +8191,14 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 32767,LAFAYETTE STREET,constant,4,4,,"",FALSE,,4,4,"",W,50
 105036,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-10-01,2,2,"",W,48
 105037,LAFAYETTE STREET,constant,2,2,,"",FALSE,,2,2,"",W,30
-110941,LAFAYETTE STREET,constant,2,2,,"",FALSE,2023-07-16,2,2,"",W,46
-110942,LAFAYETTE STREET,constant,2,2,,"",FALSE,2023-07-16,2,2,"",W,46
+110941,LAFAYETTE STREET,constant,2,2,,"",FALSE,2023-07-01,2,2,"",W,46
+110942,LAFAYETTE STREET,constant,2,2,,"",FALSE,2023-07-01,2,2,"",W,46
 164260,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-04-25,2,2,"",W,46
 164261,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-04-25,2,2,"",W,30
 164266,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-04-25,2,2,"",W,30
 164267,LAFAYETTE STREET,constant,2,2,,"",TRUE,2014-04-25,2,2,"",W,48
-302161,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,50
-302162,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-16,3,3,"",A,50
+302161,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,50
+302162,LAFAYETTE STREET,constant,3,3,,"",FALSE,2023-07-01,3,3,"",A,50
 327163,LAFAYETTE STREET,constant,2,2,,"",FALSE,,2,2,"",W,54
 327164,LAFAYETTE STREET,constant,2,2,,"",FALSE,,2,2,"",W,54
 329195,LAFAYETTE STREET,constant,2,2,,"",FALSE,,2,2,"",W,54
@@ -8231,11 +8231,11 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 331423,LAUREL HILL TERRACE,constant,2,2,,"",FALSE,,2,2,"",T,35
 331424,LAUREL HILL TERRACE,constant,2,2,,"",FALSE,,2,2,"",T,35
 134652,LENOX AVENUE,constant,2,2,,"",FALSE,,2,2,"",A,30
-145340,LENOX AVENUE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",W,24
-150949,LENOX AVENUE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,30
-150950,LENOX AVENUE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",W,24
+145340,LENOX AVENUE,constant,2,2,,"",TRUE,2015-06-01,2,2,"",W,24
+150949,LENOX AVENUE,constant,2,2,,"",TRUE,2015-06-01,2,2,"",A,30
+150950,LENOX AVENUE,constant,2,2,,"",TRUE,2015-06-01,2,2,"",W,24
 150951,LENOX AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,30
-150952,LENOX AVENUE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,30
+150952,LENOX AVENUE,constant,2,2,,"",TRUE,2015-06-01,2,2,"",A,30
 150953,LENOX AVENUE,constant,2,2,,"",FALSE,,2,2,"",A,30
 151122,LENOX AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,30
 151124,LENOX AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,30
@@ -10901,8 +10901,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 70676,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,60
 70680,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,60
 70681,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,,2,2,"",W,60
-70682,ST NICHOLAS AVENUE,constant,3,3,,"",FALSE,1996-04-01,3,3,"",A,46
-70685,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,1996-04-01,2,2,"",A,60
+70682,ST NICHOLAS AVENUE,constant,3,3,,"",FALSE,2010-08-01,3,3,"",A,46
+70685,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,2010-08-01,2,2,"",A,60
 70687,ST NICHOLAS AVENUE,constant,1,1,,"",FALSE,,1,1,"",W,26
 70697,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,60
 70699,ST NICHOLAS AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,60
@@ -11217,8 +11217,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 250870,UNION SQUARE EAST,constant,3,3,,"",FALSE,,3,3,"",W,36
 250951,UNION SQUARE EAST,constant,2,2,,"",FALSE,2019-11-14,2,2,"",A,34
 32806,UNION SQUARE WEST,constant,1,1,,"",FALSE,,1,1,"",A,20
-32808,UNION SQUARE WEST,constant,1,1,,"",FALSE,,1,1,"",A,18
-110559,UNION SQUARE WEST,constant,1,1,,"",FALSE,2019-11-18,1,1,"",A,24
+32808,UNION SQUARE WEST,constant,1,1,,"",FALSE,2019-11-01,1,1,"",A,18
+110559,UNION SQUARE WEST,constant,1,1,,"",FALSE,2019-11-01,1,1,"",A,24
 188857,UNITED NATIONS PLAZA,constant,2,2,,"",FALSE,,2,2,"",W,22
 345888,UNIVERSITY HEIGHTS BRIDGE,constant,4,4,,"",FALSE,,4,4,"",T,44
 32595,UNIVERSITY PLACE,constant,2,2,,"",FALSE,,2,2,"",W,38
@@ -11263,9 +11263,9 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 35798,VANDERBILT AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,40
 35818,VANDERBILT AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,40
 35822,VANDERBILT AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,40
-31789,VARICK STREET,constant,3,3,,"",FALSE,2023-09-12,3,3,"",A,58
-31791,VARICK STREET,decrease_dated_by_facility,3,2,2023-09-12,bike facility date (pipeline),FALSE,2023-09-12,3,2,24b,A,58
-31846,VARICK STREET,constant,2,2,,"",FALSE,2023-09-12,2,2,"",A,40
+31789,VARICK STREET,constant,3,3,,"",FALSE,2022-03-01,3,3,"",A,58
+31791,VARICK STREET,decrease_dated_by_facility,3,2,2022-03-01,street view review,FALSE,2022-03-01,3,2,24b,A,58
+31846,VARICK STREET,constant,2,2,,"",FALSE,2022-03-01,2,2,"",A,40
 31850,VARICK STREET,constant,2,2,,"",FALSE,,2,2,"",A,36
 31855,VARICK STREET,constant,2,2,,"",FALSE,,2,2,"",A,36
 31857,VARICK STREET,constant,4,4,,"",FALSE,,4,4,"",A,60
@@ -11281,8 +11281,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 31925,VARICK STREET,constant,4,4,,"",FALSE,,4,4,"",A,60
 31927,VARICK STREET,constant,4,4,,"",FALSE,,4,4,"",A,60
 132684,VARICK STREET,constant,1,1,,"",FALSE,,1,1,"",W,22
-281970,VARICK STREET,constant,2,2,,"",FALSE,2023-09-12,2,2,"",A,40
-281971,VARICK STREET,constant,2,2,,"",FALSE,2023-09-12,2,2,"",A,40
+281970,VARICK STREET,constant,2,2,,"",FALSE,2022-03-01,2,2,"",A,40
+281971,VARICK STREET,constant,2,2,,"",FALSE,2022-03-01,2,2,"",A,40
 72610,VERMILYEA AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,40
 72650,VERMILYEA AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,40
 72654,VERMILYEA AVENUE,constant,2,2,,"",FALSE,,2,2,"",T,40
@@ -14613,21 +14613,21 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 295908,WEST BROADWAY,constant,2,2,,"",FALSE,,2,2,"",T,38
 326412,WEST BROADWAY,constant,2,2,,"",FALSE,2023-09-12,2,2,"",A,48
 326413,WEST BROADWAY,constant,2,2,,"",FALSE,2023-09-12,2,2,"",A,48
-34265,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-27,bike facility date (pipeline),FALSE,2018-06-27,3,2,24b,A,42
-35871,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-27,bike facility date (pipeline),FALSE,2018-06-27,3,2,24b,A,42
+34265,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-01,bike facility date (pipeline),FALSE,2018-06-01,3,2,24b,A,42
+35871,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-01,bike facility date (pipeline),FALSE,2018-06-01,3,2,24b,A,42
 35878,WEST DRIVE,constant,3,3,,"",FALSE,,3,3,"",A,
 37073,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-27,3,3,"",A,44
 37177,WEST DRIVE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,48
 37179,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
-37193,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
+37193,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,32
 37195,WEST DRIVE,constant,2,2,,"",FALSE,,2,2,"",A,
-37197,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,34
+37197,WEST DRIVE,constant,2,2,,"",TRUE,2015-06-01,2,2,"",A,34
 37296,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,34
 37299,WEST DRIVE,constant,2,2,,"",FALSE,,2,2,"",A,
-37401,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,32
-37411,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
+37401,WEST DRIVE,constant,2,2,,"",TRUE,2015-06-01,2,2,"",A,32
+37411,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,32
 37417,WEST DRIVE,constant,2,2,,"",FALSE,,2,2,"",A,
-37500,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
+37500,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,32
 37502,WEST DRIVE,constant,2,2,,"",FALSE,,2,2,"",A,
 37504,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,32
 37609,WEST DRIVE,constant,2,2,,"",FALSE,,2,2,"",A,
@@ -14640,8 +14640,8 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 111037,WEST DRIVE,constant,1,1,,"",FALSE,2018-06-27,1,1,"",W,16
 111185,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-27,bike facility date (pipeline),FALSE,2018-06-27,3,2,24b,A,44
 111186,WEST DRIVE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,36
-111187,WEST DRIVE,constant,3,3,,"",TRUE,2012-07-09,3,3,"",T,44
-111188,WEST DRIVE,constant,3,3,,"",TRUE,2012-07-09,3,3,"",T,44
+111187,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-01,3,3,"",T,44
+111188,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-01,3,3,"",T,44
 111189,WEST DRIVE,constant,2,2,,"",FALSE,2018-06-27,2,2,"",A,22
 115264,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,32
 115265,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,32
@@ -14660,7 +14660,7 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 282209,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,36
 282210,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,36
 285433,WEST DRIVE,constant,3,3,,"",FALSE,,3,3,"",A,
-285434,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-27,3,3,"",A,44
+285434,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-01,3,3,"",A,44
 297886,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
 297887,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,32
 300108,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
@@ -14669,16 +14669,16 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 300125,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
 300187,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
 300188,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
-300190,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
-300197,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
-300198,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
+300190,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,32
+300197,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,32
+300198,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,32
 300207,WEST DRIVE,constant,2,2,,"",TRUE,2012-09-15,2,2,"",A,32
 300208,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,32
-300209,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,34
-300210,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,34
-300496,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-27,3,3,"",A,42
-300499,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-27,bike facility date (pipeline),FALSE,2018-06-27,3,2,24b,A,42
-300500,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-27,3,3,"",A,42
+300209,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,34
+300210,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2015-06-01,2,1,24b,A,34
+300496,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-01,3,3,"",A,42
+300499,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-01,bike facility date (pipeline),FALSE,2018-06-01,3,2,24b,A,42
+300500,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-01,3,3,"",A,42
 300552,WEST DRIVE,decrease_dated_by_facility,3,2,2018-06-27,bike facility date (pipeline),FALSE,2018-06-27,3,2,24b,A,42
 300553,WEST DRIVE,constant,3,3,,"",FALSE,2018-06-27,3,3,"",A,42
 300821,WEST DRIVE,review_decrease_no_facility,2,1,,"",TRUE,2012-09-15,2,1,24b,A,36
@@ -15004,11 +15004,11 @@ SegmentID,street,case,lanes_before,lanes_after,change_date,date_source,pre2016_p
 347991,WILLIAMSBURG BRIDGE,constant,4,4,,"",FALSE,,4,4,"",W,50
 348005,WILLIAMSBURG BRIDGE,constant,4,4,,"",FALSE,,4,4,"",A,50
 348009,WILLIAMSBURG BRIDGE,constant,2,2,,"",FALSE,,2,2,"",A,24
-69454,WILLIS AVENUE BRIDGE,constant,4,4,,"",TRUE,2014-07-02,4,4,"",W,48
-241847,WILLIS AVENUE BRIDGE,constant,4,4,,"",TRUE,2014-07-02,4,4,"",W,48
-241848,WILLIS AVENUE BRIDGE,constant,4,4,,"",TRUE,2014-07-02,4,4,"",W,40
-259075,WILLIS AVENUE BRIDGE,constant,2,2,,"",TRUE,2014-07-02,2,2,"",W,25
-259082,WILLIS AVENUE BRIDGE,constant,2,2,,"",TRUE,2014-07-02,2,2,"",W,25
+69454,WILLIS AVENUE BRIDGE,constant,4,4,,"",FALSE,1899-01-01,4,4,"",W,48
+241847,WILLIS AVENUE BRIDGE,constant,4,4,,"",FALSE,1899-01-01,4,4,"",W,48
+241848,WILLIS AVENUE BRIDGE,constant,4,4,,"",FALSE,1899-01-01,4,4,"",W,40
+259075,WILLIS AVENUE BRIDGE,constant,2,2,,"",FALSE,1899-01-01,2,2,"",W,25
+259082,WILLIS AVENUE BRIDGE,constant,2,2,,"",FALSE,1899-01-01,2,2,"",W,25
 334685,WILLIS AVENUE BRIDGE,constant,4,4,,"",FALSE,,4,4,"",W,40
 334686,WILLIS AVENUE BRIDGE,constant,4,4,,"",FALSE,,4,4,"",W,40
 349954,WILLIS AVENUE BRIDGE,constant,2,2,,"",FALSE,,2,2,"",W,25
