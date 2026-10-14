@@ -67,3 +67,71 @@ segment_versions_read <- function(date = NULL) {
   n <- nrow(v)
   v[ri[seq_len(n)] <= ri[2 * n + 1] & ri[n + seq_len(n)] >= ri[2 * n + 1], ]
 }
+
+# Street spells (build/01_street_spells.R) ----
+# Every layer as spells on the key segments: key_id, attribute, side, value, valid_from, valid_to
+# (NA = still valid), date_precision, source, priority, source_id, key_cover.
+
+# The attributes in the spells: type, sides, source, and what the value means
+streets_attributes <- function() data.table::data.table(
+  attribute = c("in_lion", "bike_lane", "travel_lanes", "parking_lanes", "total_lanes", "street_width", "traffic_dir"),
+  type      = c("flag", "character", "numeric", "numeric", "numeric", "numeric", "character"),
+  sides     = c("both", "tf, ft", "both", "both", "both", "both", "both"),
+  from      = c("2012-05", "DOT install dates", "2016-02 (LION), 2012-07 (Manhattan)", "2016-02", "2016-02", "2016-11", "2012-05"),
+  meaning   = c("the key segment exists in LION (a source version covers it)",
+                "Protected / Standard / Sharrows / none, per direction of the key segment",
+                "moving lanes; Manhattan: dated with bike lane changes and reviews, elsewhere LION per release",
+                "parking lanes (LION)", "total lanes (LION)", "minimum street width in ft (LION)",
+                "LION TrafDir relative to the key segment: W with, A against, T two-way, P pedestrian"))
+
+streets_spells_read <- function(attributes = NULL) {
+  sp <- data.table::setDT(arrow::read_parquet(streets_dir("spells", "street_spells.parquet")))
+  if (!is.null(attributes)) sp <- sp[attribute %in% attributes]
+  sp[, `:=`(valid_from = data.table::as.IDate(valid_from), valid_to = data.table::as.IDate(valid_to))]
+  sp[]
+}
+
+# Key segments with borough, street, street code, roadway type (1 street, 2 highway, 3 bridge, ...)
+key_segments_read <- function() data.table::setDT(arrow::read_parquet(streets_dir("spells", "key_segments.parquet")))[]
+
+# Street state on a grid of dates: one row per key segment and date (wide = TRUE: one column per
+# attribute, bike_lane as bike_lane_tf / bike_lane_ft), or long rows key_id, date, attribute, side,
+# value, date_precision, source. Where sources overlap the lower priority wins, then the larger
+# key_cover. in_lion_only drops key segments not in LION on a date (streets that did not exist yet).
+streets_panel <- function(from, to = from, by = "month", attributes = NULL, boro = NULL, key_ids = NULL,
+                          wide = TRUE, in_lion_only = TRUE) {
+  dates <- data.table::as.IDate(seq(as.Date(from), as.Date(to), by = by))
+  attrs <- unique(c(attributes, if (in_lion_only) "in_lion"))
+  sp <- streets_spells_read(if (is.null(attributes)) NULL else attrs)
+  if (!is.null(boro)) { b <- boro; key_ids <- c(key_ids, key_segments_read()[boro %in% b, key_id]) }
+  if (!is.null(key_ids)) sp <- sp[key_id %in% key_ids]
+  vt <- sp[, data.table::fifelse(is.na(valid_to), data.table::as.IDate("2100-01-01"), valid_to)]
+  i1 <- findInterval(as.integer(sp[, valid_from]) - 1L, as.integer(dates)) + 1L   # first grid date on or after valid_from
+  i2 <- findInterval(as.integer(vt) - 1L, as.integer(dates))                      # last grid date before valid_to
+  n <- pmax(i2 - i1 + 1L, 0L)
+  x <- sp[rep(seq_len(nrow(sp)), n)]
+  x[, date := dates[rep(i1, n) + sequence(n) - 1L]]
+  data.table::setorder(x, key_id, date, attribute, side, priority, -key_cover)
+  x <- x[!duplicated(x[, .(key_id, date, attribute, side)])]
+  if (in_lion_only) {
+    x <- x[x[attribute == "in_lion", .(key_id, date)], on = .(key_id, date), nomatch = 0]
+    if (!is.null(attributes) && !"in_lion" %in% attributes) x <- x[attribute != "in_lion"]
+  }
+  if (!wide) return(x[, .(key_id, date, attribute, side, value, date_precision, source)][])
+  x[, col := data.table::fifelse(side == "both", attribute, paste(attribute, side, sep = "_"))]
+  w <- data.table::dcast(x, key_id + date ~ col, value.var = "value")
+  num <- intersect(names(w), streets_attributes()[type == "numeric", attribute])
+  for (v in num) data.table::set(w, j = v, value = as.numeric(w[[v]]))
+  if ("in_lion" %in% names(w)) w[, in_lion := !is.na(in_lion)]
+  w[]
+}
+
+# Street state on one date; geometry = TRUE returns sf with the key segments' lines (EPSG 2263)
+streets_state <- function(date, attributes = NULL, boro = NULL, key_ids = NULL, wide = TRUE, geometry = FALSE) {
+  x <- streets_panel(date, date, attributes = attributes, boro = boro, key_ids = key_ids, wide = wide)
+  if (!geometry) return(x)
+  v <- segment_versions_read()
+  v <- v[v$last_release == max(segment_key_read()[, last_release]), c("segment_id")]
+  names(v)[1] <- "key_id"
+  merge(v, x, by = "key_id")
+}

@@ -15,7 +15,12 @@ recounted in 2024.
 ## Layout
 
 ```
-R/streets.R                      readers: segment_key_read(), segment_key_map(ids, date), segment_versions_read(date)
+R/streets.R                      readers: streets_state(), streets_panel(), streets_spells_read(), streets_attributes(),
+                                 key_segments_read(), segment_key_read(), segment_key_map(), segment_key_attach(),
+                                 segment_versions_read(), bikelane_windows_keyed_read()
+build/
+  01_street_spells.R             all layers as spells on the key segments
+                                 -> derived/streets/spells/street_spells.parquet, key_segments.parquet
 spine/                           LION SegmentID across the 57 quarterly releases (12a-26c) -> segment key
   01_lion_segments.R             attributes of every LION record per release (no geometry)
                                  -> derived/streets/spine/lion_segment_releases.parquet
@@ -76,6 +81,34 @@ and 95% match current LION directly). Spells for every layer are meant to be key
 source("../nyc_streets/R/streets.R")
 segment_key_map(c(32886, 28), date = "2016-06-01")   # 1 Av segment 32886 is now three segments
 ```
+
+### Street spells
+
+`build/01_street_spells.R` puts every layer in one long table on the key segments: `key_id`,
+`attribute`, `side` (both / tf / ft, relative to the key segment), `value`, `valid_from`, `valid_to`
+(NA = still valid), `date_precision` (day / month / year / release / verified / undated / open),
+`source`, `priority`, `source_id`, `key_cover`. `streets_attributes()` lists the attributes:
+
+| attribute | from | source |
+|---|---|---|
+| `in_lion` | 2012-05 | segment key: the street exists in LION |
+| `bike_lane` (tf, ft) | DOT install dates | `layers/bike_lanes` (Protected / Standard / Sharrows / none; NA = not in the DOT bike route data) |
+| `travel_lanes` | 2012-07 Manhattan, 2016-02 elsewhere | dated Manhattan panel (priority), LION per release |
+| `parking_lanes`, `total_lanes`, `street_width`, `traffic_dir` | 2016 (traffic_dir 2012) | LION per release |
+
+`streets_state(date)` gives one row per key segment on a date (`geometry = TRUE` for sf lines),
+`streets_panel(from, to, by)` a key segment x date panel; both filter by `boro` or `key_ids`, drop
+segments not yet in LION, and resolve overlapping sources by priority, then key_cover. Manhattan
+monthly 2012-2026 (2.6M rows) takes about 5 s.
+
+```r
+source("../nyc_streets/R/streets.R")
+s <- streets_state("2019-06-01", boro = 1, geometry = TRUE)
+p <- streets_panel("2012-07-01", "2026-07-01", "month", attributes = c("bike_lane", "travel_lanes"), boro = 1)
+```
+
+New layers (bus lanes, parking, speed limits, ...) are added as a block in `build/01_street_spells.R`
+on the key, with their attribute in `streets_attributes()`.
 
 All scripts run from the repo root. Outputs that other projects read go to
 `nyc_traffic_data/derived/streets/<layer>/`; working files stay in the repo (`out/`).

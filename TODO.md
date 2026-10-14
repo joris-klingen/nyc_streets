@@ -8,7 +8,10 @@
 - [x] **Layer outputs keyed** (2026-10-14): `bike_lanes_windows_keyed.parquet` (19,886 key segments; 111 retired source ids dropped), `lion_lanes_panel_keyed.parquet` and `manhattan_lanes_monthly_keyed.parquet`, next to the unkeyed files (the paper pipeline still reads those).
 - [ ] **Merged sources that disagree**: 29-40 of the 165 key segments with several bike lane sources differ in facility at a given date; 3,561 key segment-months in the Manhattan lane panel differ in lanes. Check whether `main_source` is the right pick there.
 - [ ] **Move `5_NYC_bikelanes` to the keyed outputs** when the paper pipeline is next rebuilt (zone assignment and street panel on key_id).
-- [ ] **Spell schema** shared by all layers: key_id, side, attribute, value, valid_from, valid_to, date_precision, source, evidence_id; `streets_state(date)` and `streets_panel(attrs, freq)` readers.
+- [x] **Spell schema** built (2026-10-14): `build/01_street_spells.R`, `streets_state()`, `streets_panel()`.
+- [ ] **Next layers on the spells**: bus lanes (`year1` install years), speed limits and slow zones, speed humps (install dates), parking signs (`order_completed_on_date`), Citi Bike stations (first/last trip), all from the snapshots in nyc_traffic_data/streets.
+- [ ] **Street spells before the key network**: spells exist only for segments in 26c; streets removed since 2012 (2,711 retired versions) drop out of panels. Add them as their own key ids if a study needs them.
+- [ ] **evidence_id** in the spells: link verified bike lane dates to the review project (proj_id) and DOT presentation.
 - [ ] **Unlinked versions near the network**: 216 retired versions lie 30-100 ft and 153 lie 100-500 ft from a segment of the next release (realignments beyond the 10 ft buffer?). Check a sample on a map before relying on them.
 - [ ] **LION before 12a**: 3% of the traffic count ids are in no release since 2012; the DCP archive has older releases if the counts before 2012 are needed.
 - [ ] **Faster raw LION reads**: `lion_read()` / `lion_gdb()` in nyc_traffic read the zip through /vsizip, which takes minutes for the 2012-2016 releases; unzipping to a local temp folder takes seconds.
