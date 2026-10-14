@@ -80,6 +80,7 @@
   .tagctl .stepper button { border: 0; background: transparent; color: var(--fg); width: 1.9em; height: 1.9em; cursor: pointer; font-weight: 700; }
   .tagctl .stepper output { min-width: 1.6em; text-align: center; font: 600 .9rem var(--font-mono); }
   .tagctl select { font: 500 .82rem var(--font-body); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 3px 4px; }
+  .tagctl .chk, .svrow .chk { display: inline-flex; gap: 4px; align-items: center; white-space: nowrap; }
   .tagctl .clear { border: 0; background: transparent; color: var(--muted); cursor: pointer; text-decoration: underline; font-size: .78rem; }
 
   .compare { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px 8px 12px 16px; }
@@ -106,7 +107,8 @@
   .btn:disabled { opacity: .45; cursor: not-allowed; }
   .num { width: 4em; font: 500 .95rem var(--font-mono); padding: 5px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg); }
   .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .svrow { display: grid; grid-template-columns: minmax(0, 1.4fr) 3.4em minmax(0, 1.3fr) auto; gap: 4px; align-items: center; }
+  .svrow { display: grid; grid-template-columns: minmax(0, 1.4fr) 3.4em 3.2em minmax(0, 1.3fr) auto; gap: 4px; align-items: center; }
+  .svrow input[type="checkbox"] { width: auto; }
   .svrow input, .svrow select { min-width: 0; width: 100%; font: 500 .82rem var(--font-body); padding: 4px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg); }
   .svrow button { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 1rem; }
   .derived { background: var(--bg); border-radius: 4px; padding: 8px 10px; font-size: .86rem; }
@@ -177,7 +179,7 @@
                 ["buffered", "buffered", "Protected"], ["protected", "protected", "Protected"]];
   const BIKE_CLASS = Object.fromEntries(BIKE.map(b => [b[0], b[2]]));
   const BADGE = { none: "none", sharrows: "shr", conventional: "paint", buffered: "buff", protected: "prot" };
-  const badge = t => (t.lanes ?? "?") + "·" + (BADGE[t.bike] || "?");
+  const badge = t => (t.lanes ?? "?") + "·" + (BADGE[t.bike] || "?") + (t.bus ? "·bus" : "");
   const CLASS_KEY = { Protected: "protected", Standard: "conventional", Sharrows: "sharrows", none: "none" };
   const NAME = { Protected: "protected", Standard: "painted lane", Sharrows: "shared lane", none: "no bike lane" };
   const GROUPS = [[1, "Projects"], [2, "Lane changes · 3+ segments"], [3, "Date conflicts"], [4, "Lane changes · 1–2 segments"]];
@@ -403,6 +405,9 @@
       minus.addEventListener("click", () => set(Math.max(0, (tags[ph.i] && tags[ph.i].lanes != null ? tags[ph.i].lanes : 1) - 1)));
       plus.addEventListener("click", () => set(Math.min(8, (tags[ph.i] && tags[ph.i].lanes != null ? tags[ph.i].lanes : 0) + 1)));
       box.append(el("span", { text: "Travel lanes" }), el("span", { class: "stepper" }, minus, out, plus));
+      const bus = el("input", { type: "checkbox", checked: !!t.bus, "aria-label": "Bus lane in " + ph.y });
+      bus.addEventListener("change", () => setTag(ph.i, { bus: bus.checked }));
+      box.append(el("label", { class: "chk" }, bus, document.createTextNode("+ bus lane")));
     }
     const s = el("select", { "aria-label": "Bike lane in " + ph.y });
     s.append(el("option", { value: "", text: "bike lane: not tagged" }));
@@ -490,7 +495,7 @@
     const box = el("div", { class: "card" }, el("div", { class: "lbl", text: "Street View (opens a new tab; \"See more dates\" top left)" }));
     const links = el("div", { class: "links" });
     [1, 2, 3].forEach(k => { const u = p["streetview_" + k]; if (u) links.append(el("a", { href: u, target: "_blank", rel: "noopener", text: (p["sv_label_" + k] ? "at " + short(p["sv_label_" + k]) : "point " + k) + " ↗" })); });
-    box.append(links, el("p", { class: "hint", text: "Count moving lanes for cars only: not parking, bus-only or bike lanes." }));
+    box.append(links, el("p", { class: "hint", text: "Count moving lanes for cars only: not parking, bus-only or bike lanes. Bus lanes have their own tick box." }));
     return box;
   }
   function buildNote(r) {
@@ -534,13 +539,13 @@
   }
   function loadCorrection(r) {
     for (const o of r.observations || []) {
-      if (o.source === "aerial") { const ph = PHOTOS.find(x => x.y === o.photo); if (ph) tags[ph.i] = { lanes: o.lanes, bike: o.bike }; }
-      else svRows.push({ date: o.date, lanes: o.lanes, bike: o.bike });
+      if (o.source === "aerial") { const ph = PHOTOS.find(x => x.y === o.photo); if (ph) tags[ph.i] = { lanes: o.lanes, bus: !!o.bus, bike: o.bike }; }
+      else svRows.push({ date: o.date, lanes: o.lanes, bus: !!o.bus, bike: o.bike });
     }
   }
   function setTag(i, patch) {
     tags[i] = Object.assign({}, tags[i] || {}, patch);
-    if (tags[i].lanes == null && !tags[i].bike) delete tags[i];
+    if (tags[i].lanes == null && !tags[i].bike && !tags[i].bus) delete tags[i];
     const p = ITEMS.find(x => x.item_id === current);
     const b = $("#strip").children[i];
     const old = b.querySelector(".tag"); if (old) old.remove();
@@ -550,10 +555,10 @@
 
   function observations(p) {
     const obs = [];
-    for (const [i, t] of Object.entries(tags)) { const ph = PHOTOS[+i]; obs.push({ source: "aerial", photo: ph.y, lo: ph.lo, hi: ph.hi, label: ph.label, lanes: t.lanes ?? null, bike: t.bike || null }); }
+    for (const [i, t] of Object.entries(tags)) { const ph = PHOTOS[+i]; obs.push({ source: "aerial", photo: ph.y, lo: ph.lo, hi: ph.hi, label: ph.label, lanes: t.lanes ?? null, bus: t.lanes != null || t.bus ? !!t.bus : null, bike: t.bike || null }); }
     for (const o of svRows) if (/^\d{4}-\d{2}$/.test(o.date)) {
       const end = new Date(Date.UTC(+o.date.slice(0, 4), +o.date.slice(5, 7), 0)).toISOString().slice(0, 10);
-      obs.push({ source: "streetview", date: o.date, lo: o.date + "-01", hi: end, label: "Street View " + o.date, lanes: o.lanes ?? null, bike: o.bike || null });
+      obs.push({ source: "streetview", date: o.date, lo: o.date + "-01", hi: end, label: "Street View " + o.date, lanes: o.lanes ?? null, bus: o.lanes != null || o.bus ? !!o.bus : null, bike: o.bike || null });
     }
     return obs.sort((a, b) => a.lo < b.lo ? -1 : 1);
   }
@@ -577,17 +582,25 @@
       lanes.push({ before: a.lanes, after: b.lanes, last_before: a.label, first_after: b.label, window: [a.hi, b.lo],
                    date: bc ? bc.date : b.lo, precision: bc ? (bc.precision === "verified" ? "verified" : "window") : "window", with_bike: !!bc });
     }
-    return { obs, bike, lanes };
+    // a bus lane is known wherever the lanes were counted (unticked = none)
+    const bus = [], withBus = obs.filter(o => o.bus != null);
+    for (let i = 1; i < withBus.length; i++) {
+      const a = withBus[i - 1], b = withBus[i];
+      if (a.bus === b.bus) continue;
+      bus.push({ from: a.bus ? "bus lane" : "no bus lane", to: b.bus ? "bus lane" : "no bus lane", last_without: a.label, first_with: b.label, date: b.lo, precision: "window" });
+    }
+    return { obs, bike, lanes, bus };
   }
 
   function buildCorrect(p, r, lanes) {
     const card = el("div", { class: "card" });
     card.append(el("div", { class: "q", text: "Tag what the photos show" }),
-      el("p", { class: "hint", text: "Under each photo, set the " + (p.ask_lanes ? "travel lanes and " : "") + "bike lane where you can read them; the two photos around the proposal are pre-filled. Add Street View panoramas below for the gaps between photos." }));
+      el("p", { class: "hint", text: "Under each photo, set the " + (p.ask_lanes ? "travel lanes for cars, tick a bus lane, and the " : "") + "bike lane where you can read them; the two photos around the proposal are pre-filled. Add Street View panoramas below for the gaps between photos." }));
     const list = el("div", { id: "svlist" });
-    const head = el("div", { class: "svrow" }, el("span", { class: "lbl", text: "Street View (month)" }), el("span", { class: "lbl", text: p.ask_lanes ? "lanes" : "" }), el("span", { class: "lbl", text: "bike lane" }), el("span"));
+    const head = el("div", { class: "svrow" }, el("span", { class: "lbl", text: "Street View (month)" }), el("span", { class: "lbl", text: p.ask_lanes ? "lanes" : "" }),
+      el("span", { class: "lbl", text: p.ask_lanes ? "bus" : "" }), el("span", { class: "lbl", text: "bike lane" }), el("span"));
     card.append(head, list);
-    const add = button("+ panorama", "ghost small", () => { const last = svRows[svRows.length - 1] || {}; svRows.push({ date: "", lanes: last.lanes ?? null, bike: last.bike || null }); renderSv(p); });
+    const add = button("+ panorama", "ghost small", () => { const last = svRows[svRows.length - 1] || {}; svRows.push({ date: "", lanes: last.lanes ?? null, bus: !!last.bus, bike: last.bike || null }); renderSv(p); });
     card.append(el("div", { class: "row" }, add));
     card.append(el("div", { class: "derived", id: "derived" }));
     const b = el("div", { class: "btns" }, button("Save  S", "save", () => saveCorrected(p)), button("Cancel", "ghost", () => { mode = "view"; tags = {}; svRows = []; renderItem(); }));
@@ -601,6 +614,8 @@
     svRows.forEach((o, k) => {
       const d = el("input", { type: "month", min: "2007-01", max: "2026-12", value: o.date || "", "aria-label": "Panorama month" });
       const n = el("input", { type: "number", min: "0", max: "8", inputmode: "numeric", value: o.lanes ?? "", "aria-label": "Travel lanes", disabled: !p.ask_lanes });
+      const bus = el("input", { type: "checkbox", checked: !!o.bus, "aria-label": "Bus lane", disabled: !p.ask_lanes });
+      bus.addEventListener("change", () => { o.bus = bus.checked; refreshDerived(p); });
       const s = el("select", { "aria-label": "Bike lane" });
       s.append(el("option", { value: "", text: "—" }));
       for (const [v, t] of BIKE) s.append(el("option", { value: v, text: t, selected: o.bike === v }));
@@ -609,7 +624,7 @@
       n.addEventListener("input", () => { o.lanes = n.value === "" ? null : +n.value; refreshDerived(p); });
       s.addEventListener("change", () => { o.bike = s.value || null; refreshDerived(p); });
       x.addEventListener("click", () => { svRows.splice(k, 1); renderSv(p); drawAxis(p, $("#axis"), $("#strip").getBoundingClientRect().width); });
-      list.append(el("div", { class: "svrow" }, d, n, s, x));
+      list.append(el("div", { class: "svrow" }, d, n, el("span", { class: "chk" }, bus), s, x));
     });
     refreshDerived(p);
   }
@@ -620,7 +635,8 @@
     if (d.obs.length < 2) out.push(el("p", { text: "Tag at least two photos or panoramas to bracket a change." }));
     for (const c of d.bike) out.push(el("p", { text: "Bike lane " + NAME[c.from] + " → " + NAME[c.to] + ": between " + c.last_without + " and " + c.first_with + (c.precision === "verified" ? ". " + c.source + " date " + c.date + " falls inside, so it is used." : ". No DOT date inside: the window is kept.") }));
     for (const c of d.lanes) out.push(el("p", { text: "Travel lanes " + c.before + " → " + c.after + ": between " + c.last_before + " and " + c.first_after + (c.with_bike ? ", with the bike lane (" + c.date + ")." : ".") }));
-    if (d.obs.length >= 2 && !d.bike.length && !d.lanes.length) out.push(el("p", { text: "No change between the tagged photos and panoramas." }));
+    for (const c of d.bus) out.push(el("p", { text: (c.to === "bus lane" ? "Bus lane added" : "Bus lane removed") + ": between " + c.last_without + " and " + c.first_with + "." }));
+    if (d.obs.length >= 2 && !d.bike.length && !d.lanes.length && !d.bus.length) out.push(el("p", { text: "No change between the tagged photos and panoramas." }));
     box.replaceChildren(...out);
   }
 
@@ -653,7 +669,8 @@
     if (d.obs.length < 1) { say("Tag at least one photo or add a panorama."); return; }
     const body = base(p);
     body.verdict = "corrected";
-    body.observations = d.obs.map(o => ({ source: o.source, photo: o.photo || "", date: o.date || o.lo.slice(0, 7), lanes: o.lanes, bike: o.bike }));
+    body.observations = d.obs.map(o => ({ source: o.source, photo: o.photo || "", date: o.date || o.lo.slice(0, 7), lanes: o.lanes, bus: o.bus, bike: o.bike }));
+    body.bus_changes = d.bus;
     body.bike_changes = d.bike.map(c => ({ from: c.from, to: c.to, last_without: c.last_without, first_with: c.first_with, date: c.date, precision: c.precision, source: c.source }));
     body.lane_changes = d.lanes.map(c => ({ before: c.before, after: c.after, last_before: c.last_before, first_after: c.first_after, date: c.date, precision: c.precision, with_bike: c.with_bike }));
     const l = laneProposal(p);
@@ -681,6 +698,7 @@
     card.append(el("p", {}, el("strong", { text: v })));
     for (const c of r.bike_changes || []) card.append(el("p", { text: "Bike lane " + (NAME[c.from] || c.from) + " → " + (NAME[c.to] || c.to) + ": " + c.date + " · " + c.precision + (c.last_without ? " (between " + c.last_without + " and " + c.first_with + ")" : "") }));
     for (const c of r.lane_changes || []) card.append(el("p", { text: "Travel lanes " + c.before + " → " + c.after + ": " + (c.date || "undated") + " · " + c.precision }));
+    for (const c of r.bus_changes || []) card.append(el("p", { text: (c.to === "bus lane" ? "Bus lane added" : "Bus lane removed") + ": " + c.date + " · window (between " + c.last_without + " and " + c.first_with + ")" }));
     if (r.lanes_before_project != null) card.append(el("p", { text: "Travel lanes before the project: " + r.lanes_before_project }));
     card.append(el("p", { class: "saved", text: "Saved " + new Date(r.saved_at).toLocaleString() + (r.by ? " by " + (names[r.by] || "a reviewer") : "") }));
     const ch = button("Change answer", "ghost small", () => { editing = p.item_id; if (r.verdict === "corrected") startCorrect(); else renderItem(); });
