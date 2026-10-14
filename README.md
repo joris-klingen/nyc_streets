@@ -15,7 +15,15 @@ recounted in 2024.
 ## Layout
 
 ```
-spine/                           LION SegmentID across the quarterly releases -> stable segment key (planned)
+R/streets.R                      readers: segment_key_read(), segment_key_map(ids, date), segment_versions_read(date)
+spine/                           LION SegmentID across the 57 quarterly releases (12a-26c) -> segment key
+  01_lion_segments.R             attributes of every LION record per release (no geometry)
+                                 -> derived/streets/spine/lion_segment_releases.parquet
+  02_segment_versions.R          one row per SegmentID x distinct geometry, first/last release
+                                 -> derived/streets/spine/segment_versions.gpkg
+  03_segment_key.R               links between versions (overlap, same id redrawn, LegacyID) chained to 26c
+                                 -> derived/streets/spine/segment_links.parquet, segment_key.parquet
+  checks_segment_key.R           unlinked versions, agreement with LegacyID, coverage of traffic counts / bike routes
 layers/                          one folder per street attribute
   bike_lanes/
     manual/
@@ -47,6 +55,24 @@ evidence/                        material used to date changes, shared by the la
                                  review page (review_app/); see its README
   dot_projects/                  DOT presentation catalogue, matched to the review projects, with timing
                                  sentences from the PDFs; see its README
+```
+
+### Segment key
+
+LION SegmentIDs are stable: per release 0.1-0.7% are retired and 0.2-2% added, and ids are not
+reused for other streets. Over 2012-2026, 196,722 ids have 228,389 geometry versions (27,275 ids
+redrawn at least once). `spine/03_segment_key.R` links each version that ends to its successors in
+the next release (line overlap within 10 ft, at least half of either line; else the same id with a
+redrawn line, or a later segment naming it as LegacyID) and chains the links to 26c: 94.3% of ended
+versions get a successor; the 2,711 that do not are mostly removed or rebuilt highways, ramps,
+bridges, paths and driveways. `share` is the share of a version's length that continues as each
+26c segment (a split spreads it, a street cut back keeps less than 1). With the key, 96.3% of the
+DOT traffic count SegmentIDs and 99.5% of the DOT 2020 bike route ids reach a current segment (85%
+and 95% match current LION directly). Spells for every layer are meant to be keyed on it.
+
+```r
+source("../nyc_streets/R/streets.R")
+segment_key_map(c(32886, 28), date = "2016-06-01")   # 1 Av segment 32886 is now three segments
 ```
 
 All scripts run from the repo root. Outputs that other projects read go to

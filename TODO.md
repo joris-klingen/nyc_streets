@@ -1,6 +1,15 @@
 # TODO
 
-*Last updated 2026-10-12. Roughly in order of payoff for the bike lane paper (`5_NYC_bikelanes`, plan in `notes/paper_plan_v2.md`).*
+*Last updated 2026-10-14. Roughly in order of payoff for the bike lane paper (`5_NYC_bikelanes`, plan in `notes/paper_plan_v2.md`).*
+
+## Segment key (`spine/`)
+
+- [x] **Segment key built** (2026-10-14): 57 LION releases, versions, links and crosswalk to 26c; see README.
+- [ ] **Key the layer outputs on it**: bike lane windows (DOT 2020 / 16d ids) and the travel-lane panel (`lion_lanes_panel`) carry release-specific SegmentIDs; add `key_id` and `share` so panels can be built on one network.
+- [ ] **Spell schema** shared by all layers: key_id, side, attribute, value, valid_from, valid_to, date_precision, source, evidence_id; `streets_state(date)` and `streets_panel(attrs, freq)` readers.
+- [ ] **Unlinked versions near the network**: 216 retired versions lie 30-100 ft and 153 lie 100-500 ft from a segment of the next release (realignments beyond the 10 ft buffer?). Check a sample on a map before relying on them.
+- [ ] **LION before 12a**: 3% of the traffic count ids are in no release since 2012; the DCP archive has older releases if the counts before 2012 are needed.
+- [ ] **Faster raw LION reads**: `lion_read()` / `lion_gdb()` in nyc_traffic read the zip through /vsizip, which takes minutes for the 2012-2016 releases; unzipping to a local temp folder takes seconds.
 
 ## Protection dates
 
