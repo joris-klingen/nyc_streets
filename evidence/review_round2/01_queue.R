@@ -169,11 +169,48 @@ pts <- lines[, {
   .(lon = MidP_lon[i], lat = MidP_lat[i], bearing = (atan2(dx, dy) * 180 / pi) %% 360)
 }, by = item_id]
 
-# Street View links at 25 / 50 / 75 % along the item, looking along the street
+# Cross streets: the item's extent and a label per Street View point ----
+# LION records of the segments (latest release each), and the streets meeting at each node
+lion <- setDT(arrow::read_parquet(streets_dir("spine", "lion_segment_releases.parquet"),
+                                  col_select = c("segment_id", "street", "node_from", "node_to", "feature_typ", "release_date")))
+lion <- lion[feature_typ %in% c("0", "6", "A", "C", "W")]
+seg_rec <- lion[segment_id %in% item_seg[, SegmentID]][order(-release_date)][!duplicated(segment_id)]
+node_st <- unique(rbind(lion[, .(node = node_from, street)], lion[, .(node = node_to, street)]))
+setkey(node_st, node)
+cross_at <- function(n, own) {
+  s <- node_st[.(n), street]
+  s <- unique(s[!is.na(s) & s != own & !grepl("^(UNNAMED|DRIVEWAY|PEDESTRIAN|BIKE PATH)", s)])
+  if (!length(s)) return("")
+  s[order(!grepl("^(EAST|WEST|E|W) [0-9]+ ", s), nchar(s))][1]   # prefer numbered streets, then short names
+}
+# order segments along the item (projection on its bearing); the outer node of the first and last segment
+lines[pts, on = "item_id", bearing := i.bearing]
+lines[, along := (MidP_lon - mean(MidP_lon)) * sin(bearing * pi / 180) * cos(MidP_lat * pi / 180) + (MidP_lat - mean(MidP_lat)) * cos(bearing * pi / 180), by = item_id]
+lines[seg_rec, on = .(SegmentID = segment_id), `:=`(lion_street = i.street, node_from = i.node_from, node_to = i.node_to)]
+proj_t <- function(lon, lat, b, lon0, lat0) (lon - lon0) * sin(b * pi / 180) * cos(lat * pi / 180) + (lat - lat0) * cos(b * pi / 180)
+ext <- lines[!is.na(node_from), {
+  o <- order(along)
+  lon0 <- mean(MidP_lon); lat0 <- mean(MidP_lat)
+  # nodes in order along the item: for each segment the end further back first; the first named cross
+  # street from either end is the extent (roadbed pieces of the same street have no cross street)
+  seq_nodes <- unlist(lapply(o, function(k) {
+    back_first <- proj_t(lon_start[k], lat_start[k], bearing[k], lon0, lat0) < proj_t(lon_end[k], lat_end[k], bearing[k], lon0, lat0)
+    if (back_first) c(node_from[k], node_to[k]) else c(node_to[k], node_from[k])
+  }))
+  own <- rep(lion_street[o], each = 2)
+  names_along <- mapply(cross_at, seq_nodes, own)
+  hit <- which(names_along != "")
+  .(from_street = if (length(hit)) names_along[min(hit)] else "", to_street = if (length(hit)) names_along[max(hit)] else "")
+}, by = item_id]
+items <- merge(items, ext, by = "item_id", all.x = TRUE)
+
+# Street View links at 25 / 50 / 75 % along the item, looking along the street, labelled by the cross street
 sv <- function(lat, lon, heading) sprintf("https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=%.6f,%.6f&heading=%.0f&pitch=-10&fov=90", lat, lon, heading)
-views <- lines[order(MidP_lat, MidP_lon), { i <- unique(pmax(1L, round(c(0.25, 0.5, 0.75) * .N))); .(view = seq_along(i), lat = MidP_lat[i], lon = MidP_lon[i]) }, by = item_id]
+views <- lines[order(along), { i <- unique(pmax(1L, round(c(0.25, 0.5, 0.75) * .N))); .(view = seq_along(i), lat = MidP_lat[i], lon = MidP_lon[i], n1 = node_to[i], n2 = node_from[i], own = lion_street[i]) }, by = item_id]
+views[, label := mapply(function(a, b, o) { if (is.na(a)) return(""); x <- cross_at(a, o); if (x == "") cross_at(b, o) else x }, n1, n2, own)]
 views <- merge(views, pts[, .(item_id, bearing)], by = "item_id")[, link := sv(lat, lon, bearing)]
 items <- merge(items, dcast(views, item_id ~ paste0("streetview_", view), value.var = "link"), by = "item_id", all.x = TRUE)
+items <- merge(items, dcast(views, item_id ~ paste0("sv_label_", view), value.var = "label"), by = "item_id", all.x = TRUE)
 # priority: 1 round 1 projects, 2 lane corridors of 3+ segments, 3 date conflicts, 4 small lane items
 items[, priority := fcase(kind == "A", 1L, kind == "B" & n_segments >= 3, 2L, kind == "C", 3L, default = 4L)]
 setorder(items, priority, -n_segments)

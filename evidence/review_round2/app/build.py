@@ -11,7 +11,8 @@ APP = "evidence/review_round2/app"
 OUT = "evidence/review_round2/out"
 KEEP = ["item_id", "kind", "priority", "street", "n_segments", "lion_counts", "lane_q", "prot_pipe", "prot_dot",
         "r1_protected_from", "r1_before_type", "streetview_1", "streetview_2", "streetview_3",
-        "bike_events", "dot_events", "lion_before", "lion_after", "pre_project", "ask_lanes"]
+        "bike_events", "dot_events", "lion_before", "lion_after", "pre_project", "ask_lanes",
+        "from_street", "to_street", "sv_label_1", "sv_label_2", "sv_label_3"]
 
 rows = [{k: (r.get(k) or "") for k in KEEP} for r in csv.DictReader(open(os.path.join(OUT, "items.csv"), encoding="utf-8"))]
 rows = [r for r in rows if os.path.exists(os.path.join(OUT, "sheets", r["item_id"] + ".jpg"))]
