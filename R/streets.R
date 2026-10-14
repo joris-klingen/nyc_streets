@@ -98,11 +98,13 @@ key_segments_read <- function() data.table::setDT(arrow::read_parquet(streets_di
 # attribute, bike_lane as bike_lane_tf / bike_lane_ft), or long rows key_id, date, attribute, side,
 # value, date_precision, source. Where sources overlap the lower priority wins, then the larger
 # key_cover. in_lion_only drops key segments not in LION on a date (streets that did not exist yet).
+# sources: keep only these sources (e.g. "lion" for the undated LION values; in_lion always kept).
 streets_panel <- function(from, to = from, by = "month", attributes = NULL, boro = NULL, key_ids = NULL,
-                          wide = TRUE, in_lion_only = TRUE) {
+                          wide = TRUE, in_lion_only = TRUE, sources = NULL) {
   dates <- data.table::as.IDate(seq(as.Date(from), as.Date(to), by = by))
   attrs <- unique(c(attributes, if (in_lion_only) "in_lion"))
   sp <- streets_spells_read(if (is.null(attributes)) NULL else attrs)
+  if (!is.null(sources)) sp <- sp[source %in% sources | attribute == "in_lion"]
   if (!is.null(boro)) { b <- boro; key_ids <- c(key_ids, key_segments_read()[boro %in% b, key_id]) }
   if (!is.null(key_ids)) sp <- sp[key_id %in% key_ids]
   vt <- sp[, data.table::fifelse(is.na(valid_to), data.table::as.IDate("2100-01-01"), valid_to)]

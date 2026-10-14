@@ -64,6 +64,8 @@ il <- il[, .(value = "1", valid_from = min(from), valid_to = as.IDate(max(as.int
              key_cover = max(key_cover)), by = .(key_id, grp)][, grp := NULL]
 il[valid_to >= far, valid_to := NA]
 il[, `:=`(attribute = "in_lion", side = "both", date_precision = "release", source = "lion", priority = 1L)]
+# in the first release: the street existed before the records (keeps earlier bike lanes in panels)
+il[valid_from == rel[1, date], `:=`(valid_from = open_start, date_precision = "open")]
 
 # Bike lanes ----
 w <- bikelane_windows_keyed_read()[main_source == TRUE]
