@@ -9,3 +9,6 @@ evidence/aerial_labelling/review_app/sheets/
 evidence/dot_projects/html/
 layers/bike_lanes/manual/review_export/
 __pycache__/
+evidence/review_round2/out/sheets/
+evidence/review_round2/app/sheets2/
+evidence/review_round2/app/index.html

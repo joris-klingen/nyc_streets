@@ -18,8 +18,9 @@
 
 library(data.table)
 library(arrow)
+library(sf)
 
-source("../nyc_traffic/R/nyc_traffic.R")
+source("R/streets.R")   # segment_versions_read(); also sources nyc_traffic.R
 root <- nyc_data_root()
 p <- setDT(read_parquet(file.path(root, "derived/streets/travel_lanes/lion_lanes_panel.parquet")))[boro == 1]
 
@@ -63,13 +64,32 @@ s[, case := fcase(
   trav_last > trav_first, "review_increase_with_facility",
   default = "review_other")]
 s[n_values > 2, case := "review_multiple_changes"]
+
+# Central Park drives: lanes dropped when the drives went car-free (decision 2026-10-11): north of
+# 72nd St 2015-06, the rest 2018-06 (manual/park_drive_dates.csv); north or south of the line along
+# 72nd St from Central Park West to Fifth Av
+park_drives <- c("EAST DRIVE", "WEST DRIVE", "TERRACE DRIVE", "CENTER DRIVE")
+pd <- s[street %in% park_drives & trav_last < trav_first, SegmentID]
+if (length(pd)) {
+  g <- segment_versions_read()
+  g <- g[g$segment_id %in% pd, ]
+  g <- g[order(g$segment_id, -g$version), ]
+  g <- g[!duplicated(g$segment_id), ]
+  ctr <- st_coordinates(st_centroid(st_transform(st_geometry(g), 4326)))
+  a <- c(-73.9776, 40.7766); b <- c(-73.9665, 40.7712)   # 72nd St at Central Park West, at Fifth Av
+  north <- ((b[1] - a[1]) * (ctr[, 2] - a[2]) - (b[2] - a[2]) * (ctr[, 1] - a[1])) > 0
+  carfree <- data.table(SegmentID = g$segment_id, carfree = as.IDate(fifelse(north, "2015-06-01", "2018-06-01")))
+  s[carfree, on = "SegmentID", `:=`(case = "decrease_dated_by_carfree", fac_between = i.carfree)]
+  cat("park drive segments dated at the car-free date:", nrow(carfree), "(north of 72nd St:", sum(north), ")\n")
+}
 s[, pre2016_project := !is.na(prot_from) & prot_from >= as.IDate("2012-07-01") & prot_from < d16]
 
 s[, `:=`(
   lanes_before = fcase(case == "correction_increase", trav_last, default = trav_first),
   lanes_after = trav_last,
-  change_date = fcase(case == "decrease_dated_by_facility", fac_between, default = as.IDate(NA)),
-  date_source = fcase(case == "decrease_dated_by_facility" & !is.na(rev_date) & fac_between == rev_date, "street view review",
+  change_date = fcase(case %in% c("decrease_dated_by_facility", "decrease_dated_by_carfree"), fac_between, default = as.IDate(NA)),
+  date_source = fcase(case == "decrease_dated_by_carfree", "car-free date (park drives)",
+                      case == "decrease_dated_by_facility" & !is.na(rev_date) & fac_between == rev_date, "street view review",
                       case == "decrease_dated_by_facility", "bike facility date (pipeline)", default = ""))]
 
 spells <- s[, .(SegmentID, street, case, lanes_before, lanes_after, change_date, date_source, pre2016_project,

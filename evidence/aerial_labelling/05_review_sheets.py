@@ -3,9 +3,10 @@
 Reuses the fetching code (and tile cache) of pilot_aerial/02_fetch_images.py. The segment
 centre lines are drawn semi-transparently on each panel, so it is clear which carriageway is
 being judged; the lane itself sits at the curb and stays visible.
-Usage (from repo root): python evidence/aerial_labelling/05_review_sheets.py
+Usage (from repo root): python evidence/aerial_labelling/05_review_sheets.py [points.csv lines.csv out_dir [ids]]
+  default: the round 1 review projects; ids: comma-separated subset (e.g. only items without a sheet)
 """
-import csv, importlib.util, math, os
+import csv, importlib.util, math, os, sys
 from collections import defaultdict
 from PIL import Image, ImageDraw, ImageFont
 
@@ -13,7 +14,10 @@ spec = importlib.util.spec_from_file_location("fetch", "evidence/pilot_aerial/02
 F = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(F)
 
-OUT = "evidence/aerial_labelling/out/review_sheets"
+POINTS = sys.argv[1] if len(sys.argv) > 1 else "evidence/aerial_labelling/out/projects.csv"
+LINES = sys.argv[2] if len(sys.argv) > 2 else "evidence/aerial_labelling/out/review_segment_lines.csv"
+OUT = sys.argv[3] if len(sys.argv) > 3 else "evidence/aerial_labelling/out/review_sheets"
+ONLY = set(sys.argv[4].split(",")) if len(sys.argv) > 4 else None
 LINE = (255, 0, 255, 110)   # magenta, semi-transparent
 
 
@@ -30,10 +34,11 @@ def main():
         font = ImageFont.truetype("arial.ttf", 22)
     except OSError:
         font = ImageFont.load_default()
-    pts = {r["proj_id"]: r for r in csv.DictReader(open("evidence/aerial_labelling/out/projects.csv"))}
+    pts = {r["proj_id"]: r for r in csv.DictReader(open(POINTS))}
     lines = defaultdict(list)
-    for r in csv.DictReader(open("evidence/aerial_labelling/out/review_segment_lines.csv")):
-        lines[r["proj_id"]].append(r)
+    for r in csv.DictReader(open(LINES)):
+        if ONLY is None or r["proj_id"] in ONLY:
+            lines[r["proj_id"]].append(r)
     years = F.YEARS_NYC + F.YEARS_NYS
     cap = {int(r["year"]): r["label"] for r in csv.DictReader(open("layers/bike_lanes/manual/aerial_capture_dates_manhattan.csv"))}
     for pid, segs in sorted(lines.items()):

@@ -52,7 +52,9 @@ def fetch_nys(pid, lon, lat, year):
     b = bbox(lon, lat)
     url = (f"https://orthos.its.ny.gov/arcgis/rest/services/wms/{year}/MapServer/export"
            f"?bbox={b[0]},{b[1]},{b[2]},{b[3]}&bboxSR=3857&imageSR=3857&size={PX},{PX}&format=png&f=image")
-    return Image.open(io.BytesIO(get(url, os.path.join(CACHE, f"{pid}_{year}.png")))).convert("RGB")
+    # pilot (P) and round 1 (M) images are cached by id; later items by location, so that ids can be reassigned
+    key = f"{pid}_{year}" if pid[:1] in ("P", "M") else f"nys_{lon:.5f}_{lat:.5f}_{year}"
+    return Image.open(io.BytesIO(get(url, os.path.join(CACHE, key + ".png")))).convert("RGB")
 
 def fetch_nyc(pid, lon, lat, year, z=20):
     b = bbox(lon, lat)
