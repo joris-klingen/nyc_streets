@@ -49,7 +49,10 @@ def main():
         d.text((8, 6), f"{pid}  (street runs vertically, {F.CROP_M} m square; magenta = project segments)", fill="black", font=font)
         for i, yr in enumerate(years):
             try:
-                img = F.fetch_nyc(pid, lon, lat, yr) if yr in F.YEARS_NYC else F.fetch_nys(pid, lon, lat, yr)
+                # the NYC tile service for 2008 / 2010 has moved (it now returns a placeholder): round 1
+                # (M) and pilot (P) items use their cached NYC tiles, later items the NYS service's 2008 / 2010
+                use_nyc = yr in F.YEARS_NYC and pid[:1] in ("M", "P")
+                img = F.fetch_nyc(pid, lon, lat, yr) if use_nyc else F.fetch_nys(pid, lon, lat, yr)
                 over = Image.new("RGBA", img.size, (0, 0, 0, 0))
                 od = ImageDraw.Draw(over)
                 for s in segs:
