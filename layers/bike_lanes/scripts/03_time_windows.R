@@ -1,361 +1,183 @@
-# Segment x time-window bike lane facilities for Manhattan (moved here from
-# 5_NYC_bikelanes/scripts/data_management/002_import_bikelanes.R on 2026-10-13)
+# Segment x time-window bike lane facilities, all boroughs, from the DOT 2026 version history
 #
-# Inputs: DOT 2020 bike routes shapefile and the 2025 snapshot (nyc_traffic_data/streets/bike_routes),
-#         manual/streetview_dot2020.csv (manual Street View checks), manual/lookup_bikelane_types.xlsx,
-#         manual/protection_overrides.csv (manual/04_build_overrides.R), manual/segmentid_crosswalk_lion16d.csv
+# Base: the DOT bike routes release of 2026-10 (nyc_traffic_data/streets/bike_routes), which keeps
+#   every version of a segment's facility: Retired rows with instdate and ret_date, and the Current
+#   row. Per segment the versions are ordered by instdate; a version lasts until the next one starts
+#   (or until its ret_date, when the lane was removed). Facility texts (tf/ft, and tf2/ft2 where a
+#   second facility is recorded) are coded with manual/lookup_bikelane_types.xlsx; the best class per
+#   direction counts (I > II > III).
+# Manual Street View checks (manual/streetview_dot2020.csv, on the DOT 2020 release): for the segments
+#   they cover, their dates and before-upgrade types replace the DOT history up to the 2020 release.
+# 2020 segments missing from the 2026 release whose street no 2026 segment continues keep their 2020
+#   facility up to the 2020 release.
+# Street View review overrides (manual/protection_overrides.csv) and the copies to LION 16d ids
+#   (manual/segmentid_crosswalk_lion16d.csv) are applied as before.
 # Output: nyc_traffic_data/derived/streets/bike_lanes/bike_lanes_time_windows.RDS, one row per
-#         SegmentID x time_window with date_from, date_to and tf_/ft_facilit (Protected / Standard /
-#         Sharrows), read with bikelane_windows_read(); bike_lane_updates.gpkg (2025 updates) next to it.
-#         Includes copies for 18 LION 16d segments (manual/segmentid_crosswalk_lion16d.csv)
+#   SegmentID x time_window with date_from, date_to and tf_/ft_facilit (Protected / Standard /
+#   Sharrows, NA = none), read with bikelane_windows_read(). Until 2026-10-14 the windows came from the
+#   DOT 2020 release plus the Manhattan 2025 updates (moved here from 5_NYC_bikelanes 002 on
+#   2026-10-13): kept as bike_lanes_time_windows_dot2020.RDS.
 # Run from repo root: Rscript layers/bike_lanes/scripts/03_time_windows.R
 
 library(data.table)
-library(dplyr)
 library(sf)
 
-source("../nyc_traffic/R/nyc_traffic.R")
+source("R/streets.R")   # segment key; also sources nyc_traffic.R
 out_dir <- file.path(nyc_data_root(), "derived/streets/bike_lanes")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
-# DOT bike routes snapshot for the 2025 updates (YYYYMMDD)
-snap_bike_routes <- '20251008'
+snap_bike_routes <- "20261010"   # DOT release with the version history
+start_date <- as.IDate("1899-01-01")
+end_date <- as.IDate("2099-09-09")
+lane_types <- c(I = "Protected", II = "Standard", III = "Sharrows")
 
-path_dot_bikelanes <- paste0("/vsizip/", file.path(nyc_data_root(), "streets/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp"))
-
-# load -------------
-dot.sf = read_sf(path_dot_bikelanes)
-
-dot.sf = st_transform(dot.sf, "+init=EPSG:4326")
-
-
-dot_geom.v = st_as_text(st_geometry(dot.sf))
-
-
-dot.dt <- data.table(dot.sf)
-
-# trick to keep the geometry and run a unique on the data.table
-dot.dt = dot.dt[, geometry := dot_geom.v]
-
-
-# cleaning and categorization of facilities ---------------------------------------------------------------------------------
-
-# dot.dt[, lion16d_id := as.numeric(segmentid)]
-
-nrow(dot.dt) - nrow(unique(dot.dt))
-# 3 duplicates -> remove for now
-
-dot.dt = unique(dot.dt)
-
-
-# clean dates -------------
-dot.dt[, instdate := gsub("T", " ", instdate)]
-dot.dt[, moddate := gsub("T", " ", moddate)]
-
-dot.dt[, install_date := as.POSIXct(substr(instdate, 1, 19), 
-                                    format = "%Y-%m-%d", 
-                                    tz = "America/New_York")]
-
-dot.dt[, modif_date := as.POSIXct(substr(moddate, 1, 19), 
-                                  format = "%Y-%m-%d", 
-                                  tz ="America/New_York")]
-
-dot.dt[, `:=`(instdate = NULL, moddate=NULL)]
-
-# reminder: if never modified, modif date == install date
-nrow(dot.dt[install_date == modif_date]) # majority of cases
-
-
-# some modified dates are before the install date -> might be because of unknown install/modification date
-# for now, we will consider those as never modified (not a huge issue if only looking at yearly)
-dot.dt[install_date > modif_date, modif_date := install_date]
-
-# clean categories -------------
-unique(dot.dt[, facilitycl])
-dot.dt[facilitycl == "i", facilitycl := "I"]
-dot.dt[, .N, by = facilitycl]
-
-unique(dot.dt[, tf_facilit])
-unique(dot.dt[, ft_facilit])
-
-# all combinations of Class and facilities
-class_facilities = dot.dt[, .N, by = .(facilitycl, tf_facilit, ft_facilit)][order(facilitycl, -N)]
-class_facilities
-
-class_facilities_man = dot.dt[boro == 1, .N, by = .(facilitycl, tf_facilit, ft_facilit)][order(facilitycl, -N)]
-# some inconsistencies to correct or drop
-# I                 Standard              Standard   65
-# II                Greenway              Greenway    9
-# II          Protected Path                  <NA>    6
-# II                    <NA>        Protected Path    3
-# II          Protected Path        Protected Path    2
-# III               Standard                  <NA>   15
-# III               Curbside                  <NA>    5
-# III                   <NA>              Standard    2
-# drop for now until we know which variable to trust (107 obs)
-
-precleancat = nrow(dot.dt)
-
-dot.dt = dot.dt[!((facilitycl == "I" & tf_facilit == "Standard" & ft_facilit == "Standard") |
-                    (facilitycl == "II" & tf_facilit == "Greenway" & ft_facilit == "Greenway") |
-                    (facilitycl == "II" & tf_facilit == "Protected Path" & is.na(ft_facilit)) |
-                    (facilitycl == "II" & is.na(tf_facilit) & ft_facilit == "Protected Path") |
-                    (facilitycl == "II" & tf_facilit == "Protected Path" & ft_facilit == "Protected Path") |
-                    (facilitycl == "III" & tf_facilit == "Standard" & is.na(ft_facilit)) |
-                    (facilitycl == "III" & tf_facilit == "Curbside" & is.na(ft_facilit)) |
-                    (facilitycl == "III" & is.na(tf_facilit) & ft_facilit == "Standard"))]
-
-precleancat - nrow(dot.dt) # close enough
-rm(precleancat)
-
-
-# add manual table -----
-
-# manual Street View checks: versioned export of the Google Sheet "Manual Streetview NYC Bikelanes"
-# (tab 'dot 2020'); re-export with scripts/01_export_manual_sheet.R
-dot_man <- fread('layers/bike_lanes/manual/streetview_dot2020.csv', colClasses = 'character')
-
-dot_man[, install_date := as.POSIXct(install_date, format = "%Y-%m-%d", tz = "America/New_York")]
-dot_man[, modif_date := as.POSIXct(na_if(modif_date, ""), format = "%Y-%m-%d", tz = "America/New_York")]
-
-dot_man <- dot_man[, .(geometry, 
-                       install_date, 
-                       modif_date, 
-                       modified, 
-                       ft_facilit,
-                       tf_facilit,
-                       tf_bef_mod, 
-                       ft_bef_mod,
-                       from_manual_table = 1)]
-
-# drop redundant cols
-dot.dt[, c('facilitycl', 'allclasses') := NULL]
-
-# append background info cols to manual table
-cols <- c('geometry', names(dot.dt)[!names(dot.dt) %in% names(dot_man)])
-
-dot_man <- merge(dot_man, dot.dt[, ..cols], by = 'geometry')
-
-
-dot_final <- rbind(dot.dt, dot_man, fill = T)
-
-dot_final[, dupl := .N, by = geometry]
-
-dot_final <- dot_final[dupl == 1 | from_manual_table == 1]
-
-
-# add updates from 2025 data ----
-
-# keep only updates after latest modification in previous data
-max_date_prev <- dot_final[, max(modif_date, na.rm = T)]
-
-
-dot_25 <- st_read(dsn = nyc_latest('bike_routes', as_of = snap_bike_routes)) %>%
-  filter(boro == 1) %>% 
-  mutate(segmentid = as.numeric(segmentid)) %>% 
-  filter(instdate > max_date_prev)
-
-dot_updates <- dot_25 %>% 
-  left_join(dot_final %>% transmute(segmentid, in_prev_streets_data = TRUE), by = 'segmentid') %>% 
-  mutate(bike_lane_found = paste(facilitycl, in_prev_streets_data))
-
-
-st_write(dot_updates, file.path(out_dir, 'bike_lane_updates.gpkg'), delete_layer = T, quiet = T)
-
-
-# bind updates to previous ----
-
-
-# rename updates
-dot_updates <- dot_updates %>% 
-  rename(install_date = instdate) %>% 
-  mutate(modif_date = install_date) # this is to ensure that protected is not overwritten
-
-
-# check non overlapping names
-names_up <- names(dot_updates)
-names_prev <- names(dot_final)
-
-
-dot_updates <- dot_updates[, intersect(names_up, names_prev)]
-
-# remove updates from previous
-segments_update <- dot_updates %>% pull(segmentid)
-
-dot_final <- dot_final %>% 
-  filter(!segmentid %in% segments_update)
-
-dot_updates <- dot_updates %>% 
-  st_drop_geometry() %>% 
-  as_tibble() %>% 
-  mutate(boro = as.numeric(boro),
-         lanecount = as.numeric(lanecount))
-
-# segments with several update records (e.g. sharrows replaced by a protected lane): one record with
-# the earliest as the situation before the modification and the latest as the current one
-# ('none' = no lane in that direction before)
-dot_updates <- as.data.table(dot_updates)[order(segmentid, install_date)]
-multi <- dot_updates[, .N, segmentid][N > 1, segmentid]
-if (length(multi)) {
-  first_rec <- dot_updates[segmentid %in% multi, .SD[1], segmentid]
-  last_rec <- dot_updates[segmentid %in% multi, .SD[.N], segmentid]
-  last_rec[, `:=`(modif_date = install_date, install_date = first_rec[, install_date],
-                  tf_bef_mod = fcoalesce(first_rec[, tf_facilit], 'none'),
-                  ft_bef_mod = fcoalesce(first_rec[, ft_facilit], 'none'))]
-  dot_updates <- rbind(dot_updates[!segmentid %in% multi], last_rec, fill = TRUE)
-  cat('update segments with several records chained:', length(multi), '\n')
+# Facility coding ----
+bl_types <- setDT(readxl::read_excel("layers/bike_lanes/manual/lookup_bikelane_types.xlsx"))
+bl_types <- setNames(bl_types[, facility_code], bl_types[, facility_text])
+to_class <- function(x) unname(fifelse(x %in% c("I", "II", "III"), x, bl_types[x]))
+best <- function(...) {   # best class over several facility columns (I > II > III), NA if none
+  r <- suppressWarnings(do.call(pmin, c(lapply(list(...), function(x) match(to_class(x), c("I", "II", "III"))), na.rm = TRUE)))
+  c("I", "II", "III")[r]
+}
+best_of <- function(x) {  # best class within a group of rows
+  r <- match(x, c("I", "II", "III"))
+  if (all(is.na(r))) NA_character_ else c("I", "II", "III")[min(r, na.rm = TRUE)]
 }
 
-dot_final <- dot_final %>%
-  bind_rows(dot_updates)
+# DOT 2026 versions ----
+d <- setDT(st_drop_geometry(st_read(nyc_latest("bike_routes", as_of = snap_bike_routes), quiet = TRUE)))
+unknown <- setdiff(na.omit(unique(c(d[, tf_facilit], d[, ft_facilit], d[, tf2facilit], d[, ft2facilit]))), names(bl_types))
+if (length(unknown)) stop("facility texts not in the lookup: ", paste(unknown, collapse = ", "))
+d[, `:=`(seg = as.integer(segmentid), inst = as.IDate(instdate), ret = as.IDate(ret_date))]
+d[, `:=`(tf = best(tf_facilit, tf2facilit), ft = best(ft_facilit, ft2facilit))]
+d <- d[!is.na(seg) & seg != 0]
+d[is.na(inst), inst := start_date]
 
-# records without a LION segment id (segmentid 0 in the 2020 release) cannot be placed
-dot_final <- dot_final[!is.na(segmentid) & segmentid != 0]
-stopifnot(dot_final[, anyDuplicated(segmentid)] == 0)
+# one version per segment and install date (rows repeat per geometry piece; 23 segments have two
+# current rows): the best class per direction, the latest retirement
+v <- d[, .(tf = best_of(tf), ft = best_of(ft), retired = all(status == "Retired"), ret = max(ret)), by = .(seg, inst)]
+setorder(v, seg, inst)
+v[, next_inst := shift(inst, -1), by = seg]
+# a retirement date on or before its install date cannot be placed
+bad_ret <- v[retired & !is.na(ret) & ret <= inst, .N]
+v[retired & !is.na(ret) & ret <= inst, ret := NA]
+# end of a version: the next version's start; a retirement before that (the lane removed until the
+# next version); open for the current version and for retired versions without a date or successor
+v[, end := fcase(!is.na(next_inst) & (!retired | is.na(ret) | ret >= next_inst), next_inst,
+                 retired & !is.na(ret), ret,
+                 default = end_date)]
+w <- v[, .(SegmentID = seg, date_from = inst, date_to = end, tf, ft)]
+# no lane before the first version, and between a retirement and the next version
+gaps <- v[, .(SegmentID = seg, date_from = c(start_date, end[-.N]), date_to = c(inst[1], inst[-1])), by = seg][date_to > date_from]
+after <- v[, .SD[.N], by = seg][end < end_date, .(SegmentID = seg, date_from = end, date_to = end_date)]
+w <- rbind(w, gaps[, .(SegmentID, date_from, date_to, tf = NA_character_, ft = NA_character_)],
+           after[, .(SegmentID, date_from, date_to, tf = NA_character_, ft = NA_character_)])[date_to > date_from]
+cat("DOT 2026:", d[, uniqueN(seg)], "segments,", nrow(v), "versions;", nrow(after), "lanes removed for good;",
+    "retirement dates before install dropped:", bad_ret, "\n")
 
+# Segments of the 2020 release that DOT 2026 dropped ----
+# some 2020 segments are in neither the current nor the retired rows of the 2026 release (rebuilt
+# bridges, the Brooklyn Bridge promenade, greenway pieces). Where their street is not continued by a
+# 2026 segment (segment key), the 2020 facility is kept from install up to the 2020 release; no
+# record after that.
+d20 <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "streets/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
+d20 <- st_transform(d20, "+init=EPSG:4326")
+g20 <- data.table(geometry = st_as_text(st_geometry(d20)), SegmentID = as.integer(d20[["segmentid"]]),
+                  moddate = as.IDate(substr(as.character(d20[["moddate"]]), 1, 10)),
+                  instdate = as.IDate(substr(as.character(d20[["instdate"]]), 1, 10)),
+                  tf = to_class(d20[["tf_facilit"]]), ft = to_class(d20[["ft_facilit"]]))
+cutoff <- g20[, max(c(moddate, instdate), na.rm = TRUE)]   # the 2020 release's last recorded change
+key <- segment_key_read()
+k26 <- segment_key_attach(data.table(SegmentID = unique(v[, seg])), key = key)[!is.na(key_id) & key_cover >= 0.5, unique(key_id)]
+dropped <- setdiff(g20[SegmentID != 0, unique(SegmentID)], v[, seg])
+kd <- segment_key_attach(data.table(SegmentID = dropped), key = key)[, .(continued = any(key_id %in% k26)), by = SegmentID]
+dropped <- kd[continued == FALSE, SegmentID]
+s20 <- g20[SegmentID %in% dropped, .(inst = min(fcoalesce(instdate, start_date)), tf = best_of(tf), ft = best_of(ft)), by = SegmentID]
+s20 <- s20[inst < cutoff]
+w <- rbind(w, s20[, .(SegmentID, date_from = start_date, date_to = inst, tf = NA_character_, ft = NA_character_)],
+           s20[, .(SegmentID, date_from = inst, date_to = cutoff, tf, ft)],
+           s20[, .(SegmentID, date_from = cutoff, date_to = end_date, tf = NA_character_, ft = NA_character_)])[date_to > date_from]
+cat("2020 segments dropped from DOT 2026 and not continued:", nrow(s20), "kept up to", format(cutoff), "\n")
 
+# Manual Street View checks on the 2020 release ----
+# rows are matched to segments by geometry in the 2020 shapefile (g20), as when the checks were made
+man <- fread("layers/bike_lanes/manual/streetview_dot2020.csv", colClasses = "character")
+man <- merge(man[, .(geometry, install_date, modif_date, tf_facilit, ft_facilit, tf_bef_mod, ft_bef_mod)],
+             unique(g20[, .(geometry, SegmentID)]), by = "geometry")
+man <- unique(man[!is.na(SegmentID) & SegmentID != 0], by = "SegmentID")
+man[, `:=`(inst = as.IDate(install_date), modif = as.IDate(fifelse(modif_date == "", NA_character_, modif_date)))]
+man[is.na(inst), inst := start_date]
+before_mod <- function(bef, after) fifelse(is.na(bef) | bef == "", to_class(after), to_class(bef))
+man[, `:=`(tf_a = to_class(tf_facilit), ft_a = to_class(ft_facilit), tf_b = before_mod(tf_bef_mod, tf_facilit), ft_b = before_mod(ft_bef_mod, ft_facilit))]
+upgraded <- man[!is.na(modif) & modif > inst]
+mw <- rbind(man[, .(SegmentID, date_from = start_date, date_to = inst, tf = NA_character_, ft = NA_character_)],
+            upgraded[, .(SegmentID, date_from = inst, date_to = modif, tf = tf_b, ft = ft_b)],
+            man[, .(SegmentID, date_from = fifelse(!is.na(modif) & modif > inst, modif, inst), date_to = end_date, tf = tf_a, ft = ft_a)])
+mw <- mw[date_to > date_from]
+# manual windows up to the cutoff, DOT 2026 after it
+mw <- mw[date_from < cutoff][, date_to := pmin(date_to, cutoff)]
+cmp <- merge(w[SegmentID %in% man[, SegmentID] & date_from <= cutoff & date_to > cutoff, .(SegmentID, tf26 = tf, ft26 = ft)],
+             mw[date_to == cutoff, .(SegmentID, tf_man = tf, ft_man = ft)], by = "SegmentID")
+differ <- cmp[(fcoalesce(tf26, "-") != fcoalesce(tf_man, "-")) | (fcoalesce(ft26, "-") != fcoalesce(ft_man, "-")), .N]
+dw <- w[SegmentID %in% man[, SegmentID] & date_to > cutoff][, date_from := pmax(date_from, cutoff)]
+w <- rbind(w[!SegmentID %in% man[, SegmentID]], mw, dw)
+cat("manual checks:", man[, .N], "segments, replacing the DOT history before", format(cutoff), "; the facility at that date differs from",
+    "DOT 2026 for", differ, "of", nrow(cmp), "\n")
 
-# putt all timewindows in I, II, III, coding ----
-bl_types <- readxl::read_excel('layers/bike_lanes/manual/lookup_bikelane_types.xlsx')
+# Windows ----
+w[, `:=`(tf_facilit = lane_types[tf], ft_facilit = lane_types[ft])]
+setorder(w, SegmentID, date_from)
+# merge consecutive windows with the same facilities
+w[, run := rleid(tf_facilit, ft_facilit), by = SegmentID]
+w <- w[, .(date_from = min(date_from), date_to = max(date_to)), by = .(SegmentID, run, tf_facilit, ft_facilit)][, run := NULL]
+w <- w[date_to > start_date][date_from < start_date, date_from := start_date]
+tz <- "America/New_York"
+dot_export <- w[, .(SegmentID = as.numeric(SegmentID), time_window = 0L, date_from = as.POSIXct(as.character(date_from), tz = tz),
+                    date_to = as.POSIXct(as.character(date_to), tz = tz), tf_facilit, ft_facilit)]
+start_ct <- as.POSIXct("1899-01-01", tz = tz)
+end_ct <- as.POSIXct("2099-09-09", tz = tz)
 
-bl_types <- setNames( bl_types %>% pull(facility_code),
-                      bl_types %>% pull(facility_text))
-
-# facility text or class code (the manual table codes pre-modification types as I/II/III) to class code
-to_class <- function(x) unname(fifelse(x %in% c('I', 'II', 'III'), x, bl_types[x]))
-
-# pre-modification type: from the manual table; if blank, the type did not change
-# (manual sheet rules: "those without pre-mod keep the same class")
-before_mod <- function(bef, after) fifelse(is.na(bef) | bef == '', to_class(after), to_class(bef))
-
-
-dot_out <- dot_final[, .(
-  segmentid,
-  street,
-  boro,
-  fromstreet,
-  tostreet,
-  bikedir,
-  lanecount,
-  ft_after_mod = to_class(ft_facilit),
-  tf_after_mod = to_class(tf_facilit),
-  ft_before_mod = before_mod(ft_bef_mod, ft_facilit),
-  tf_before_mod = before_mod(tf_bef_mod, tf_facilit),
-  install_date,
-  modif_date,
-  geometry
-)]
-
-
-
-
-# add start_date to cases without bike infra
-start_date <- as.POSIXct('1899-01-01', tz = "America/New_York")
-end_date <- as.POSIXct('2099-09-09', tz = "America/New_York")
-
-
-dot_out[is.na(install_date), install_date := start_date]
-
-
-# expand the cases that are upgraded twice (so 3 time windows in total)
-dot_out[ , infra_upgrades := 1] # for normal cases
-
-dot_out[install_date < modif_date, infra_upgrades := 2]
-
-# expand 
-dot_out <- dot_out[, .(time_window = 1:(infra_upgrades+1)), by = c(names(dot_out))]
-
-
-# set the time_window before installation
-dot_out[time_window > 1, ft_facilit := ft_after_mod]
-dot_out[time_window == 2 & infra_upgrades == 2, ft_facilit := ft_before_mod]
-
-dot_out[time_window > 1, tf_facilit := tf_after_mod]
-dot_out[time_window == 2 & infra_upgrades == 2, tf_facilit := tf_before_mod]
-
-dot_out[time_window == 1, date_from := start_date]
-dot_out[time_window == 2, date_from := install_date]
-dot_out[time_window == 3, date_from := modif_date]
-
-dot_out[time_window == 1, date_to := install_date]
-dot_out[time_window == 2 & infra_upgrades == 1, date_to := end_date]
-dot_out[time_window == 2 & infra_upgrades == 2, date_to := modif_date]
-dot_out[time_window == 3, date_to := end_date]
-
-# install dates on or before start_date (old bridges, unknown dates) leave an empty first window
-dot_out <- dot_out[date_to > date_from]
-dot_out[, time_window := seq_len(.N), by = segmentid]
-
-
-# select
-dot_export <- dot_out[, .(
-  SegmentID = segmentid,
-  time_window,
-  date_from,
-  date_to,
-  tf_facilit,
-  ft_facilit
-)]
-
-# refactor types
-lane_types = c('I' = 'Protected',
-               'II' = 'Standard',
-               'III' = 'Sharrows')
-
-
-
-dot_export[, tf_facilit := lane_types[tf_facilit]]
-dot_export[, ft_facilit := lane_types[ft_facilit]]
-
-
-# validated protection dates (Street View review, park-drive car-free dates) ----
-# segment-level overrides built in manual/04_build_overrides.R;
-# the directions that carry the lane are taken from the DOT windows (both if none)
-ov <- fread('layers/bike_lanes/manual/protection_overrides.csv', colClasses = c(SegmentID = 'numeric'))
-ov <- ov[SegmentID %in% dot_export$SegmentID | protected_from != 'never']
-
-dirs <- dot_export[SegmentID %in% ov$SegmentID,
-                   .(tf = any(!is.na(tf_facilit)), ft = any(!is.na(ft_facilit))), by = SegmentID]
-ov <- merge(ov, dirs, by = 'SegmentID', all.x = TRUE)
+# Street View review overrides ----
+# segment-level protection dates from manual/04_build_overrides.R; the directions that carry the lane
+# are taken from the windows (both if none)
+ov <- fread("layers/bike_lanes/manual/protection_overrides.csv", colClasses = c(SegmentID = "numeric"))
+ov <- ov[SegmentID %in% dot_export[, SegmentID] | protected_from != "never"]
+dirs <- dot_export[SegmentID %in% ov[, SegmentID], .(tf = any(!is.na(tf_facilit)), ft = any(!is.na(ft_facilit))), by = SegmentID]
+ov <- merge(ov, dirs, by = "SegmentID", all.x = TRUE)
 ov[is.na(tf) | (!tf & !ft), `:=`(tf = TRUE, ft = TRUE)]
-
 windows_for <- function(o) {
-  if (o$protected_from == 'never') {
-    w <- dot_export[SegmentID == o$SegmentID]
-    w[tf_facilit == 'Protected', tf_facilit := 'Standard']
-    w[ft_facilit == 'Protected', ft_facilit := 'Standard']
-    return(w)
+  if (o[, protected_from] == "never") {
+    x <- dot_export[SegmentID == o[, SegmentID]]
+    x[tf_facilit == "Protected", tf_facilit := "Standard"][ft_facilit == "Protected", ft_facilit := "Standard"]
+    return(x)
   }
   fac <- function(x, on) if (on) x else NA_character_
-  if (o$protected_from == 'always') {
-    return(data.table(SegmentID = o$SegmentID, time_window = 1L, date_from = start_date, date_to = end_date,
-                      tf_facilit = fac('Protected', o$tf), ft_facilit = fac('Protected', o$ft)))
+  if (o[, protected_from] == "always") {
+    return(data.table(SegmentID = o[, SegmentID], time_window = 1L, date_from = start_ct, date_to = end_ct,
+                      tf_facilit = fac("Protected", o[, tf]), ft_facilit = fac("Protected", o[, ft])))
   }
-  d <- as.POSIXct(o$protected_from, tz = 'America/New_York')
-  before <- if (o$before_class == 'none') NA_character_ else o$before_class
-  data.table(SegmentID = o$SegmentID, time_window = 1:2, date_from = c(start_date, d), date_to = c(d, end_date),
-             tf_facilit = c(fac(before, o$tf), fac('Protected', o$tf)),
-             ft_facilit = c(fac(before, o$ft), fac('Protected', o$ft)))
+  dd <- as.POSIXct(o[, protected_from], tz = tz)
+  before <- if (o[, before_class] == "none") NA_character_ else o[, before_class]
+  data.table(SegmentID = o[, SegmentID], time_window = 1:2, date_from = c(start_ct, dd), date_to = c(dd, end_ct),
+             tf_facilit = c(fac(before, o[, tf]), fac("Protected", o[, tf])), ft_facilit = c(fac(before, o[, ft]), fac("Protected", o[, ft])))
 }
-dot_ov <- rbindlist(lapply(split(ov, by = 'SegmentID'), windows_for))
-dot_export <- rbind(dot_export[!SegmentID %in% ov$SegmentID], dot_ov)
-cat('overrides applied to', uniqueN(dot_ov$SegmentID), 'segments\n')
+dot_ov <- rbindlist(lapply(split(ov, by = "SegmentID"), windows_for))
+dot_export <- rbind(dot_export[!SegmentID %in% ov[, SegmentID]], dot_ov)
+cat("overrides applied to", uniqueN(dot_ov[, SegmentID]), "segments\n")
 
-
-# copies for LION 16d segments missing from the DOT data ----
-# hand-made in 5_NYC_bikelanes 101_merge_streets_data.R (moved here 2026-10-13): the windows of a DOT
-# segment are copied to the LION 16d SegmentID of the same street piece (the paper's street network).
-# 37669, 37630 and 37533 receive identical windows from several sources (kept once); the copy
-# replaces windows the target has of its own (36563: DOT Standard from 2018-12-24, copy Protected
-# from 2018-12-01).
-xw <- fread('layers/bike_lanes/manual/segmentid_crosswalk_lion16d.csv')
+# Copies for LION 16d segments missing from the DOT data ----
+# the windows of a DOT segment are copied to the LION 16d SegmentID of the same street piece (the
+# 5_NYC_bikelanes street network); the copy replaces windows the target has of its own
+xw <- fread("layers/bike_lanes/manual/segmentid_crosswalk_lion16d.csv")
 dot_xw <- dot_export[SegmentID %in% xw[, dot_segmentid]]
 dot_xw[, SegmentID := xw[match(dot_xw[, SegmentID], xw[, dot_segmentid]), lion16d_segmentid]]
 dot_xw <- unique(dot_xw)
 dot_export <- rbind(dot_export[!SegmentID %in% dot_xw[, SegmentID]], dot_xw)
 
-# windows of a segment must not overlap
-overlap <- dot_export[order(SegmentID, date_from)][, .(n = sum(shift(date_from, -1) < date_to, na.rm = TRUE)), SegmentID][n > 0]
-if (nrow(overlap)) stop(nrow(overlap), ' segments with overlapping windows, e.g. ', paste(head(overlap[, SegmentID]), collapse = ', '))
-
-saveRDS(dot_export, file.path(out_dir, 'bike_lanes_time_windows.RDS'))
+# Checks and output ----
+setorder(dot_export, SegmentID, date_from)
+overlap <- dot_export[, .(n = sum(shift(date_from, -1) < date_to, na.rm = TRUE)), SegmentID][n > 0]
+if (nrow(overlap)) stop(nrow(overlap), " segments with overlapping windows, e.g. ", paste(head(overlap[, SegmentID]), collapse = ", "))
+dot_export[, time_window := seq_len(.N), by = SegmentID]
+saveRDS(dot_export, file.path(out_dir, "bike_lanes_time_windows.RDS"))
+cat("windows:", nrow(dot_export), "for", dot_export[, uniqueN(SegmentID)], "segments\n")

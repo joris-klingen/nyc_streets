@@ -49,11 +49,15 @@ layers/                          one folder per street attribute
     scripts/
       01_export_manual_sheet.R     export the Google Sheet "Manual Streetview NYC Bikelanes" to manual/
       02_import_review_answers.py  review page export -> manual/streetview_review_answers.csv
-      03_time_windows.R            build the segment x time-window facilities (Protected / Standard / Sharrows)
+      03_time_windows.R            build the segment x time-window facilities (Protected / Standard / Sharrows), all
+                                   boroughs, from the DOT 2026 version history with the manual checks before 2020
                                    -> nyc_traffic_data/derived/streets/bike_lanes/bike_lanes_time_windows.RDS
+                                   (the earlier DOT 2020 build: bike_lanes_time_windows_dot2020.RDS,
+                                   bikelane_windows_read("dot2020"))
       04_key_windows.R             the windows on the segment key (tf/ft swapped where the key segment runs the
                                    other way) -> bike_lanes_windows_keyed.parquet, bikelane_windows_keyed_read()
-    checks/                        quality checks from 2026-10 (DOT releases, pipeline vs DOT history, upgrade bug)
+    checks/                        quality checks from 2026-10 (DOT releases, pipeline vs DOT history, upgrade bug;
+                                   06: the DOT 2026 build against the DOT 2020 build on the segment key)
   travel_lanes/                  travel-lane panel from 57 quarterly LION releases (citywide, Manhattan monthly);
                                  see its README
 evidence/                        material used to date changes, shared by the layers
