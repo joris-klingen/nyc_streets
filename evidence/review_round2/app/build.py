@@ -16,13 +16,19 @@ KEEP = ["item_id", "kind", "priority", "street", "n_segments", "lion_counts", "l
 
 rows = [{k: (r.get(k) or "") for k in KEEP} for r in csv.DictReader(open(os.path.join(OUT, "items.csv"), encoding="utf-8"))]
 rows = [r for r in rows if os.path.exists(os.path.join(OUT, "sheets", r["item_id"] + ".jpg"))]
+# photo locations: the item's middle, then the Street View points that have a sheet (03_view_points.py)
+for r in rows:
+    r["locs"] = ["middle"] + [(r.get(f"sv_label_{k}") or f"point {k}") for k in (1, 2, 3)
+                              if os.path.exists(os.path.join(OUT, "sheets_views", f"x{r['item_id']}_{k}.jpg"))]
+    r["loc_files"] = [os.path.join(OUT, "sheets", r["item_id"] + ".jpg")] + [os.path.join(OUT, "sheets_views", f"x{r['item_id']}_{k}.jpg")
+                      for k in (1, 2, 3) if os.path.exists(os.path.join(OUT, "sheets_views", f"x{r['item_id']}_{k}.jpg"))]
 # proposed timelines come as JSON strings; flags as booleans
 for r in rows:
     for k in ("bike_events", "dot_events"):
         r[k] = json.loads(r[k] or "[]")
     for k in ("pre_project", "ask_lanes"):
         r[k] = r[k] == "TRUE"
-data = json.dumps(rows, ensure_ascii=False).replace("</", "<\\/")
+data = json.dumps([{k: v for k, v in r.items() if k != "loc_files"} for r in rows], ensure_ascii=False).replace("</", "<\\/")
 ev_path = os.path.join(OUT, "dot_evidence.json")
 evidence = json.load(open(ev_path, encoding="utf-8")) if os.path.exists(ev_path) else {}
 evidence = {k: v for k, v in evidence.items() if k in {r["item_id"] for r in rows}}
@@ -31,11 +37,19 @@ html = (open(os.path.join(APP, "template.html"), encoding="utf-8").read()
         .replace("/*DATA*/", data).replace("/*EVIDENCE*/", ev_data))
 open(os.path.join(APP, "index.html"), "w", encoding="utf-8").write(html)
 
-# sheets, recompressed to keep the publish within the size limits
-dst = os.path.join(APP, "sheets2")
+# one image per item: a row per location, a column per photo year (320 px panels cut from the
+# 3 x 3 sheets, whose 400 px panels sit at 6 + col * 406, 42 + row * 406)
+P = 320
+dst = os.path.join(APP, "sheets3")
 os.makedirs(dst, exist_ok=True)
 for r in rows:
-    im = Image.open(os.path.join(OUT, "sheets", r["item_id"] + ".jpg"))
-    im.save(os.path.join(dst, r["item_id"] + ".jpg"), quality=72, optimize=True)
+    files = r["loc_files"]
+    sprite = Image.new("RGB", (9 * P, len(files) * P), "white")
+    for row, f in enumerate(files):
+        im = Image.open(f)
+        for i in range(9):
+            x, y = 6 + (i % 3) * 406, 42 + (i // 3) * 406
+            sprite.paste(im.crop((x, y, x + 400, y + 400)).resize((P, P), Image.LANCZOS), (i * P, row * P))
+    sprite.save(os.path.join(dst, r["item_id"] + ".jpg"), quality=74, optimize=True)
 size = sum(os.path.getsize(os.path.join(dst, f)) for f in os.listdir(dst))
 print(len(rows), "items;", len(evidence), "with DOT evidence;", round(size / 1e6, 1), "MB of sheets;", round(len(html) / 1e3), "kB page")
