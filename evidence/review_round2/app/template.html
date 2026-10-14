@@ -56,6 +56,8 @@
   .pid { font: 500 .74rem var(--font-mono); color: var(--muted); }
   .dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--line); grid-row: span 2; }
   .dot.done { background: var(--ok); border-color: var(--ok); }
+  .dot.check { background: var(--warn); border-color: var(--warn); }
+  .lanecheck { color: var(--warn); font-weight: 600; }
 
   main.item { min-width: 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 380px; grid-template-rows: auto auto minmax(0, 1fr); }
   .ihead { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px 16px 6px; }
@@ -83,10 +85,12 @@
   .tagctl .chk, .svrow .chk { display: inline-flex; gap: 4px; align-items: center; white-space: nowrap; }
   .tagctl .clear { border: 0; background: transparent; color: var(--muted); cursor: pointer; text-decoration: underline; font-size: .78rem; }
 
-  .compare { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px 8px 12px 16px; }
+  .compare { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 6px 8px; padding: 6px 8px 8px 16px; }
   .ph { position: relative; min-height: 0; display: grid; grid-template-rows: auto auto minmax(0, 1fr); align-content: start; }
   .ph .cap { font: 600 .82rem var(--font-body); padding: 0 0 3px; display: flex; justify-content: space-between; gap: 8px; }
   .ph .cap span { color: var(--muted); font-weight: 500; }
+  .phbar { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; font-size: .82rem; }
+  .phbar .chk { display: inline-flex; gap: 5px; align-items: center; }
   .ph canvas { aspect-ratio: 1 / 1; height: 100%; width: auto; max-width: 100%; max-height: 100%; justify-self: center; background: var(--line); border-radius: 4px; display: block; }
 
   .panel { min-height: 0; overflow: auto; padding: 4px 16px 16px 8px; display: grid; gap: 12px; align-content: start; }
@@ -146,7 +150,7 @@
     <h1>Street Change Review</h1>
     <div class="progress"><span id="progress">0 of 0</span><div class="bar"><i id="bar"></i></div></div>
     <span class="status" id="status">Connecting to the shared answers…</span>
-    <span class="keys"><kbd>Y</kbd> matches · <kbd>N</kbd> correct · <kbd>J</kbd>/<kbd>K</kbd> next / previous</span>
+    <span class="keys"><kbd>Y</kbd> matches · <kbd>N</kbd> correct · <kbd>J</kbd>/<kbd>K</kbd> next / previous · <kbd>B</kbd> brighten · <kbd>Z</kbd> unzoom</span>
   </header>
   <nav class="rail" aria-label="Items">
     <div class="filters" role="group" aria-label="Show">
@@ -178,6 +182,7 @@
   const BIKE = [["none", "none", "none"], ["sharrows", "shared", "Sharrows"], ["conventional", "painted", "Standard"],
                 ["buffered", "buffered", "Protected"], ["protected", "protected", "Protected"]];
   const BIKE_CLASS = Object.fromEntries(BIKE.map(b => [b[0], b[2]]));
+  const TYPE_NAME = { none: "no bike lane", sharrows: "shared lane", conventional: "painted lane", buffered: "painted buffer", protected: "physical protection" };
   const BADGE = { none: "none", sharrows: "shr", conventional: "paint", buffered: "buff", protected: "prot" };
   const badge = t => (t.lanes ?? "?") + "·" + (BADGE[t.bike] || "?") + (t.bus ? "·bus" : "");
   const CLASS_KEY = { Protected: "protected", Standard: "conventional", Sharrows: "sharrows", none: "none" };
@@ -193,6 +198,8 @@
   let tags = {};               // correct mode: photo index -> {lanes, bike}
   let svRows = [];             // correct mode: Street View panoramas
   let editing = null;          // item whose saved answer is being changed
+  let bright = true;           // lift shadows in the large photos (Midtown streets are in shadow most years)
+  let zoom = null;             // {cx, cy} in panel pixels (0-400) when the large photos are zoomed in
   let db = null, user = null, myId = null, canWrite = true, names = {};
   const sheets = {};           // item_id -> Image
 
@@ -208,6 +215,8 @@
   };
   const svgEl = (tag, attrs = {}) => { const n = document.createElementNS("http://www.w3.org/2000/svg", tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); return n; };
   const isDone = id => !!reviews[id];
+  // answers confirmed before the lane counts were editable carry LION's counts
+  const needsLaneCheck = p => { const r = reviews[p.item_id]; return !!(r && p.ask_lanes && !p.pre_project && r.verdict === "confirmed" && !r.lanes_counted); };
   const short = s => (s || "").toUpperCase().replace(/\bEAST\b/g, "E").replace(/\bWEST\b/g, "W").replace(/\bSTREET\b/g, "St").replace(/\bAVENUE\b/g, "Av")
     .replace(/\bBOULEVARD\b/g, "Blvd").replace(/\bPLACE\b/g, "Pl").replace(/\bDRIVE\b/g, "Dr").replace(/\bAPPROACH\b/g, "Appr")
     .toLowerCase().replace(/\b([a-z])/g, m => m.toUpperCase()).replace(/\b(St|Av|Blvd|Pl|Dr)\b/gi, m => m[0].toUpperCase() + m.slice(1).toLowerCase());
@@ -259,7 +268,7 @@
       const ol = el("ol");
       for (const p of items) {
         const b = el("button", { type: "button", "aria-current": p.item_id === current ? "true" : "false" },
-          el("span", { class: "dot" + (isDone(p.item_id) ? " done" : ""), "aria-hidden": "true" }),
+          el("span", { class: "dot" + (needsLaneCheck(p) ? " check" : isDone(p.item_id) ? " done" : ""), "aria-hidden": "true", title: needsLaneCheck(p) ? "Lane counts are LION's: check them" : null }),
           el("span", { class: "nm", text: short(p.street) }), el("span", { class: "pid", text: p.item_id }),
           el("span", { class: "ex", text: extent(p) || (p.n_segments + " segments") }));
         b.addEventListener("click", () => go(p.item_id));
@@ -277,7 +286,7 @@
     $("#bar").style.width = (ITEMS.length ? 100 * n / ITEMS.length : 0) + "%";
   }
   function go(id) {
-    current = id; mode = "view"; tags = {}; svRows = []; pick = [null, null]; editing = null;
+    current = id; mode = "view"; tags = {}; svRows = []; pick = [null, null]; editing = null; zoom = null;
     renderList(); renderItem();
   }
   function step(d) {
@@ -293,21 +302,40 @@
     if (!img) { img = new Image(); img.src = "sheets2/" + p.item_id + ".jpg"; sheets[p.item_id] = img; }
     if (img.complete && img.naturalWidth) cb(img); else img.addEventListener("load", () => cb(img), { once: true });
   }
-  function draw(canvas, p, ph) {
+  const GAMMA = (() => { const t = new Uint8ClampedArray(256); for (let v = 0; v < 256; v++) t[v] = Math.round(255 * Math.pow(v / 255, 0.55)); return t; })();
+  function draw(canvas, p, ph, large) {
     sheet(p, img => {
       const r = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
       const s = Math.max(10, Math.floor(Math.min(r.width, r.height || r.width) * dpr));
       canvas.width = s; canvas.height = s;
       const ctx = canvas.getContext("2d");
       ctx.imageSmoothingQuality = "high";
-      ctx.drawImage(img, ph.sx, ph.sy, 400, 400, 0, 0, s, s);
+      let sx = ph.sx, sy = ph.sy, sw = 400;
+      if (large && zoom) {   // 2.5x around the clicked point, kept inside the panel
+        sw = 160;
+        sx = ph.sx + Math.min(400 - sw, Math.max(0, zoom.cx - sw / 2));
+        sy = ph.sy + Math.min(400 - sw, Math.max(0, zoom.cy - sw / 2));
+      }
+      ctx.drawImage(img, sx, sy, sw, sw, 0, 0, s, s);
+      if (large && bright) {
+        try {
+          const d = ctx.getImageData(0, 0, s, s), a = d.data;
+          for (let i = 0; i < a.length; i += 4) { a[i] = GAMMA[a[i]]; a[i + 1] = GAMMA[a[i + 1]]; a[i + 2] = GAMMA[a[i + 2]]; }
+          ctx.putImageData(d, 0, 0);
+        } catch (e) {   // pixels not readable: a plain brightness filter instead
+          ctx.filter = "brightness(1.6) contrast(1.05)";
+          ctx.drawImage(img, sx, sy, sw, sw, 0, 0, s, s);
+          ctx.filter = "none";
+        }
+      }
     });
   }
   function defaultPick(p) {
     const ev = mainEvent(p.kind === "C" ? p.dot_events.concat(p.bike_events) : p.bike_events);
     if (ev) {
       let a = 0; PHOTOS.forEach(ph => { if (ph.hi < ev.date) a = ph.i; });
-      return [a, Math.min(a + 1, PHOTOS.length - 1)];
+      a = Math.min(a, PHOTOS.length - 2);   // a change after the last photo: the last two photos
+      return [a, a + 1];
     }
     if (p.ask_lanes) return [4, 8];
     return [2, 8];
@@ -419,6 +447,15 @@
     return box;
   }
 
+  function redrawLarge(p) {
+    document.querySelectorAll(".compare canvas").forEach((cv, k) => {
+      draw(cv, p, PHOTOS[pick[k]], true);
+      cv.style.cursor = zoom ? "zoom-out" : "zoom-in";
+      cv.title = zoom ? "Click to zoom out" : "Click to zoom in here";
+    });
+    const b = $("#f-bright"); if (b) b.checked = bright;
+  }
+
   function choosePhoto(p, i) {
     if (pick.includes(i)) return;
     if (i < pick[0]) pick[0] = i; else if (i > pick[1]) pick[1] = i;
@@ -430,11 +467,20 @@
     const c = el("section", { class: "compare", "aria-label": "Two photos compared" });
     for (const k of [0, 1]) {
       const ph = PHOTOS[pick[k]];
-      const canvas = el("canvas", { role: "img", "aria-label": "Aerial photo " + ph.label + " of " + short(p.street) + ", the item's segments in magenta" });
+      const canvas = el("canvas", { role: "img", title: zoom ? "Click to zoom out" : "Click to zoom in here", "aria-label": "Aerial photo " + ph.label + " of " + short(p.street) + ", the item's segments in magenta" });
+      canvas.style.cursor = zoom ? "zoom-out" : "zoom-in";
+      canvas.addEventListener("click", ev => {
+        if (zoom) zoom = null;
+        else { const rc = canvas.getBoundingClientRect(); zoom = { cx: (ev.clientX - rc.left) / rc.width * 400, cy: (ev.clientY - rc.top) / rc.height * 400 }; }
+        redrawLarge(p);
+      });
       c.append(el("div", { class: "ph" }, el("div", { class: "cap" }, ph.label, el("span", { text: k === 0 ? "earlier" : "later" })),
         mode === "correct" ? tagControls(p, ph) : el("span"), canvas));
-      requestAnimationFrame(() => draw(canvas, p, ph));
+      requestAnimationFrame(() => draw(canvas, p, ph, true));
     }
+    const bb = el("label", { class: "chk" }, el("input", { type: "checkbox", id: "f-bright", checked: bright }), document.createTextNode("Brighten shadows (B)"));
+    bb.querySelector("input").addEventListener("change", e => { bright = e.target.checked; redrawLarge(p); });
+    c.append(el("div", { class: "phbar" }, bb, el("span", { class: "hint", text: "Click a photo to zoom both in on that spot (Z resets)." })));
     return c;
   }
 
@@ -470,8 +516,11 @@
           const n = el("input", { type: "number", class: "num", id: "f-pre", min: "0", max: "8", inputmode: "numeric", value: lanes.after ?? "" });
           card.append(el("div", { class: "row" }, el("label", { for: "f-pre", text: "Before the project:" }), n, el("span", { class: "hint", text: "LION's first count (2016), after it: " + (lanes.after ?? "–") })));
         } else {
-          card.append(el("div", {}, el("strong", { text: lanes.before + " → " + lanes.after }), " ",
-            el("span", { class: "hint", text: lanes.with_bike ? "with the bike lane change (" + lanes.with_bike + ")" : "between LION 16a (Feb 2016) and the 24b recount (Apr 2024)" })));
+          const nb = el("input", { type: "number", class: "num", id: "f-lb", min: "0", max: "8", inputmode: "numeric", value: lanes.before ?? "" });
+          const na = el("input", { type: "number", class: "num", id: "f-la", min: "0", max: "8", inputmode: "numeric", value: lanes.after ?? "" });
+          card.append(el("div", { class: "row" }, el("label", { for: "f-lb", text: "Before" }), nb, el("label", { for: "f-la", text: "after" }), na,
+            el("span", { class: "hint", text: lanes.with_bike ? "changed with the bike lane (" + lanes.with_bike + ")" : "changed between LION 16a (Feb 2016) and the 24b recount (Apr 2024)" })),
+            el("p", { class: "hint", text: "Pre-filled with LION (" + lanes.before + " → " + lanes.after + "), which is often off: set what you see. Same number twice = no change." }));
         }
       }
       const b = el("div", { class: "btns" });
@@ -571,9 +620,10 @@
     const withBike = obs.filter(o => o.bike), withLanes = obs.filter(o => o.lanes != null);
     for (let i = 1; i < withBike.length; i++) {
       const a = withBike[i - 1], b = withBike[i], ca = BIKE_CLASS[a.bike], cb = BIKE_CLASS[b.bike];
-      if (ca === cb) continue;
+      if (a.bike === b.bike) continue;
       const hit = cands.filter(e => e.to === cb && e.date > a.hi && e.date <= b.hi).sort((x, y) => x.date < y.date ? -1 : 1)[0];
-      bike.push({ from: ca, to: cb, last_without: a.label, first_with: b.label, window: [a.hi, b.lo], date: hit ? hit.date : b.lo, precision: hit ? "verified" : "window", source: hit ? hit.source : b.source });
+      bike.push({ from: ca, to: cb, from_type: a.bike, to_type: b.bike, last_without: a.label, first_with: b.label, window: [a.hi, b.lo],
+                  date: hit ? hit.date : b.lo, precision: hit ? "verified" : "window", source: hit ? hit.source : b.source });
     }
     for (let i = 1; i < withLanes.length; i++) {
       const a = withLanes[i - 1], b = withLanes[i];
@@ -633,7 +683,7 @@
     const d = derive(p);
     const out = [];
     if (d.obs.length < 2) out.push(el("p", { text: "Tag at least two photos or panoramas to bracket a change." }));
-    for (const c of d.bike) out.push(el("p", { text: "Bike lane " + NAME[c.from] + " → " + NAME[c.to] + ": between " + c.last_without + " and " + c.first_with + (c.precision === "verified" ? ". " + c.source + " date " + c.date + " falls inside, so it is used." : ". No DOT date inside: the window is kept.") }));
+    for (const c of d.bike) out.push(el("p", { text: "Bike lane " + TYPE_NAME[c.from_type] + " → " + TYPE_NAME[c.to_type] + ": between " + c.last_without + " and " + c.first_with + (c.precision === "verified" ? ". " + c.source + " date " + c.date + " falls inside, so it is used." : ". No DOT date inside: the window is kept.") }));
     for (const c of d.lanes) out.push(el("p", { text: "Travel lanes " + c.before + " → " + c.after + ": between " + c.last_before + " and " + c.first_after + (c.with_bike ? ", with the bike lane (" + c.date + ")." : ".") }));
     for (const c of d.bus) out.push(el("p", { text: (c.to === "bus lane" ? "Bus lane added" : "Bus lane removed") + ": between " + c.last_without + " and " + c.first_with + "." }));
     if (d.obs.length >= 2 && !d.bike.length && !d.lanes.length && !d.bus.length) out.push(el("p", { text: "No change between the tagged photos and panoramas." }));
@@ -659,7 +709,10 @@
       const ev = mainEvent(p.bike_events);
       if (+v !== lanes.after) body.lane_changes.push({ before: +v, after: lanes.after, date: ev ? ev.date : "", precision: ev ? "with bike lane" : "unknown", with_bike: !!ev });
     } else if (lanes) {
-      body.lane_changes.push({ before: lanes.before, after: lanes.after, date: lanes.with_bike || "", precision: lanes.with_bike ? "with bike lane" : "2016-2024", with_bike: !!lanes.with_bike });
+      const vb = $("#f-lb").value, va = $("#f-la").value;
+      if (!/^\d$/.test(vb) || !/^\d$/.test(va)) { say("Enter the travel lanes before and after."); return; }
+      body.lanes_counted = { before: +vb, after: +va, edited: +vb !== lanes.before || +va !== lanes.after };
+      if (+vb !== +va) body.lane_changes.push({ before: +vb, after: +va, date: lanes.with_bike || "", precision: lanes.with_bike ? "with bike lane" : "2016-2024", with_bike: !!lanes.with_bike });
     }
     await write(p, body);
   }
@@ -671,7 +724,7 @@
     body.verdict = "corrected";
     body.observations = d.obs.map(o => ({ source: o.source, photo: o.photo || "", date: o.date || o.lo.slice(0, 7), lanes: o.lanes, bus: o.bus, bike: o.bike }));
     body.bus_changes = d.bus;
-    body.bike_changes = d.bike.map(c => ({ from: c.from, to: c.to, last_without: c.last_without, first_with: c.first_with, date: c.date, precision: c.precision, source: c.source }));
+    body.bike_changes = d.bike.map(c => ({ from: c.from, to: c.to, from_type: c.from_type, to_type: c.to_type, last_without: c.last_without, first_with: c.first_with, date: c.date, precision: c.precision, source: c.source }));
     body.lane_changes = d.lanes.map(c => ({ before: c.before, after: c.after, last_before: c.last_before, first_after: c.first_after, date: c.date, precision: c.precision, with_bike: c.with_bike }));
     const l = laneProposal(p);
     if (l && l.pre) { const first = d.obs.find(o => o.lanes != null); if (first) body.lanes_before_project = first.lanes; }
@@ -696,12 +749,14 @@
     const card = el("div", { class: "card answer" });
     const v = { confirmed: "Confirmed: matches", confirmed_ours: "Confirmed: our timeline", confirmed_dot: "Confirmed: DOT's timeline", corrected: "Corrected from photos and panoramas" }[r.verdict] || r.verdict;
     card.append(el("p", {}, el("strong", { text: v })));
-    for (const c of r.bike_changes || []) card.append(el("p", { text: "Bike lane " + (NAME[c.from] || c.from) + " → " + (NAME[c.to] || c.to) + ": " + c.date + " · " + c.precision + (c.last_without ? " (between " + c.last_without + " and " + c.first_with + ")" : "") }));
+    for (const c of r.bike_changes || []) card.append(el("p", { text: "Bike lane " + (TYPE_NAME[c.from_type] || NAME[c.from] || c.from) + " → " + (TYPE_NAME[c.to_type] || NAME[c.to] || c.to) + ": " + c.date + " · " + c.precision + (c.last_without ? " (between " + c.last_without + " and " + c.first_with + ")" : "") }));
     for (const c of r.lane_changes || []) card.append(el("p", { text: "Travel lanes " + c.before + " → " + c.after + ": " + (c.date || "undated") + " · " + c.precision }));
     for (const c of r.bus_changes || []) card.append(el("p", { text: (c.to === "bus lane" ? "Bus lane added" : "Bus lane removed") + ": " + c.date + " · window (between " + c.last_without + " and " + c.first_with + ")" }));
+    if (r.lanes_counted) card.append(el("p", { text: "Travel lanes counted: " + r.lanes_counted.before + " → " + r.lanes_counted.after + (r.lanes_counted.edited ? "" : " (as LION)") }));
     if (r.lanes_before_project != null) card.append(el("p", { text: "Travel lanes before the project: " + r.lanes_before_project }));
     card.append(el("p", { class: "saved", text: "Saved " + new Date(r.saved_at).toLocaleString() + (r.by ? " by " + (names[r.by] || "a reviewer") : "") }));
-    const ch = button("Change answer", "ghost small", () => { editing = p.item_id; if (r.verdict === "corrected") startCorrect(); else renderItem(); });
+    if (needsLaneCheck(p)) card.append(el("p", { class: "lanecheck", text: "The travel lanes in this answer are LION's, not yours. Reopen it, set the lanes you see and confirm again." }));
+    const ch = button(needsLaneCheck(p) ? "Check lane counts" : "Change answer", needsLaneCheck(p) ? "save small" : "ghost small", () => { editing = p.item_id; if (r.verdict === "corrected") startCorrect(); else renderItem(); });
     ch.disabled = !db || !canWrite;
     card.append(el("div", { class: "btns" }, ch));
     return card;
@@ -712,6 +767,8 @@
     if (typing() || e.ctrlKey || e.metaKey || e.altKey) return;
     const p = ITEMS.find(x => x.item_id === current); if (!p) return;
     const k = e.key.toLowerCase();
+    if (k === "b") { bright = !bright; redrawLarge(p); e.preventDefault(); return; }
+    if (k === "z") { zoom = null; redrawLarge(p); e.preventDefault(); return; }
     if (k === "j") step(1);
     else if (k === "k") step(-1);
     else if (mode === "view" && (!reviews[p.item_id] || editing === p.item_id)) {
