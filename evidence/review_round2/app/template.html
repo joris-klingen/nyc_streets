@@ -110,6 +110,28 @@
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .saved { font-size: .88rem; color: var(--muted); }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .proposal { border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 12px 16px; display: grid; gap: 12px; }
+  .proposal h3 { font: 700 1.15rem var(--font-display); letter-spacing: .03em; text-transform: uppercase; margin: 0; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 24px; }
+  .tl { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .tl li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 10px; align-items: baseline; }
+  .tl .d { font: 500 .92rem var(--font-mono); font-variant-numeric: tabular-nums; }
+  .tl .what { font-weight: 600; }
+  .tl .meta { display: block; font-size: .8rem; color: var(--muted); font-weight: 400; }
+  .tl .empty { color: var(--muted); font-size: .9rem; }
+  .verdicts { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn.ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+  table.obs { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  table.obs th { text-align: left; font: 600 .72rem var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  table.obs td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  table.obs input, table.obs select { width: 100%; min-width: 0; margin: 0; font: 500 .92rem var(--font-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; }
+  table.obs td.x { width: 2.5em; text-align: center; }
+  table.obs button { border: 0; background: transparent; color: var(--muted); font-size: 1.1rem; cursor: pointer; }
+  .derived { background: var(--bg); border-radius: 4px; padding: 10px 14px; font-size: .92rem; }
+  .derived p { margin: 2px 0; }
+  .derived .warn { color: var(--warn); }
+  .answer { background: var(--ok-soft); border-radius: 4px; padding: 10px 14px; }
+  .answer p { margin: 2px 0; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -147,55 +169,60 @@
   const ITEMS = JSON.parse(document.getElementById("items").textContent);
   const EVIDENCE = JSON.parse(document.getElementById("evidence").textContent);
   const COLLECTION = "round2";
-  const KINDS = {
-    A: { label: "Project · lanes", lanes: true, prot: true },
-    B: { label: "Lane change", lanes: true, prot: false },
-    C: { label: "Date conflict", lanes: false, prot: true }
-  };
+  const KIND_LABEL = { A: "Project", B: "Lane change", C: "Date conflict" };
+  const GROUPS = [[1, "Projects"], [2, "Lane changes · 3+ segments"], [3, "Date conflicts"], [4, "Lane changes · 1–2 segments"]];
+  // what a reviewer can see on the street, and the class it counts as (buffered counts as protected)
+  const BIKE = [["none", "No bike lane", "none"], ["sharrows", "Sharrows / shared", "Sharrows"], ["conventional", "Painted lane", "Standard"],
+                ["buffered", "Painted buffer", "Protected"], ["protected", "Physically protected", "Protected"]];
+  const BIKE_CLASS = Object.fromEntries(BIKE.map(b => [b[0], b[2]]));
   const LANE_TASKS = {
-    "review_decrease_no_facility": "LION counts fewer travel lanes in 2024 than in 2016 here, and no bike lane change explains it. Find when the moving lanes for cars changed (road diet, bus lane, turn lanes, curb extensions), or tick that the street looks the same and LION only recounted.",
-    "review_increase_with_facility": "LION counts more travel lanes in 2024 than in 2016 while the bike lane changed. Count the moving lanes before and after, and when they changed.",
-    "review_other": "LION's lane counts change in an unusual way here. Count the moving lanes before and after, and when they changed.",
-    "pre-project count": "A protected lane was installed before LION first counted lanes (2016), so the count before the project is unknown. Count the moving lanes in the earliest panoramas, before the project."
+    "review_decrease_no_facility": "LION counts fewer travel lanes in 2024 than in 2016 here.",
+    "review_increase_with_facility": "LION counts more travel lanes in 2024 than in 2016 while the bike lane changed.",
+    "review_other": "LION's lane counts change in an unusual way here.",
+    "pre-project count": "A protected lane came before LION first counted lanes (2016), so the count before the project is unknown."
   };
-  const TASK = {
-    A: "Round 1 dated the protection of this project, or its dates agreed with the photos. Confirm the protection date, and record the moving lanes for cars before and after: they usually changed with the bike lane.",
-    B: "",
-    C: "Our date (from the manual Street View checks on the 2020 release) and the DOT 2026 history disagree by more than a year. Find when physical protection first appears, and what was there before.",
-    M029: "Round 1 found protection first in 2026-04, with nothing visible up to 2024-09. Record the window: the first panorama with protection and the last one without it."
-  };
-  const BEFORE = [["none", "No bike lane"], ["conventional", "Conventional lane"], ["buffered", "Painted buffer"], ["protected", "Already protected"]];
-  const GROUPS = [[1, "Projects with lane questions"], [2, "Lane changes · 3+ segments"], [3, "Date conflicts"], [4, "Lane changes · 1–2 segments"]];
 
   let reviews = {};
   let current = ITEMS[0] ? ITEMS[0].item_id : null;
   let filter = "todo";
+  let editing = null;          // item_id whose saved answer is being changed
+  let logOpen = null;          // item_id whose observation log is open without a saved answer
   let db = null, user = null, myId = null, canWrite = true, names = {};
 
   const $ = (s, r = document) => r.querySelector(s);
   const el = (tag, attrs = {}, ...kids) => {
     const n = document.createElement(tag);
     for (const [k, v] of Object.entries(attrs)) {
-      if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v === true ? "" : v);
+      if (k === "class") n.className = v; else if (k === "text") n.textContent = v;
+      else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v === true ? "" : v);
     }
     for (const k of kids) if (k) n.append(k);
     return n;
   };
   const isDone = id => !!reviews[id];
-  const ym = d => (d || "").slice(0, 7);
-  const show = d => d ? d : "–";
-  const kindOf = p => KINDS[p.kind] || KINDS.B;
-  const asksProt = p => kindOf(p).prot || (p.kind === "B" && !!p.prot_pipe);
+  const titleCase = s => s.toLowerCase().replace(/\b([a-z])/g, m => m.toUpperCase()).replace(/\b(\d+) (Av|Avenue)\b/i, "$1 Av");
+  const PREC = { day: "exact day", month: "month only (1st of the month)", year: "year only (1 January)" };
+
+  // Proposal helpers ----
+  function mainBikeEvent(events) {     // the change a lane change would come with: the largest install or upgrade
+    const c = events.filter(e => e.to === "Protected" || e.to === "Standard");
+    if (!c.length) return null;
+    return c.slice().sort((a, b) => b.segments - a.segments || (b.date > a.date ? 1 : -1))[0];
+  }
+  function laneProposal(p) {
+    if (!p.ask_lanes) return null;
+    const lb = p.lion_before === "" ? null : +p.lion_before, la = p.lion_after === "" ? null : +p.lion_after;
+    if (p.pre_project) return { pre: true, after: lb };
+    const ev = mainBikeEvent(p.bike_events);
+    return { pre: false, before: lb, after: la, with_bike: ev ? ev.date : null };
+  }
 
   function setStatus(msg, warn) { const s = $("#status"); s.textContent = msg; s.classList.toggle("warn", !!warn); }
-
   function renderProgress() {
     const n = ITEMS.filter(p => isDone(p.item_id)).length;
     $("#progress").textContent = n + " of " + ITEMS.length + " checked";
     $("#bar").style.width = (ITEMS.length ? 100 * n / ITEMS.length : 0) + "%";
   }
-
-  function titleCase(s) { return s.toLowerCase().replace(/\b([a-z])/g, m => m.toUpperCase()).replace(/\b(\d+) (Av|Avenue)\b/i, "$1 Av"); }
 
   function renderList() {
     const box = $("#list"); box.replaceChildren();
@@ -209,7 +236,7 @@
           el("span", { class: "dot" + (isDone(p.item_id) ? " done" : ""), "aria-hidden": "true" }),
           el("span", { class: "sname", text: titleCase(p.street) }),
           el("span", { class: "pid", text: p.item_id }));
-        b.addEventListener("click", () => { current = p.item_id; renderList(); renderDetail(); window.scrollTo({ top: 0 }); });
+        b.addEventListener("click", () => { current = p.item_id; editing = null; logOpen = null; renderList(); renderDetail(); window.scrollTo({ top: 0 }); });
         ol.append(el("li", {}, b));
       }
       box.append(ol);
@@ -217,33 +244,25 @@
     if (!box.children.length) box.append(el("p", { class: "group", text: filter === "done" ? "Nothing checked yet." : "All items checked." }));
   }
 
+  // Detail ----
   function renderDetail() {
     const box = $("#detail"); box.replaceChildren();
     const p = ITEMS.find(x => x.item_id === current);
     if (!p) { box.append(el("p", { text: "Pick an item on the left." })); return; }
-    const k = kindOf(p);
     const r = reviews[p.item_id];
 
     box.append(el("div", { class: "eyebrow" },
       el("span", { class: "chip p" + p.priority, text: GROUPS.find(g => g[0] === +p.priority)[1] }),
-      el("span", { class: "chip cat", text: k.label }),
+      el("span", { class: "chip cat", text: KIND_LABEL[p.kind] || p.kind }),
       r ? el("span", { class: "chip done", text: "Checked" }) : null,
       el("span", { class: "pid", text: p.item_id })));
     box.append(el("h2", { text: titleCase(p.street) }));
-
     const facts = el("dl", { class: "facts" });
     const rows = [["Segments", p.n_segments]];
-    if (k.lanes) rows.push(["LION lanes 2016 → 2024", p.lion_counts || "–"]);
-    if (asksProt(p)) {
-      rows.push(["Our protection date", show(p.prot_pipe)], ["DOT 2026 date", show(p.prot_dot)]);
-      if (p.r1_protected_from) rows.push(["Round 1 answer", p.r1_protected_from + (p.r1_before_type ? " (before: " + p.r1_before_type + ")" : "")]);
-    }
+    if (p.ask_lanes) rows.push(["LION lanes 2016 → 2024", p.lion_counts || "–"]);
+    if (p.r1_protected_from) rows.push(["Round 1 answer", p.r1_protected_from + (p.r1_before_type ? " (before: " + p.r1_before_type + ")" : "")]);
     for (const [a, b] of rows) facts.append(el("div", { class: "fact" }, el("dt", { text: a }), el("dd", { text: String(b) })));
     box.append(facts);
-
-    const tasks = [TASK[p.item_id] || TASK[p.kind]];
-    if (k.lanes) for (const q of (p.lane_q || "").split("; ")) if (LANE_TASKS[q] && p.kind === "B") tasks.push(LANE_TASKS[q]);
-    for (const t of tasks.filter(Boolean)) box.append(el("p", { class: "task", text: t }));
 
     const views = el("div", { class: "views" });
     ["streetview_1", "streetview_2", "streetview_3"].forEach((key, i) => {
@@ -255,11 +274,264 @@
     const ev = EVIDENCE[p.item_id];
     if (ev && (ev.presentations.length || ev.report2014.length)) box.append(buildEvidence(ev));
 
-    box.append(buildForm(p, r));
+    if (r && editing !== p.item_id) box.append(buildAnswer(p, r));
+    else box.append(buildForm(p, r));
 
     box.append(el("figure", {},
       el("img", { src: "sheets2/" + p.item_id + ".jpg", alt: "Aerial photos 2008 to 2024 of " + titleCase(p.street) + ", with the item's street segments marked in magenta", loading: "lazy" }),
       el("figcaption", { text: "Aerial photos 2008–2024, each labelled with its Manhattan capture date. 2008–2014 were flown in June with trees in leaf; 2016 onward in March–April. 70 m square, street running vertically; magenta marks the item's segments. Lane markings are often clearer here than in Street View." })));
+  }
+
+  function timeline(events, lanes) {
+    const ul = el("ul", { class: "tl" });
+    for (const e of events) {
+      ul.append(el("li", {}, el("span", { class: "d", text: e.date }),
+        el("span", { class: "what", text: e.from + " → " + e.to },
+          el("span", { class: "meta", text: e.source + " · " + PREC[e.precision] + " · " + e.segments + " of " + e.of + " segments" }))));
+    }
+    if (lanes) {
+      let d, what, meta;
+      if (lanes.pre) { d = "before"; what = "travel lanes before the project: ?"; meta = "LION's first count (2016), after the project: " + (lanes.after ?? "–"); }
+      else if (lanes.with_bike) { d = lanes.with_bike; what = "travel lanes " + lanes.before + " → " + lanes.after; meta = "proposed: at the same time as the bike lane change"; }
+      else { d = "2016–2024"; what = "travel lanes " + lanes.before + " → " + lanes.after; meta = "LION: changed between release 16a (Feb 2016) and the 24b recount (Apr 2024)"; }
+      ul.append(el("li", {}, el("span", { class: "d", text: d }), el("span", { class: "what", text: what }, el("span", { class: "meta", text: meta }))));
+    }
+    if (!ul.children.length) ul.append(el("li", { class: "empty", text: "No change on record." }));
+    return ul;
+  }
+
+  function buildForm(p, r) {
+    const f = el("form", { id: "review-form", novalidate: "" });
+    const lanes = laneProposal(p);
+    const hasProposal = p.bike_events.length || p.dot_events.length || lanes;
+    const tasks = [];
+    if (p.kind === "C") tasks.push("Our timeline and the DOT 2026 history disagree by more than a year. Pick the one Street View confirms, or log what you see.");
+    else if (p.item_id === "M029") tasks.push("Round 1 found protection first in 2026-04 with nothing visible up to 2024-09. Log the last panorama without protection and the first with it.");
+    else tasks.push("Check the proposal in Street View. If it matches, confirm it; if not, log what the panoramas show and the page works out the dates.");
+    for (const q of (p.lane_q || "").split("; ")) if (p.ask_lanes && LANE_TASKS[q]) tasks.push(LANE_TASKS[q]);
+    for (const t of tasks) f.append(el("p", { class: "task", text: t }));
+
+    const showLog = !hasProposal || logOpen === p.item_id || (r && r.verdict === "corrected") || p.item_id === "M029";
+    const prop = el("div", { class: "proposal" });
+    let preInput = null;
+    if (hasProposal && !showLog) {
+      if (p.kind === "C") {
+        prop.append(el("h3", { text: "Two timelines" }), el("div", { class: "cols" },
+          el("div", {}, el("p", { class: "evh", text: "Ours (manual checks before 2020, then DOT)" }), timeline(p.bike_events, null)),
+          el("div", {}, el("p", { class: "evh", text: "DOT 2026 history" }), timeline(p.dot_events, null))));
+      } else {
+        prop.append(el("h3", { text: "Proposed" }), timeline(p.bike_events, lanes));
+      }
+      if (lanes && lanes.pre) {
+        preInput = el("input", { type: "number", id: "f-pre", min: "0", max: "8", step: "1", inputmode: "numeric", value: r && r.lanes_before_project != null ? r.lanes_before_project : (lanes.after ?? "") });
+        prop.append(el("div", { class: "row" }, el("div", {}, el("label", { for: "f-pre", text: "Travel lanes before the project" }), preInput)));
+      }
+      const v = el("div", { class: "verdicts" });
+      if (p.kind === "C") {
+        v.append(btn("Our timeline matches", "ok", () => saveConfirmed(p, "ours")), btn("DOT's matches", "ok", () => saveConfirmed(p, "dot")));
+      } else {
+        v.append(btn("Matches Street View", "ok", () => saveConfirmed(p, "proposal")));
+      }
+      v.append(btn(p.kind === "C" ? "Neither: log what I see" : "Doesn't match: log what I see", "ghost", () => { logOpen = p.item_id; renderDetail(); }));
+      prop.append(v);
+      f.append(prop);
+    } else {
+      f.append(buildLog(p, r, lanes));
+    }
+
+    const ta = el("textarea", { id: "f-note", placeholder: "Anything worth knowing: cross streets where it differs, lanes that vary along the item, construction" });
+    ta.value = r ? (r.note || "") : "";
+    f.append(el("div", {}, el("label", { for: "f-note", text: "Note (optional)" }), ta));
+    const saved = el("span", { class: "saved", id: "saved-line" });
+    const actions = el("div", { class: "actions" });
+    if (showLog) actions.append(btn(r ? "Update answer" : "Save answer", "", () => saveCorrected(p)));
+    actions.append(btn("Next item", "ghost", nextItem));
+    if (editing === p.item_id) actions.append(btn("Cancel", "ghost", () => { editing = null; logOpen = null; renderDetail(); }));
+    actions.append(saved);
+    f.append(actions);
+    if (!db || !canWrite) {
+      f.querySelectorAll("button.ok, button.save").forEach(b => b.disabled = true);
+      saved.textContent = !db ? "Answers can't be saved in this view. Open the page on claude.ai while signed in." : "You can view the answers but not change them.";
+    }
+    f.addEventListener("submit", e => e.preventDefault());
+    return f;
+  }
+
+  function btn(text, cls, fn) {
+    const b = el("button", { type: "button", class: "btn " + (cls || "save"), text });
+    b.addEventListener("click", fn);
+    return b;
+  }
+
+  // Observation log ----
+  function initialRows(p, r, lanes) {
+    if (r && r.observations && r.observations.length) return r.observations.map(o => Object.assign({}, o));
+    const ev = mainBikeEvent(p.bike_events) || p.bike_events[0] || p.dot_events[0];
+    const toKey = c => ({ Protected: "protected", Standard: "conventional", Sharrows: "sharrows", none: "none" })[c] || "none";
+    const before = { date: "", lanes: lanes ? (lanes.pre ? "" : lanes.before) : "", bike: ev ? toKey(ev.from) : "none" };
+    const after = { date: "", lanes: lanes ? (lanes.pre ? lanes.after : lanes.after) : "", bike: ev ? toKey(ev.to) : "none" };
+    return [before, after];
+  }
+
+  function buildLog(p, r, lanes) {
+    const wrap = el("div", { class: "proposal" });
+    wrap.append(el("h3", { text: "What the panoramas show" }));
+    wrap.append(el("p", { class: "prefill", text: "One row per panorama date you checked, in any order. Two rows around each change are enough; \"+ add panorama\" copies the last row." }));
+    const table = el("table", { class: "obs" });
+    const head = el("tr", {}, el("th", { text: "Panorama (month)" }));
+    if (p.ask_lanes) head.append(el("th", { text: "Travel lanes" }));
+    head.append(el("th", { text: "Bike lane" }), el("th", {}));
+    table.append(el("thead", {}, head));
+    const body = el("tbody", { id: "obs-body" });
+    table.append(body);
+    const rows = initialRows(p, r, lanes);
+    const derived = el("div", { class: "derived", id: "derived" });
+
+    function addRow(o) {
+      const tr = el("tr");
+      const d = el("input", { type: "month", min: "2007-01", max: "2026-12", value: o.date || "", "aria-label": "Panorama month" });
+      tr.append(el("td", {}, d));
+      let n = null;
+      if (p.ask_lanes) { n = el("input", { type: "number", min: "0", max: "8", step: "1", inputmode: "numeric", value: o.lanes ?? "", "aria-label": "Travel lanes" }); tr.append(el("td", {}, n)); }
+      const s = el("select", { "aria-label": "Bike lane" });
+      for (const [v, t] of BIKE) s.append(el("option", { value: v, text: t, selected: o.bike === v }));
+      tr.append(el("td", {}, s));
+      const x = el("button", { type: "button", title: "Remove this row", "aria-label": "Remove this row", text: "×" });
+      x.addEventListener("click", () => { tr.remove(); update(); });
+      tr.append(el("td", { class: "x" }, x));
+      for (const i of [d, n, s]) if (i) i.addEventListener("input", update);
+      body.append(tr);
+    }
+    rows.forEach(addRow);
+    const add = el("button", { type: "button", class: "btn ghost", text: "+ add panorama" });
+    add.addEventListener("click", () => { const o = readRows(); const last = o[o.length - 1] || { bike: "none" }; addRow({ date: "", lanes: last.lanes, bike: last.bike }); update(); });
+    wrap.append(table, el("div", { class: "actions" }, add), derived);
+    if (lanes && lanes.pre) wrap.append(el("p", { class: "prefill", text: "Before-project count: the first row's travel lanes." }));
+
+    function update() { derived.replaceChildren(...describe(p, deriveChanges(p, readRows()))); }
+    setTimeout(update, 0);
+    return wrap;
+  }
+
+  function readRows() {
+    return [...document.querySelectorAll("#obs-body tr")].map(tr => {
+      const ins = tr.querySelectorAll("input, select");
+      const date = ins[0].value;
+      const hasLanes = ins.length === 3;
+      return { date, lanes: hasLanes && ins[1].value !== "" ? +ins[1].value : null, bike: ins[hasLanes ? 2 : 1].value };
+    });
+  }
+
+  // changes between consecutive dated rows; a change's date is the DOT or pipeline day inside the
+  // window when there is one (verified), else the first panorama showing it (window)
+  function deriveChanges(p, rows) {
+    const obs = rows.filter(o => /^\d{4}-\d{2}$/.test(o.date)).sort((a, b) => a.date < b.date ? -1 : 1);
+    const cands = p.bike_events.concat(p.dot_events);
+    const bike = [], lanes = [];
+    for (let i = 1; i < obs.length; i++) {
+      const a = obs[i - 1], b = obs[i];
+      const ca = BIKE_CLASS[a.bike], cb = BIKE_CLASS[b.bike];
+      let bikeDate = null;
+      if (ca !== cb) {
+        const inside = cands.filter(e => e.to === cb && e.date.slice(0, 7) > a.date && e.date.slice(0, 7) <= b.date);
+        const hit = inside.sort((x, y) => y.segments - x.segments)[0];
+        bikeDate = hit ? hit.date : null;
+        bike.push({ from: ca, to: cb, last_without: a.date, first_with: b.date, date: hit ? hit.date : b.date,
+                    precision: hit ? "verified" : "window", source: hit ? hit.source : "panoramas" });
+      }
+      if (a.lanes != null && b.lanes != null && a.lanes !== b.lanes) {
+        lanes.push({ before: a.lanes, after: b.lanes, last_before: a.date, first_after: b.date,
+                     date: bikeDate || b.date, precision: bikeDate ? "verified" : "window", with_bike: !!bikeDate || ca !== cb });
+      }
+    }
+    return { obs, bike, lanes, undated: rows.length - obs.length };
+  }
+
+  function describe(p, d) {
+    const out = [];
+    if (!d.obs.length) { out.push(el("p", { text: "Enter the month of each panorama to see the dates this gives." })); return out; }
+    for (const c of d.bike) out.push(el("p", { text: "Bike lane " + c.from + " → " + c.to + ": between " + c.last_without + " and " + c.first_with + (c.precision === "verified" ? "; " + c.source + " date " + c.date + " falls inside, so it is used." : "; no DOT date inside, so the window is kept.") }));
+    for (const c of d.lanes) out.push(el("p", { text: "Travel lanes " + c.before + " → " + c.after + ": between " + c.last_before + " and " + c.first_after + (c.precision === "verified" ? ", with the bike lane (" + c.date + ")." : ".") }));
+    if (!d.bike.length && !d.lanes.length) out.push(el("p", { text: d.obs.length === 1 ? "One panorama: add another to bracket a change." : "No change between these panoramas." }));
+    if (d.undated) out.push(el("p", { class: "warn", text: d.undated + " row" + (d.undated === 1 ? " has" : "s have") + " no month and " + (d.undated === 1 ? "is" : "are") + " left out." }));
+    return out;
+  }
+
+  // Saving ----
+  function base(p) { return { item_id: p.item_id, kind: p.kind, street: p.street, by: myId || "", saved_at: new Date().toISOString(), note: ($("#f-note") ? $("#f-note").value.trim().slice(0, 2000) : "") }; }
+
+  async function saveConfirmed(p, which) {
+    const body = base(p);
+    const lanes = laneProposal(p);
+    const events = which === "dot" ? p.dot_events : p.bike_events;
+    body.verdict = which === "proposal" ? "confirmed" : "confirmed_" + which;
+    body.observations = [];
+    body.bike_changes = events.map(e => ({ from: e.from, to: e.to, date: e.date, precision: e.precision === "day" ? "verified" : e.precision, source: e.source }));
+    body.lane_changes = [];
+    if (lanes && lanes.pre) {
+      const v = $("#f-pre").value;
+      if (!/^\d$/.test(v)) { say("Enter the number of travel lanes before the project."); return; }
+      body.lanes_before_project = +v;
+      if (+v !== lanes.after) {
+        const ev = mainBikeEvent(p.bike_events);
+        body.lane_changes.push({ before: +v, after: lanes.after, date: ev ? ev.date : "", precision: ev ? "with bike lane" : "unknown", with_bike: !!ev });
+      }
+    } else if (lanes) {
+      body.lane_changes.push({ before: lanes.before, after: lanes.after, date: lanes.with_bike || "", precision: lanes.with_bike ? "with bike lane" : "2016-2024", with_bike: !!lanes.with_bike });
+    }
+    await write(p, body);
+  }
+
+  async function saveCorrected(p) {
+    const rows = readRows();
+    const d = deriveChanges(p, rows);
+    if (d.obs.length < 1) { say("Enter at least one panorama month."); return; }
+    if (p.ask_lanes && d.obs.some(o => o.lanes == null)) { say("Enter the travel lanes for every dated panorama."); return; }
+    const body = base(p);
+    body.verdict = "corrected";
+    body.observations = rows;
+    body.bike_changes = d.bike;
+    body.lane_changes = d.lanes;
+    const lanes = laneProposal(p);
+    if (lanes && lanes.pre && d.obs.length) body.lanes_before_project = d.obs[0].lanes;
+    await write(p, body);
+  }
+
+  function say(t) { const s = $("#saved-line"); if (s) s.textContent = t; }
+
+  async function write(p, body) {
+    if (!db || !canWrite) return;
+    say("Saving…");
+    try {
+      await db.collection(COLLECTION).doc(p.item_id).set(body);
+      editing = null; logOpen = null;
+      reviews[p.item_id] = body;          // show the answer now; the snapshot confirms it
+      renderProgress(); renderList(); renderDetail();
+    } catch (e) {
+      if (e && e.code === "invalid_argument") { canWrite = false; say("Your access level doesn't allow saving answers."); }
+      else if (e && e.code === "unavailable") say("The connection dropped. Try saving again.");
+      else say("Couldn't save (" + ((e && e.code) || "error") + ").");
+    }
+  }
+
+  function nextItem() {
+    const order = ITEMS.filter(x => !isDone(x.item_id) && x.item_id !== current);
+    if (order.length) { current = order[0].item_id; editing = null; logOpen = null; renderList(); renderDetail(); window.scrollTo({ top: 0 }); }
+  }
+
+  function buildAnswer(p, r) {
+    const box = el("div", { class: "answer" });
+    const verdict = { confirmed: "Confirmed: matches Street View", confirmed_ours: "Confirmed: our timeline", confirmed_dot: "Confirmed: DOT's timeline", corrected: "Corrected from the panoramas" }[r.verdict] || r.verdict;
+    box.append(el("p", {}, el("strong", { text: verdict })));
+    for (const c of r.bike_changes || []) box.append(el("p", { text: "Bike lane " + c.from + " → " + c.to + ": " + c.date + (c.last_without ? " (between " + c.last_without + " and " + c.first_with + ")" : "") + " · " + c.precision }));
+    for (const c of r.lane_changes || []) box.append(el("p", { text: "Travel lanes " + c.before + " → " + c.after + ": " + (c.date || "undated") + " · " + c.precision }));
+    if (r.lanes_before_project != null) box.append(el("p", { text: "Travel lanes before the project: " + r.lanes_before_project }));
+    if (r.note) box.append(el("p", { text: "Note: " + r.note }));
+    box.append(el("p", { class: "saved", text: "Saved " + new Date(r.saved_at).toLocaleString() + (r.by ? " by " + (names[r.by] || "a reviewer") : "") }));
+    const change = btn("Change answer", "ghost", () => { editing = p.item_id; logOpen = r.verdict === "corrected" ? p.item_id : null; renderDetail(); });
+    if (!db || !canWrite) change.disabled = true;
+    box.append(el("div", { class: "actions" }, change, btn("Next item", "ghost", nextItem)));
+    return box;
   }
 
   function buildEvidence(ev) {
@@ -289,94 +561,6 @@
       d.append(ol);
     }
     return d;
-  }
-
-  function monthField(id, label, value) {
-    return el("div", {}, el("label", { for: id, text: label }), el("input", { type: "month", id, min: "1990-01", max: "2026-12", value: value || "" }));
-  }
-
-  function buildForm(p, r) {
-    const k = kindOf(p);
-    const f = el("form", { id: "review-form", novalidate: "" });
-
-    if (asksProt(p)) {
-      const claimed = ym(p.r1_protected_from && p.r1_protected_from !== "none" ? p.r1_protected_from : (p.prot_dot || p.prot_pipe));
-      const src = p.r1_protected_from && p.r1_protected_from !== "none" ? "round 1 answer" : (p.prot_dot ? "DOT date" : (p.prot_pipe ? "our date" : ""));
-      const fs = el("fieldset", {}, el("legend", { text: "Bike lane protection" }));
-      const row = el("div", { class: "row" },
-        monthField("f-prot", "First seen protected", r ? r.protected_from : claimed),
-        monthField("f-prot-last", "Last seen without (optional)", r ? r.protected_last_without : ""));
-      const sel = el("select", { id: "f-before" });
-      sel.append(el("option", { value: "", text: "Choose…" }));
-      for (const [v, t] of BEFORE) sel.append(el("option", { value: v, text: t, selected: (r ? r.before_type : p.r1_before_type) === v }));
-      row.append(el("div", {}, el("label", { for: "f-before", text: "What was there before" }), sel));
-      fs.append(row);
-      if (!r && claimed) fs.append(el("p", { class: "prefill", text: "Pre-filled with the " + src + ". Change it if Street View shows otherwise; fill in the last panorama without protection when the panoramas leave a gap." }));
-      fs.append(el("label", { class: "check" }, el("input", { type: "checkbox", id: "f-noprot", checked: !!(r && r.protected_from === "none") }), document.createTextNode("No physical protection found")));
-      f.append(fs);
-    }
-
-    if (k.lanes) {
-      const fs = el("fieldset", {}, el("legend", { text: "Travel lanes for cars" }));
-      const num = (id, label, v) => el("div", {}, el("label", { for: id, text: label }), el("input", { type: "number", id, min: "0", max: "8", step: "1", inputmode: "numeric", value: v === undefined || v === null ? "" : v }));
-      fs.append(el("div", { class: "row" },
-        num("f-lanes-before", "Lanes before", r ? r.lanes_before : ""),
-        num("f-lanes-after", "Lanes after", r ? r.lanes_after : ""),
-        monthField("f-lanes-when", "Changed in", r ? r.lanes_changed : ""),
-        monthField("f-lanes-last", "Last seen before (optional)", r ? r.lanes_last_before : "")));
-      fs.append(el("p", { class: "prefill", text: "LION counts: " + (p.lion_counts || "–") + ". Where counts differ along the item, give the typical block and say so in the note." }));
-      fs.append(el("label", { class: "check" }, el("input", { type: "checkbox", id: "f-nochange", checked: !!(r && r.lanes_changed === "no change") }), document.createTextNode("No change in the panoramas (LION only recounted)")));
-      f.append(fs);
-    }
-
-    const ta = el("textarea", { id: "f-note", placeholder: "What you saw: panorama dates before and after, cross streets, lanes that vary along the item, anything unusual" });
-    ta.value = r ? (r.note || "") : "";
-    f.append(el("div", {}, el("label", { for: "f-note", text: "Note" }), ta));
-
-    const save = el("button", { type: "submit", class: "btn", text: r ? "Update answer" : "Save answer" });
-    const next = el("button", { type: "button", class: "btn ghost", text: "Next item" });
-    const saved = el("span", { class: "saved", id: "saved-line" });
-    if (r) saved.textContent = "Saved " + new Date(r.saved_at).toLocaleString() + (r.by ? " by " + (names[r.by] || "a reviewer") : "");
-    if (!db || !canWrite) { save.disabled = true; saved.textContent = !db ? "Answers can't be saved in this view. Open the page on claude.ai while signed in." : "You can view the answers but not change them."; }
-    f.append(el("div", { class: "actions" }, save, next, saved));
-
-    next.addEventListener("click", () => {
-      const order = ITEMS.filter(x => !isDone(x.item_id) && x.item_id !== current);
-      if (order.length) { current = order[0].item_id; renderList(); renderDetail(); window.scrollTo({ top: 0 }); }
-    });
-    f.addEventListener("submit", async ev => {
-      ev.preventDefault();
-      const body = { item_id: p.item_id, kind: p.kind, street: p.street, by: myId || "", saved_at: new Date().toISOString() };
-      if (asksProt(p)) {
-        const none = $("#f-noprot").checked, m = $("#f-prot").value, last = $("#f-prot-last").value;
-        if (!none && !/^\d{4}-\d{2}$/.test(m)) { saved.textContent = "Enter the month protection is first seen, or tick \"No physical protection found\"."; return; }
-        if (!none && last && last >= m) { saved.textContent = "\"Last seen without\" must be before \"First seen protected\"."; return; }
-        body.protected_from = none ? "none" : m;
-        body.protected_last_without = none ? "" : last;
-        body.before_type = $("#f-before").value;
-      }
-      if (k.lanes) {
-        const nochange = $("#f-nochange").checked;
-        const lb = $("#f-lanes-before").value, la = $("#f-lanes-after").value, when = $("#f-lanes-when").value, last = $("#f-lanes-last").value;
-        if (!/^\d$/.test(lb) || !/^\d$/.test(la)) { saved.textContent = "Enter the number of travel lanes before and after (the same number if nothing changed)."; return; }
-        if (!nochange && lb !== la && !/^\d{4}-\d{2}$/.test(when)) { saved.textContent = "Enter the month the lanes changed, or tick \"No change in the panoramas\"."; return; }
-        if (!nochange && last && when && last >= when) { saved.textContent = "\"Last seen before\" must be before \"Changed in\"."; return; }
-        body.lanes_before = +lb; body.lanes_after = +la;
-        body.lanes_changed = nochange || lb === la ? "no change" : when;
-        body.lanes_last_before = nochange || lb === la ? "" : last;
-      }
-      body.note = $("#f-note").value.trim().slice(0, 2000);
-      save.disabled = true; saved.textContent = "Saving…";
-      try {
-        await db.collection(COLLECTION).doc(p.item_id).set(body);
-        saved.textContent = "Saved.";
-      } catch (e) {
-        if (e && e.code === "invalid_argument") { canWrite = false; saved.textContent = "Your access level doesn't allow saving answers."; }
-        else if (e && e.code === "unavailable") { saved.textContent = "The connection dropped. Try saving again."; save.disabled = false; }
-        else { saved.textContent = "Couldn't save (" + ((e && e.code) || "error") + ")."; save.disabled = false; }
-      }
-    });
-    return f;
   }
 
   document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {

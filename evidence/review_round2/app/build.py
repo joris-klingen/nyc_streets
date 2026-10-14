@@ -10,10 +10,17 @@ from PIL import Image
 APP = "evidence/review_round2/app"
 OUT = "evidence/review_round2/out"
 KEEP = ["item_id", "kind", "priority", "street", "n_segments", "lion_counts", "lane_q", "prot_pipe", "prot_dot",
-        "r1_protected_from", "r1_before_type", "streetview_1", "streetview_2", "streetview_3"]
+        "r1_protected_from", "r1_before_type", "streetview_1", "streetview_2", "streetview_3",
+        "bike_events", "dot_events", "lion_before", "lion_after", "pre_project", "ask_lanes"]
 
 rows = [{k: (r.get(k) or "") for k in KEEP} for r in csv.DictReader(open(os.path.join(OUT, "items.csv"), encoding="utf-8"))]
 rows = [r for r in rows if os.path.exists(os.path.join(OUT, "sheets", r["item_id"] + ".jpg"))]
+# proposed timelines come as JSON strings; flags as booleans
+for r in rows:
+    for k in ("bike_events", "dot_events"):
+        r[k] = json.loads(r[k] or "[]")
+    for k in ("pre_project", "ask_lanes"):
+        r[k] = r[k] == "TRUE"
 data = json.dumps(rows, ensure_ascii=False).replace("</", "<\\/")
 ev_path = os.path.join(OUT, "dot_evidence.json")
 evidence = json.load(open(ev_path, encoding="utf-8")) if os.path.exists(ev_path) else {}

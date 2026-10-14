@@ -114,6 +114,48 @@ items <- rbind(a[, .(item_id, kind, street, n_segments, n_lane_segments, lion_co
                b_items, c_items, fill = TRUE)
 item_seg <- rbind(a_items_seg, b[, .(item_id, SegmentID)], cf[, .(item_id, SegmentID)])
 
+# Proposed timelines, for the review page's confirm-or-correct form ----
+# bike lane changes on the item's segments: best facility over both directions per window (pipeline
+# windows: DOT 2026 history, manual checks before 2020, round 1 overrides), and per DOT 2026 version
+rank_fac <- c("Protected", "Standard", "Sharrows", "none")
+best_fac <- function(a, b) rank_fac[pmin(match(fcoalesce(a, "none"), rank_fac), match(fcoalesce(b, "none"), rank_fac))]
+precision <- function(d) fcase(mday(d) == 1 & month(d) == 1, "year", mday(d) == 1, "month", default = "day")
+wi <- w[SegmentID %in% item_seg[, SegmentID], .(SegmentID = as.integer(SegmentID), date = as.IDate(date_from), fac = best_fac(tf_facilit, ft_facilit))]
+setorder(wi, SegmentID, date)
+ev <- wi[, .(date = date[-1], from = fac[-.N], to = fac[-1]), by = SegmentID][from != to & date > as.IDate("1900-01-01")]
+dot_dates <- d26[, .(SegmentID = as.integer(segmentid), date = as.IDate(instdate))]
+ev[, source := fcase(paste(SegmentID, format(date, "%Y-%m")) %in% ov[, paste(SegmentID, substr(protected_from, 1, 7))], "round 1 review",
+                     paste(SegmentID, date) %in% dot_dates[, paste(SegmentID, date)], "DOT", default = "manual check")]
+d26[, fac := c("Protected", "Standard", "Sharrows")[pmin(match(bl_types[tf_facilit], c("I", "II", "III")), match(bl_types[ft_facilit], c("I", "II", "III")),
+                                                         match(bl_types[tf2facilit], c("I", "II", "III")), match(bl_types[ft2facilit], c("I", "II", "III")), na.rm = TRUE)]]
+d26[is.na(fac), fac := "none"]
+dv <- unique(d26[, .(SegmentID = as.integer(segmentid), date = as.IDate(instdate), fac)])[order(SegmentID, date)]
+dev <- dv[, .(date = date, from = c("none", fac[-.N]), to = fac), by = SegmentID][from != to]
+dev[, source := "DOT"]
+summarise_events <- function(e) {
+  e <- merge(item_seg, e, by = "SegmentID")
+  e[, precision := precision(date)]
+  n_seg <- item_seg[, .(n = .N), by = item_id]
+  s <- e[, .(segments = .N), by = .(item_id, date, from, to, precision, source)][n_seg, on = "item_id"]
+  s <- s[segments >= pmax(1, 0.25 * n)][order(item_id, date)]
+  s[, .(events = as.character(jsonlite::toJSON(.SD[, .(date = as.character(date), from, to, precision, source, segments, of = n)]))), by = item_id]
+}
+items <- merge(items, summarise_events(ev)[, .(item_id, bike_events = events)], by = "item_id", all.x = TRUE)
+items <- merge(items, summarise_events(dev)[, .(item_id, dot_events = events)], by = "item_id", all.x = TRUE)
+items[is.na(bike_events), bike_events := "[]"][is.na(dot_events), dot_events := "[]"]
+
+# travel lanes: the typical LION 2016 and last counts of the item's lane review segments; a lane change
+# is proposed at the item's main bike lane change when there is one, else between 16a and the 24b recount
+mode_of <- function(x) { x <- x[!is.na(x)]; if (length(x)) as.numeric(names(sort(table(x), decreasing = TRUE))[1]) else NA_real_ }
+ln <- merge(item_seg, need[, .(SegmentID, trav_lion16, trav_lion_last, lane_q)], by = "SegmentID")
+ln <- ln[, .(lion_before = mode_of(trav_lion16), lion_after = mode_of(trav_lion_last),
+             pre_project = mean(lane_q == "pre-project count") > 0.5), by = item_id]
+items <- merge(items, ln, by = "item_id", all.x = TRUE)
+# no lane questions where nothing is to be dated: M029 (protection window only) and the park items
+# (park drives dated at the car-free dates; approaches without a LION change)
+items[, ask_lanes := kind %in% c("A", "B") & !is.na(lion_before) & item_id != "M029" &
+                     !grepl("DRIVE|APPR|APPROACH|CENTRAL PARK", street)]
+
 # sheet centre: the segment nearest the middle of the item, bearing along it
 g <- st_transform(geom_of(item_seg[, unique(SegmentID)]), 4326)
 xy <- as.data.table(st_coordinates(g)); fid <- names(xy)[ncol(xy)]

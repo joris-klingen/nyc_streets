@@ -22,8 +22,15 @@ bike lane change that explains it, or a protected lane installed before LION's f
 (2015-06 north of 72nd St, 2018-06 the rest) in `02_manhattan_lane_panel.R`. Governors Island
 roads and off-street paths are left out.
 
-Dates can be recorded as a window (first seen / last seen without), because panoramas are often
-years apart.
+The page proposes a timeline per item: the bike lane changes on its segments with their exact day,
+source and precision (pipeline windows; for date conflicts also the DOT 2026 history), and for lane
+items the LION counts, with the lane change at the item's main bike lane change when there is one
+(else between 16a and the 24b recount). The reviewer confirms it in one click, or logs what the
+panoramas show (month, travel lanes, bike lane per panorama). The page then derives each change as
+a window between two panoramas, and uses a DOT or pipeline day that falls inside the window
+(precision "verified"); otherwise the first panorama showing the change, with the window kept.
+Pre-2016 projects ask only for the lanes before the project. M029 and the park items get no lane
+questions.
 
 ## Steps
 
@@ -39,7 +46,8 @@ years apart.
    round 1 review page (same link), answers in collection `round2`
 5. After the review: export the collection with the ArtifactData tool to
    `layers/bike_lanes/manual/review_export/round2/`, then `python evidence/review_round2/02_import_answers.py`
-   -> `layers/bike_lanes/manual/round2_answers.csv` (one row per item and segment)
+   -> `layers/bike_lanes/manual/round2_answers.csv` (one row per item and segment: verdict, first
+   protected date with precision and window, first lane change, lanes before the project)
 
 The answers are then applied in `layers/bike_lanes/manual/04_build_overrides.R` (protection dates) and
 `layers/travel_lanes/02_manhattan_lane_panel.R` (lane counts and dates); that step is still to be written.
