@@ -2,9 +2,10 @@
 .Rhistory
 .RData
 Rplots.pdf
-pilot_aerial/out/cache/
-aerial_labelling/out/sheets/
-aerial_labelling/out/review_sheets/
-aerial_labelling/review_app/sheets/
-dot_projects/html/
-manual/review_export/
+evidence/pilot_aerial/out/cache/
+evidence/aerial_labelling/out/sheets/
+evidence/aerial_labelling/out/review_sheets/
+evidence/aerial_labelling/review_app/sheets/
+evidence/dot_projects/html/
+layers/bike_lanes/manual/review_export/
+__pycache__/
