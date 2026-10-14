@@ -5,7 +5,9 @@
 ## Segment key (`spine/`)
 
 - [x] **Segment key built** (2026-10-14): 57 LION releases, versions, links and crosswalk to 26c; see README.
-- [ ] **Key the layer outputs on it**: bike lane windows (DOT 2020 / 16d ids) and the travel-lane panel (`lion_lanes_panel`) carry release-specific SegmentIDs; add `key_id` and `share` so panels can be built on one network.
+- [x] **Layer outputs keyed** (2026-10-14): `bike_lanes_windows_keyed.parquet` (19,886 key segments; 111 retired source ids dropped), `lion_lanes_panel_keyed.parquet` and `manhattan_lanes_monthly_keyed.parquet`, next to the unkeyed files (the paper pipeline still reads those).
+- [ ] **Merged sources that disagree**: 29-40 of the 165 key segments with several bike lane sources differ in facility at a given date; 3,561 key segment-months in the Manhattan lane panel differ in lanes. Check whether `main_source` is the right pick there.
+- [ ] **Move `5_NYC_bikelanes` to the keyed outputs** when the paper pipeline is next rebuilt (zone assignment and street panel on key_id).
 - [ ] **Spell schema** shared by all layers: key_id, side, attribute, value, valid_from, valid_to, date_precision, source, evidence_id; `streets_state(date)` and `streets_panel(attrs, freq)` readers.
 - [ ] **Unlinked versions near the network**: 216 retired versions lie 30-100 ft and 153 lie 100-500 ft from a segment of the next release (realignments beyond the 10 ft buffer?). Check a sample on a map before relying on them.
 - [ ] **LION before 12a**: 3% of the traffic count ids are in no release since 2012; the DCP archive has older releases if the counts before 2012 are needed.

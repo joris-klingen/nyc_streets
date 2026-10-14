@@ -15,7 +15,9 @@
 # Writes, in nyc_traffic_data/derived/streets/spine/:
 #   segment_links.parquet  links ended version -> successor version, method overlap / same_id / legacy_id
 #   segment_key.parquet    segment_id, version, first/last release -> key_id (SegmentID in the last
-#                          release), share; key_status current / continued / retired
+#                          release), share (of the version's length), key_cover (of the key segment's
+#                          length), lengths, reversed (key segment drawn against the source version:
+#                          from-to and to-from attributes swap); key_status current / continued / retired
 # and spine/out/link_summary.csv (per release: ended versions, linked, retired).
 # Run from repo root: Rscript spine/03_segment_key.R
 
@@ -95,10 +97,24 @@ for (r in rev(seq_len(n_rel - 1))) {
   k <- k[, .(share = sum(w * share)), by = .(row = old_row, key_id)]
   key <- rbind(key, k)
 }
-key <- merge(d[, .(row, segment_id, version, first_release, last_release, first_date, last_date)], key, by = "row", all.x = TRUE)
+key <- merge(d[, .(row, segment_id, version, first_release, last_release, first_date, last_date, length_ft = len)], key, by = "row", all.x = TRUE)
 key[, key_status := fcase(last_release == rels[n_rel, release] & key_id == segment_id, "current",
                           !is.na(key_id), "continued", default = "retired")]
-key[, row := NULL]
+# share of the key segment's length that this version covers, for attaching old attributes to key segments
+key[d[last_ri == n_rel, .(key_id = segment_id, key_length_ft = len)], key_length_ft := i.key_length_ft, on = "key_id"]
+key[, key_cover := pmin(share * length_ft / key_length_ft, 1)]
+# digitizing direction: reversed when the key segment runs against the source version (from -> to),
+# so that from-to / to-from attributes (bike lane direction, traffic direction) swap
+xy <- as.data.table(st_coordinates(v))
+fid <- names(xy)[ncol(xy)]                       # last L column indexes the feature
+ends <- xy[, .(x0 = X[1], y0 = Y[1], x1 = X[.N], y1 = Y[.N]), by = fid]
+setnames(ends, fid, "row")
+ends[, `:=`(dx = x1 - x0, dy = y1 - y0)]
+key[ends, `:=`(dx = i.dx, dy = i.dy), on = "row"]
+key[d[last_ri == n_rel, .(key_id = segment_id, krow = row)], krow := i.krow, on = "key_id"]
+key[ends, `:=`(kdx = i.dx, kdy = i.dy), on = .(krow = row)]
+key[, reversed := !is.na(key_id) & (dx * kdx + dy * kdy) < 0]
+key[, c("row", "krow", "dx", "dy", "kdx", "kdy") := NULL]
 setorder(key, segment_id, version, -share)
 
 write_parquet(links[, .(release, old_id, old_version, new_id, new_version, share_old, share_new, method)], file.path(out_dir, "segment_links.parquet"))
@@ -110,3 +126,4 @@ dir.create("spine/out", showWarnings = FALSE)
 fwrite(summ, "spine/out/link_summary.csv")
 print(summ[, lapply(.SD, sum), .SDcols = c("ended", "linked", "retired")])
 print(unique(key, by = c("segment_id", "version"))[, .N, by = key_status])
+print(key[key_status == "continued", .(rows = .N, reversed = sum(reversed))])

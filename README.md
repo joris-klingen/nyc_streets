@@ -46,6 +46,8 @@ layers/                          one folder per street attribute
       02_import_review_answers.py  review page export -> manual/streetview_review_answers.csv
       03_time_windows.R            build the segment x time-window facilities (Protected / Standard / Sharrows)
                                    -> nyc_traffic_data/derived/streets/bike_lanes/bike_lanes_time_windows.RDS
+      04_key_windows.R             the windows on the segment key (tf/ft swapped where the key segment runs the
+                                   other way) -> bike_lanes_windows_keyed.parquet, bikelane_windows_keyed_read()
     checks/                        quality checks from 2026-10 (DOT releases, pipeline vs DOT history, upgrade bug)
   travel_lanes/                  travel-lane panel from 57 quarterly LION releases (citywide, Manhattan monthly);
                                  see its README
