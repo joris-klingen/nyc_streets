@@ -20,14 +20,14 @@ R/streets.R                      readers: streets_state(), streets_panel(), stre
                                  segment_versions_read(), bikelane_windows_keyed_read()
 build/
   01_street_spells.R             all layers as spells on the key segments
-                                 -> derived/streets/spells/street_spells.parquet, key_segments.parquet
+                                 -> nyc_streets_data/spells/street_spells.parquet, key_segments.parquet
 spine/                           LION SegmentID across the 57 quarterly releases (12a-26c) -> segment key
   01_lion_segments.R             attributes of every LION record per release (no geometry)
-                                 -> derived/streets/spine/lion_segment_releases.parquet
+                                 -> nyc_streets_data/spine/lion_segment_releases.parquet
   02_segment_versions.R          one row per SegmentID x distinct geometry, first/last release
-                                 -> derived/streets/spine/segment_versions.gpkg
+                                 -> nyc_streets_data/spine/segment_versions.gpkg
   03_segment_key.R               links between versions (overlap, same id redrawn, LegacyID) chained to 26c
-                                 -> derived/streets/spine/segment_links.parquet, segment_key.parquet
+                                 -> nyc_streets_data/spine/segment_links.parquet, segment_key.parquet
   checks_segment_key.R           unlinked versions, agreement with LegacyID, coverage of traffic counts / bike routes
 layers/                          one folder per street attribute
   bike_lanes/
@@ -51,7 +51,7 @@ layers/                          one folder per street attribute
       02_import_review_answers.py  review page export -> manual/streetview_review_answers.csv
       03_time_windows.R            build the segment x time-window facilities (Protected / Standard / Sharrows), all
                                    boroughs, from the DOT 2026 version history with the manual checks before 2020
-                                   -> nyc_traffic_data/derived/streets/bike_lanes/bike_lanes_time_windows.RDS
+                                   -> nyc_streets_data/bike_lanes/bike_lanes_time_windows.RDS
                                    (the earlier DOT 2020 build: bike_lanes_time_windows_dot2020.RDS,
                                    bikelane_windows_read("dot2020"))
       04_key_windows.R             the windows on the segment key (tf/ft swapped where the key segment runs the
@@ -82,7 +82,7 @@ DOT traffic count SegmentIDs and 99.5% of the DOT 2020 bike route ids reach a cu
 and 95% match current LION directly). Spells for every layer are meant to be keyed on it.
 
 ```r
-source("../nyc_streets/R/streets.R")
+source("../nyc_streets_repo/R/streets.R")
 segment_key_map(c(32886, 28), date = "2016-06-01")   # 1 Av segment 32886 is now three segments
 ```
 
@@ -106,7 +106,7 @@ segments not yet in LION, and resolve overlapping sources by priority, then key_
 monthly 2012-2026 (2.6M rows) takes about 5 s.
 
 ```r
-source("../nyc_streets/R/streets.R")
+source("../nyc_streets_repo/R/streets.R")
 s <- streets_state("2019-06-01", boro = 1, geometry = TRUE)
 p <- streets_panel("2012-07-01", "2026-07-01", "month", attributes = c("bike_lane", "travel_lanes"), boro = 1)
 ```
@@ -115,7 +115,7 @@ New layers (bus lanes, parking, speed limits, ...) are added as a block in `buil
 on the key, with their attribute in `streets_attributes()`.
 
 All scripts run from the repo root. Outputs that other projects read go to
-`nyc_traffic_data/derived/streets/<layer>/`; working files stay in the repo (`out/`).
+`nyc_streets_data/<layer>/`; working files stay in the repo (`out/`).
 
 ### Review page
 

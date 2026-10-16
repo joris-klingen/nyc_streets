@@ -13,7 +13,7 @@
 # already reflect the project, so the pre-project count is unknown.
 #
 # Writes lanes/out/manhattan_lane_spells.csv (one row per segment), lanes/out/lane_review.csv
-# and nyc_traffic_data/derived/streets/travel_lanes/manhattan_lanes_monthly.parquet (segment x month).
+# and nyc_streets_data/travel_lanes/manhattan_lanes_monthly.parquet (segment x month).
 # Run from repo root: Rscript layers/travel_lanes/02_manhattan_lane_panel.R
 
 library(data.table)
@@ -22,7 +22,7 @@ library(sf)
 
 source("R/streets.R")   # segment_versions_read(); also sources nyc_traffic.R
 root <- nyc_data_root()
-p <- setDT(read_parquet(file.path(root, "derived/streets/travel_lanes/lion_lanes_panel.parquet")))[boro == 1]
+p <- setDT(read_parquet(file.path(nyc_streets_data_root(), "travel_lanes/lion_lanes_panel.parquet")))[boro == 1]
 
 d16 <- as.IDate("2016-02-01")   # first release with lane counts (16a, data as of early 2016)
 d24 <- as.IDate("2024-04-29")   # release with the citywide recount (24b)
@@ -116,5 +116,5 @@ m[, lanes := fifelse(!is.na(change_date) & month >= change_date, lanes_after, la
 # undated review cases: LION's own timing (the recount release) as a placeholder, flagged
 m[grepl("^review", case) & month >= d24, lanes := lanes_after]
 m[, lanes_flag := fifelse(grepl("^review", case), "undated", "")]
-write_parquet(m[, .(SegmentID, month, lanes, lanes_flag)], file.path(root, "derived/streets/travel_lanes/manhattan_lanes_monthly.parquet"))
+write_parquet(m[, .(SegmentID, month, lanes, lanes_flag)], file.path(nyc_streets_data_root(), "travel_lanes/manhattan_lanes_monthly.parquet"))
 cat("\nmonthly panel:", nrow(m), "rows,", length(months), "months\n")

@@ -3,7 +3,7 @@
 # Reads the attribute table (no geometry) of each release in nyc_traffic_data/streets/lion through
 # /vsizip, all feature types: SegmentID, LegacyID, feature and segment type, roadbed layer, roadway
 # type, street code, from/to nodes and coordinates, length, physical and generic ids.
-# Writes nyc_traffic_data/derived/streets/spine/lion_segment_releases.parquet (one row per record
+# Writes nyc_streets_data/spine/lion_segment_releases.parquet (one row per record
 # and release) and spine/out/release_counts.csv.
 # Run from repo root: Rscript spine/01_lion_segments.R
 
@@ -11,8 +11,8 @@ library(data.table)
 library(sf)
 library(arrow)
 
-source("../nyc_traffic/R/nyc_traffic.R")
-out_dir <- file.path(nyc_data_root(), "derived/streets/spine")
+source("../nyc_traffic_repo/R/nyc_traffic.R")
+out_dir <- file.path(nyc_streets_data_root(), "spine")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create("spine/out", showWarnings = FALSE)
 

@@ -3,7 +3,7 @@
 # Reads every LION release in nyc_traffic_data/streets/lion (nyc_lion12a.zip ... nyclion_26c.zip),
 # attributes only, and stacks: release, release_date (latest file date inside the zip),
 # SegmentID, SegmentTyp, borough, street, roadway type, traffic direction, travel / parking /
-# total lanes, street width. Writes nyc_traffic_data/derived/streets/travel_lanes/lion_lanes_panel.parquet and
+# total lanes, street width. Writes nyc_streets_data/travel_lanes/lion_lanes_panel.parquet and
 # a per-release change summary lanes/out/release_changes.csv.
 # Run from repo root: Rscript layers/travel_lanes/01_lion_panel.R
 
@@ -11,10 +11,10 @@ library(data.table)
 library(sf)
 library(arrow)
 
-source("../nyc_traffic/R/nyc_traffic.R")
+source("../nyc_traffic_repo/R/nyc_traffic.R")
 root <- nyc_data_root()
 lion_dir <- file.path(root, "streets/lion")
-out_dir <- file.path(root, "derived/streets/travel_lanes")
+out_dir <- file.path(nyc_streets_data_root(), "travel_lanes")
 tmp <- "C:/code/lion_tmp"          # unzip outside Dropbox
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create("layers/travel_lanes/out", showWarnings = FALSE, recursive = TRUE)

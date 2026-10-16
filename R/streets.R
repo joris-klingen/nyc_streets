@@ -1,16 +1,16 @@
-# Readers for the street network history built in nyc_streets (outputs in nyc_traffic_data/derived/streets)
+# Readers for the street network history built in nyc_streets (outputs in nyc_streets_data/)
 #
-# source("../nyc_streets/R/streets.R")   # also sources nyc_traffic.R for nyc_data_root()
+# source("../nyc_streets_repo/R/streets.R")   # also sources nyc_traffic.R for nyc_data_root()
 # k <- segment_key_map(c(32886, 9000277), date = "2014-06-01")
 
 local({
   ofiles <- unlist(lapply(sys.frames(), function(f) if (is.character(f$ofile)) f$ofile))
   this <- tail(ofiles[grepl("streets\\.R$", ofiles)], 1)
   repo <- if (length(this)) dirname(dirname(this)) else "."
-  if (!exists("nyc_data_root")) source(file.path(repo, "..", "nyc_traffic", "R", "nyc_traffic.R"), local = FALSE)
+  if (!exists("nyc_data_root")) source(file.path(repo, "..", "nyc_traffic_repo", "R", "nyc_traffic.R"), local = FALSE)
 })
 
-streets_dir <- function(...) file.path(nyc_data_root(), "derived", "streets", ...)
+streets_dir <- function(...) file.path(nyc_streets_data_root(), ...)
 
 # Segment key (spine/03_segment_key.R): every LION SegmentID x geometry version since 12a with the
 # SegmentIDs of the last release it continues as. share = share of the version's length that maps to

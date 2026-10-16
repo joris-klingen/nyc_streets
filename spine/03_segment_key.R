@@ -12,7 +12,7 @@
 # releases). The links are then chained forward to the last
 # release: every version gets the last-release SegmentIDs it continues as, with the share of its
 # length that maps to each.
-# Writes, in nyc_traffic_data/derived/streets/spine/:
+# Writes, in nyc_streets_data/spine/:
 #   segment_links.parquet  links ended version -> successor version, method overlap / same_id / legacy_id
 #   segment_key.parquet    segment_id, version, first/last release -> key_id (SegmentID in the last
 #                          release), share (of the version's length), key_cover (of the key segment's
@@ -25,8 +25,8 @@ library(data.table)
 library(sf)
 library(arrow)
 
-source("../nyc_traffic/R/nyc_traffic.R")
-out_dir <- file.path(nyc_data_root(), "derived/streets/spine")
+source("../nyc_traffic_repo/R/nyc_traffic.R")
+out_dir <- file.path(nyc_streets_data_root(), "spine")
 buf <- 10
 
 v <- st_read(file.path(out_dir, "segment_versions.gpkg"), quiet = TRUE)

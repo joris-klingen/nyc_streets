@@ -2,15 +2,15 @@
 #
 # Reads the street features (FeatureTyp 0, 6, A, C, W; every roadbed layer) of each release with
 # geometry, linearized, in EPSG 2263. A geometry counts as the same version when its coordinates
-# rounded to 0.1 ft are identical. Writes nyc_traffic_data/derived/streets/spine/segment_versions.gpkg
+# rounded to 0.1 ft are identical. Writes nyc_streets_data/spine/segment_versions.gpkg
 # (layer segment_versions): segment_id, version, first and last release (and dates), geometry.
 # Run from repo root: Rscript spine/02_segment_versions.R [n_releases]   (n: first n releases, for testing)
 
 library(data.table)
 library(sf)
 
-source("../nyc_traffic/R/nyc_traffic.R")
-out_dir <- file.path(nyc_data_root(), "derived/streets/spine")
+source("../nyc_traffic_repo/R/nyc_traffic.R")
+out_dir <- file.path(nyc_streets_data_root(), "spine")
 street_types <- c("0", "6", "A", "C", "W")
 
 rel <- lion_releases()

@@ -1,7 +1,7 @@
 library(data.table)
 library(sf)
-setwd("C:/Users/admin/Dropbox/1_research/nyc_res_bikelanes")
-source("../nyc_traffic/R/nyc_traffic.R")
+setwd("C:/Users/admin/Dropbox/1_research/nyc_res_bikelanes_repo")
+source("../nyc_traffic_repo/R/nyc_traffic.R")
 R <- file.path(nyc_data_root(), "streets/bike_routes")
 
 # pipeline: first date a segment is protected (any direction) ----

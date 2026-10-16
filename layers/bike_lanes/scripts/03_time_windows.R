@@ -12,7 +12,7 @@
 #   facility up to the 2020 release.
 # Street View review overrides (manual/protection_overrides.csv) and the copies to LION 16d ids
 #   (manual/segmentid_crosswalk_lion16d.csv) are applied as before.
-# Output: nyc_traffic_data/derived/streets/bike_lanes/bike_lanes_time_windows.RDS, one row per
+# Output: nyc_streets_data/bike_lanes/bike_lanes_time_windows.RDS, one row per
 #   SegmentID x time_window with date_from, date_to and tf_/ft_facilit (Protected / Standard /
 #   Sharrows, NA = none), read with bikelane_windows_read(). Until 2026-10-14 the windows came from the
 #   DOT 2020 release plus the Manhattan 2025 updates (moved here from nyc_res_bikelanes 002 on
@@ -23,7 +23,7 @@ library(data.table)
 library(sf)
 
 source("R/streets.R")   # segment key; also sources nyc_traffic.R
-out_dir <- file.path(nyc_data_root(), "derived/streets/bike_lanes")
+out_dir <- file.path(nyc_streets_data_root(), "bike_lanes")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
 snap_bike_routes <- "20261010"   # DOT release with the version history
