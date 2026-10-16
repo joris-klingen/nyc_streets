@@ -11,7 +11,7 @@ library(data.table)
 library(sf)
 library(arrow)
 
-source("../nyc_traffic_repo/R/nyc_traffic.R")
+source(Find(file.exists, c("../nyc_traffic_repo/R/nyc_traffic.R", "../nyc_traffic/R/nyc_traffic.R")))   # local folder or plain clone
 root <- nyc_data_root()
 lion_dir <- file.path(root, "streets/lion")
 out_dir <- file.path(nyc_streets_data_root(), "travel_lanes")

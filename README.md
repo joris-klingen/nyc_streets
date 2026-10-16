@@ -12,6 +12,30 @@ bike lane install dates are often 1 January or the 1st of the month, are revised
 and before 2025 did not record what a segment was *before* an upgrade. LION's lane counts were
 recounted in 2024.
 
+The outputs go to their own store, `nyc_streets_data/` (next to `nyc_traffic_data/`; found with
+`nyc_streets_data_root()`, set `NYC_STREETS_DATA` in nyc_traffic's `config.local` to move it).
+Until 2026-10-16 they were in `nyc_traffic_data/derived/streets/`.
+
+## Simulated data
+
+To develop code without nyc_streets_data, every output has a profile (`profiles/<source>.csv`,
+`<source>_values.csv`, `index.csv`; same format as in nyc_traffic) and a simulator in `sim/`:
+
+```r
+source("sim/sim.R")              # needs the nyc_traffic repo next to this one
+keys <- sim_key_segments(2000, boro = 1)
+sp   <- sim_street_spells(keys)
+panel <- streets_panel("2018-01-01", "2019-12-01", spells = sp, keys = keys)   # production code
+w    <- sim_bikelane_windows(segment_ids = keys[, key_id])
+```
+
+The simulators keep the structure that code depends on: the key (every key segment has a
+current version, some older versions and retired segments), spells that do not overlap and start
+when LION has the attribute, bike lane windows that chain from 1899-01-01 to 2099-09-09, lane
+panels over the real LION releases. `streets_panel()` and `streets_state()` take `spells =` and
+`keys =`, so the panel logic runs unchanged on simulated spells. `profiles/build_profiles.R`
+rebuilds the profiles.
+
 ## Layout
 
 ```

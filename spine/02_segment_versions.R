@@ -9,7 +9,7 @@
 library(data.table)
 library(sf)
 
-source("../nyc_traffic_repo/R/nyc_traffic.R")
+source(Find(file.exists, c("../nyc_traffic_repo/R/nyc_traffic.R", "../nyc_traffic/R/nyc_traffic.R")))   # local folder or plain clone
 out_dir <- file.path(nyc_streets_data_root(), "spine")
 street_types <- c("0", "6", "A", "C", "W")
 

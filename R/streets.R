@@ -7,7 +7,9 @@ local({
   ofiles <- unlist(lapply(sys.frames(), function(f) if (is.character(f$ofile)) f$ofile))
   this <- tail(ofiles[grepl("streets\\.R$", ofiles)], 1)
   repo <- if (length(this)) dirname(dirname(this)) else "."
-  if (!exists("nyc_data_root")) source(file.path(repo, "..", "nyc_traffic_repo", "R", "nyc_traffic.R"), local = FALSE)
+  # the nyc_traffic repo next to this one: nyc_traffic_repo locally, nyc_traffic in a plain clone
+  tr <- Find(dir.exists, file.path(repo, "..", c("nyc_traffic_repo", "nyc_traffic")))
+  if (!exists("nyc_data_root")) source(file.path(tr, "R", "nyc_traffic.R"), local = FALSE)
 })
 
 streets_dir <- function(...) file.path(nyc_streets_data_root(), ...)
@@ -99,13 +101,16 @@ key_segments_read <- function() data.table::setDT(arrow::read_parquet(streets_di
 # value, date_precision, source. Where sources overlap the lower priority wins, then the larger
 # key_cover. in_lion_only drops key segments not in LION on a date (streets that did not exist yet).
 # sources: keep only these sources (e.g. "lion" for the undated LION values; in_lion always kept).
+# spells, keys: tables to use instead of the stored spells and key segments (e.g. simulated ones,
+# sim_street_spells() and sim_key_segments() in sim/).
 streets_panel <- function(from, to = from, by = "month", attributes = NULL, boro = NULL, key_ids = NULL,
-                          wide = TRUE, in_lion_only = TRUE, sources = NULL) {
+                          wide = TRUE, in_lion_only = TRUE, sources = NULL, spells = NULL, keys = NULL) {
   dates <- data.table::as.IDate(seq(as.Date(from), as.Date(to), by = by))
   attrs <- unique(c(attributes, if (in_lion_only) "in_lion"))
-  sp <- streets_spells_read(if (is.null(attributes)) NULL else attrs)
+  sp <- if (is.null(spells)) streets_spells_read(if (is.null(attributes)) NULL else attrs)
+        else if (is.null(attributes)) data.table::copy(spells) else spells[attribute %in% attrs]
   if (!is.null(sources)) sp <- sp[source %in% sources | attribute == "in_lion"]
-  if (!is.null(boro)) { b <- boro; key_ids <- c(key_ids, key_segments_read()[boro %in% b, key_id]) }
+  if (!is.null(boro)) { b <- boro; key_ids <- c(key_ids, (if (is.null(keys)) key_segments_read() else keys)[boro %in% b, key_id]) }
   if (!is.null(key_ids)) sp <- sp[key_id %in% key_ids]
   vt <- sp[, data.table::fifelse(is.na(valid_to), data.table::as.IDate("2100-01-01"), valid_to)]
   i1 <- findInterval(as.integer(sp[, valid_from]) - 1L, as.integer(dates)) + 1L   # first grid date on or after valid_from
@@ -129,8 +134,10 @@ streets_panel <- function(from, to = from, by = "month", attributes = NULL, boro
 }
 
 # Street state on one date; geometry = TRUE returns sf with the key segments' lines (EPSG 2263)
-streets_state <- function(date, attributes = NULL, boro = NULL, key_ids = NULL, wide = TRUE, geometry = FALSE) {
-  x <- streets_panel(date, date, attributes = attributes, boro = boro, key_ids = key_ids, wide = wide)
+streets_state <- function(date, attributes = NULL, boro = NULL, key_ids = NULL, wide = TRUE, geometry = FALSE,
+                          spells = NULL, keys = NULL) {
+  x <- streets_panel(date, date, attributes = attributes, boro = boro, key_ids = key_ids, wide = wide,
+                     spells = spells, keys = keys)
   if (!geometry) return(x)
   v <- segment_versions_read()
   v <- v[v$last_release == max(segment_key_read()[, last_release]), c("segment_id")]

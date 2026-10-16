@@ -9,7 +9,7 @@ library(sf)
 sf_use_s2(TRUE)
 
 bl_root <- "../nyc_res_bikelanes_repo"
-source("../nyc_traffic_repo/R/nyc_traffic.R")
+source(Find(file.exists, c("../nyc_traffic_repo/R/nyc_traffic.R", "../nyc_traffic/R/nyc_traffic.R")))   # local folder or plain clone
 nyc_data <- nyc_data_root()
 set.seed(20261010)
 

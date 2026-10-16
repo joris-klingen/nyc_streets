@@ -2,6 +2,12 @@
 
 *Last updated 2026-10-14. Roughly in order of payoff for the bike lane paper (`nyc_res_bikelanes`, plan in `notes/paper_plan_v2.md`).*
 
+## Profiles and simulated data
+
+- [x] Profiles of the outputs in `profiles/` and simulators in `sim/` (2026-10-16); `streets_panel()` and `streets_state()` take `spells =` / `keys =`.
+- [x] Outputs moved from `nyc_traffic_data/derived/streets/` to their own store `nyc_streets_data/` (2026-10-16).
+- [ ] Re-run `profiles/build_profiles.R` after rebuilding the outputs.
+
 ## Segment key (`spine/`)
 
 - [x] **Segment key built** (2026-10-14): 57 LION releases, versions, links and crosswalk to 26c; see README.
