@@ -1,6 +1,6 @@
 # Direct aerial labelling: define protected-lane projects on north-south streets in the study zones
 #
-# Universe: north-south (NB/SB) street segments in the 5_NYC_bikelanes study zones that become
+# Universe: north-south (NB/SB) street segments in the nyc_res_bikelanes study zones that become
 # protected between 2010-01 and 2025-08 in the fixed pipeline or in the DOT 2026 history.
 # Projects: same street, same claimed protection month, contiguous (gap < 300 m along the street).
 # Writes projects.csv (location only, for blind labelling) and project_claims.csv (dates).
@@ -9,7 +9,7 @@
 library(data.table)
 library(sf)
 
-bl_root <- "../5_NYC_bikelanes"
+bl_root <- "../nyc_res_bikelanes"
 source("../nyc_traffic/R/nyc_traffic.R")
 nyc_data <- nyc_data_root()
 out <- "evidence/aerial_labelling/out"

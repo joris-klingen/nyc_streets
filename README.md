@@ -2,7 +2,7 @@
 
 Curated history of the NYC street network 2012 to now: what each street segment looked like at each
 date (bike lanes, travel lanes, and later bus lanes, parking, traffic rules, Citi Bike stations, ...),
-with the evidence for each date. Used by `5_NYC_bikelanes` (treatment timing) and the gender &
+with the evidence for each date. Used by `nyc_res_bikelanes` (treatment timing) and the gender &
 cycling work. Was `nyc_bikelane_history` until 2026-10-14.
 
 Raw data (LION releases, DOT bike routes, snapshots of the current-state layout sets) is downloaded
@@ -132,7 +132,7 @@ After editing the sheet, re-export and commit so git records every change:
 Rscript layers/bike_lanes/scripts/01_export_manual_sheet.R
 ```
 
-The output is read in other projects (e.g. `5_NYC_bikelanes`) with `bikelane_windows_read()` from
+The output is read in other projects (e.g. `nyc_res_bikelanes`) with `bikelane_windows_read()` from
 `nyc_traffic`. All bike lane classification and dating happens in this repo:
 
 ```bash
