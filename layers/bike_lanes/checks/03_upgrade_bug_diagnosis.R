@@ -15,7 +15,7 @@ cat("  of which have an upgrade window in pipeline:", d[!is.na(modif), .N], "\n"
 cat("  and the pipeline's upgrade date is within 31 days of the DOT protection date:", d[!is.na(modif) & abs(as.numeric(modif - as.IDate(prot_dot))) <= 31, .N], "\n")
 
 # streets involved
-r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data_root(), "street_layout/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
+r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data_root(), "raw/street_layout/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
 r26[, SegmentID := as.numeric(segmentid)]
 st <- unique(r26[, .(SegmentID, street)], by = "SegmentID")
 cat("\nstreets where pipeline dates protection > 1 year too early:\n")

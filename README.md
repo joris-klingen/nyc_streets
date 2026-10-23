@@ -163,7 +163,7 @@ The output is read in other projects (e.g. `nyc_res_bikelanes`) with `bikelane_w
 Rscript layers/bike_lanes/scripts/03_time_windows.R
 ```
 
-Raw DOT releases live in the shared data store: `Dropbox/1_research/nyc_traffic_data/street_layout/bike_routes/`
+Raw DOT releases live in the shared data store: `Dropbox/1_research/nyc_traffic_data/raw/street_layout/bike_routes/`
 (see the `nyc_traffic` repo).
 
 ## Classification

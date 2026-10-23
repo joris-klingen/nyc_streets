@@ -4,7 +4,7 @@
 bike-lane and travel-lane panels) from raw LION + DOT releases. Outputs go to
 `../nyc_streets_data/`. Raw inputs are downloaded and read by **`nyc_traffic`**, not here.
 
-**Not to be confused with** `nyc_traffic_data/street_layout/`, which is the *raw* current-state street
+**Not to be confused with** `nyc_traffic_data/raw/street_layout/`, which is the *raw* current-state street
 layout. This repo produces the *dated history*.
 
 **Read this first.** [`README.md`](README.md) — segment key, street spells, bike-lane

@@ -1,6 +1,6 @@
 # Segment x time-window bike lane facilities, all boroughs, from the DOT 2026 version history
 #
-# Base: the DOT bike routes release of 2026-10 (nyc_traffic_data/street_layout/bike_routes), which keeps
+# Base: the DOT bike routes release of 2026-10 (nyc_traffic_data/raw/street_layout/bike_routes), which keeps
 #   every version of a segment's facility: Retired rows with instdate and ret_date, and the Current
 #   row. Per segment the versions are ordered by instdate; a version lasts until the next one starts
 #   (or until its ret_date, when the lane was removed). Facility texts (tf/ft, and tf2/ft2 where a
@@ -80,7 +80,7 @@ cat("DOT 2026:", d[, uniqueN(seg)], "segments,", nrow(v), "versions;", nrow(afte
 # bridges, the Brooklyn Bridge promenade, greenway pieces). Where their street is not continued by a
 # 2026 segment (segment key), the 2020 facility is kept from install up to the 2020 release; no
 # record after that.
-d20 <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "street_layout/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
+d20 <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "raw/street_layout/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
 d20 <- st_transform(d20, "+init=EPSG:4326")
 g20 <- data.table(geometry = st_as_text(st_geometry(d20)), SegmentID = as.integer(d20[["segmentid"]]),
                   moddate = as.IDate(substr(as.character(d20[["moddate"]]), 1, 10)),

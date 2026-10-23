@@ -25,7 +25,7 @@ st <- unique(st[!is.na(zone) & grepl("NB|SB", TrafDir_WD),
 tw <- setDT(bikelane_windows_read())
 pipe <- tw[tf_facilit == "Protected" | ft_facilit == "Protected", .(prot_pipe = as.Date(min(date_from))), by = SegmentID]
 
-r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data, "street_layout/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
+r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data, "raw/street_layout/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
 r26 <- r26[as.character(boro) == "1", .(SegmentID = as.numeric(segmentid), cl = toupper(facilitycl), inst = as.Date(substr(as.character(instdate), 1, 10)))]
 dot <- r26[cl == "I", .(prot_dot = min(inst)), by = SegmentID]
 

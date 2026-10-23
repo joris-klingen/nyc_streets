@@ -61,5 +61,5 @@ cover <- function(lab, ids) {
 }
 tc <- fread(nyc_latest("traffic_counts"), select = "SegmentID")
 cover("traffic counts", tc[, as.integer(SegmentID)])
-br <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "street_layout/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
+br <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "raw/street_layout/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
 cover("DOT bike routes 2020", as.integer(br$segmentid))

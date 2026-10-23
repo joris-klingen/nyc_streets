@@ -1,6 +1,6 @@
 # Citywide segment x release panel of lane counts from quarterly LION releases
 #
-# Reads every LION release in nyc_traffic_data/street_layout/lion (nyc_lion12a.zip ... nyclion_26c.zip),
+# Reads every LION release in nyc_traffic_data/raw/street_layout/lion (nyc_lion12a.zip ... nyclion_26c.zip),
 # attributes only, and stacks: release, release_date (latest file date inside the zip),
 # SegmentID, SegmentTyp, borough, street, roadway type, traffic direction, travel / parking /
 # total lanes, street width. Writes nyc_streets_data/travel_lanes/lion_lanes_panel.parquet and
@@ -13,7 +13,7 @@ library(arrow)
 
 source(Find(file.exists, c("../nyc_traffic_repo/R/nyc_traffic.R", "../nyc_traffic/R/nyc_traffic.R")))   # local folder or plain clone
 root <- nyc_data_root()
-lion_dir <- file.path(root, "street_layout/lion")
+lion_dir <- file.path(root, "raw/street_layout/lion")
 out_dir <- file.path(nyc_streets_data_root(), "travel_lanes")
 tmp <- "C:/code/lion_tmp"          # unzip outside Dropbox
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
