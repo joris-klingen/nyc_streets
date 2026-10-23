@@ -1,6 +1,6 @@
 # Stack the identifying attributes of every LION record over the quarterly releases
 #
-# Reads the attribute table (no geometry) of each release in nyc_traffic_data/streets/lion through
+# Reads the attribute table (no geometry) of each release in nyc_traffic_data/street_layout/lion through
 # /vsizip, all feature types: SegmentID, LegacyID, feature and segment type, roadbed layer, roadway
 # type, street code, from/to nodes and coordinates, length, physical and generic ids.
 # Writes nyc_streets_data/spine/lion_segment_releases.parquet (one row per record

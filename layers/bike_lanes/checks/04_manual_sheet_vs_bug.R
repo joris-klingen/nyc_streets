@@ -8,7 +8,7 @@ m <- fread(file.path(S, "manual_sheets/dot_2020.csv"), colClasses = "character")
 setnames(m, "street...2", "street")
 
 # match to 2020 DOT segments on geometry text, as 002 does ----
-dot.sf <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "streets/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
+dot.sf <- st_read(paste0("/vsizip/", file.path(nyc_data_root(), "street_layout/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
 dot.sf <- st_transform(dot.sf, "+init=EPSG:4326")
 g <- data.table(segmentid = as.numeric(dot.sf$segmentid), boro = dot.sf$boro, geometry = st_as_text(st_geometry(dot.sf)))
 mm <- merge(m, unique(g, by = "geometry"), by = "geometry", all.x = TRUE)

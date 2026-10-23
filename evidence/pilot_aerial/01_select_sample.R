@@ -16,7 +16,7 @@ set.seed(20261010)
 # manual checks with segment ids (geometry match, as in 002) ----
 man <- fread("layers/bike_lanes/manual/streetview_dot2020.csv", colClasses = "character")
 man <- man[, !duplicated(names(man)), with = FALSE]
-dot <- st_read(paste0("/vsizip/", file.path(nyc_data, "streets/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
+dot <- st_read(paste0("/vsizip/", file.path(nyc_data, "street_layout/bike_routes/Archived_nyc_bike_routes_2020.zip/Archived_nyc_bike_routes_2020/nyc_bike_routes_2020.shp")), quiet = TRUE)
 dot <- st_transform(dot, 4326)
 g <- data.table(SegmentID = as.numeric(dot$segmentid), boro = as.character(dot$boro), geometry = st_as_text(st_geometry(dot)))
 man <- merge(man, unique(g, by = "geometry"), by = "geometry")[boro == "1"]
@@ -26,7 +26,7 @@ tw <- setDT(bikelane_windows_read())
 tw[, `:=`(date_from = as.Date(date_from), date_to = as.Date(date_to))]
 prot_pipe <- tw[tf_facilit == "Protected" | ft_facilit == "Protected", .(prot_pipe = min(date_from)), by = SegmentID]
 
-r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data, "streets/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
+r26 <- setDT(st_drop_geometry(st_read(file.path(nyc_data, "street_layout/bike_routes/New York City Bike Routes_20261010.geojson"), quiet = TRUE)))
 r26 <- r26[as.character(boro) == "1", .(SegmentID = as.numeric(segmentid), cl = toupper(facilitycl), inst = as.Date(substr(as.character(instdate), 1, 10)))]
 prot_dot <- r26[cl == "I", .(prot_dot = min(inst)), by = SegmentID]
 
